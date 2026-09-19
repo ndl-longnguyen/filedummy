@@ -31,10 +31,10 @@ export default function ContactPage() {
             For questions, business partnerships, or general feedback:
           </p>
           <a
-            href="mailto:contact@ndlong.site"
-            className="inline-block text-xs font-semibold text-blue-400 hover:underline"
+            href="mailto:ndl.long.nguyendai@gmail.com?subject=FileDummy%20Inquiry"
+            className="inline-block text-xs font-semibold text-blue-400 hover:underline break-all"
           >
-            contact@ndlong.site
+            ndl.long.nguyendai@gmail.com
           </a>
         </div>
 
@@ -44,13 +44,13 @@ export default function ContactPage() {
           </div>
           <h3 className="text-base font-bold text-white">Feature Requests</h3>
           <p className="text-xs text-slate-400">
-            Need specialized audio (MP3/WAV), video (MP4), or CAD files?
+            Need specialized formats, sizes, or new tool integrations?
           </p>
           <a
-            href="mailto:requests@ndlong.site"
-            className="inline-block text-xs font-semibold text-cyan-400 hover:underline"
+            href="mailto:ndl.long.nguyendai@gmail.com?subject=FileDummy%20Feature%20Request"
+            className="inline-block text-xs font-semibold text-cyan-400 hover:underline break-all"
           >
-            requests@ndlong.site
+            ndl.long.nguyendai@gmail.com
           </a>
         </div>
 
@@ -60,13 +60,13 @@ export default function ContactPage() {
           </div>
           <h3 className="text-base font-bold text-white">DMCA & Legal</h3>
           <p className="text-xs text-slate-400">
-            For copyright or policy-related inquiries:
+            For copyright, privacy, or policy-related inquiries:
           </p>
           <a
-            href="mailto:legal@ndlong.site"
-            className="inline-block text-xs font-semibold text-indigo-400 hover:underline"
+            href="mailto:ndl.long.nguyendai@gmail.com?subject=FileDummy%20Legal"
+            className="inline-block text-xs font-semibold text-indigo-400 hover:underline break-all"
           >
-            legal@ndlong.site
+            ndl.long.nguyendai@gmail.com
           </a>
         </div>
       </div>

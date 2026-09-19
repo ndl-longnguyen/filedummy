@@ -75,7 +75,7 @@ export default function PrivacyPage() {
         <section className="space-y-2">
           <h2 className="text-lg font-bold text-white">5. Contact Information</h2>
           <p>
-            If you have any questions about this Privacy Policy, please reach out through our Contact page or email us at <code>privacy@ndlong.site</code>.
+            If you have any questions about this Privacy Policy, please reach out through our Contact page or email us at <code>ndl.long.nguyendai@gmail.com</code>.
           </p>
         </section>
       </div>
