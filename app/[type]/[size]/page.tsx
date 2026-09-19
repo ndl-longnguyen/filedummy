@@ -8,10 +8,7 @@ import {
   ArrowLeft,
   ArrowRight,
   FileCode,
-  Hash,
   Layers,
-  Copy,
-  CheckCircle2,
 } from "lucide-react";
 import { FILES, getFile, FILE_TYPES, getFilesByType, formatBytes, FileType } from "@/lib/files";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -239,18 +236,6 @@ export default async function FileDetailPage({
               <div className="py-3 flex justify-between items-center">
                 <span className="text-slate-400">Magic Bytes</span>
                 <span className="font-mono text-slate-300">{meta.magicBytes}</span>
-              </div>
-              <div className="py-3 flex justify-between items-start">
-                <span className="text-slate-400 pt-0.5">SHA-256</span>
-                <span className="font-mono text-[11px] text-slate-400 break-all text-right max-w-[200px]">
-                  {file.sha256}
-                </span>
-              </div>
-              <div className="py-3 flex justify-between items-start">
-                <span className="text-slate-400 pt-0.5">MD5 Checksum</span>
-                <span className="font-mono text-[11px] text-slate-400 break-all text-right max-w-[200px]">
-                  {file.md5}
-                </span>
               </div>
               <div className="py-3 flex justify-between items-center">
                 <span className="text-slate-400">CDN Storage</span>

@@ -3,7 +3,6 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getR2Client } from "@/lib/r2";
 import { FILES, FILE_TYPES } from "@/lib/files";
-import { incrementCount } from "@/lib/kv";
 
 export async function GET(req: NextRequest) {
   const key = req.nextUrl.searchParams.get("file");
@@ -17,11 +16,6 @@ export async function GET(req: NextRequest) {
   if (!entry) {
     return NextResponse.json({ error: "File not found or unauthorized key" }, { status: 404 });
   }
-
-  // Increment download counter asynchronously
-  incrementCount(entry.r2Key).catch((err) => {
-    console.error("[Download API] incrementCount error:", err);
-  });
 
   const r2 = getR2Client();
 

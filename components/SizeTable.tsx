@@ -27,9 +27,8 @@ export function SizeTable({ files, typeLabel }: SizeTableProps) {
         <thead>
           <tr className="border-b border-slate-800/80 bg-slate-900/50 text-slate-400 text-xs uppercase tracking-wider">
             <th className="py-4 px-6 font-semibold">File & Size</th>
-            <th className="py-4 px-4 font-semibold hidden sm:table-cell">Exact Bytes</th>
-            <th className="py-4 px-4 font-semibold hidden md:table-cell">Checksum (SHA-256)</th>
-            <th className="py-4 px-4 font-semibold text-center hidden lg:table-cell">Downloads</th>
+            <th className="py-4 px-4 font-semibold">Exact Bytes</th>
+            <th className="py-4 px-4 font-semibold hidden md:table-cell">Format</th>
             <th className="py-4 px-6 font-semibold text-right">Action</th>
           </tr>
         </thead>
@@ -57,18 +56,22 @@ export function SizeTable({ files, typeLabel }: SizeTableProps) {
               </td>
 
               {/* Exact bytes */}
-              <td className="py-4 px-4 hidden sm:table-cell text-xs font-mono text-slate-300">
+              <td className="py-4 px-4 text-xs font-mono text-emerald-400 font-semibold">
                 {f.sizeBytes.toLocaleString()} B
               </td>
 
-              {/* Checksum */}
-              <td className="py-4 px-4 hidden md:table-cell text-xs font-mono text-slate-500">
-                <div className="flex items-center gap-2">
-                  <span className="truncate max-w-[140px]">{f.sha256}</span>
+              {/* Format / Extension */}
+              <td className="py-4 px-4 hidden md:table-cell text-xs font-mono text-slate-400">
+                .{f.type}
+              </td>
+
+              {/* Action buttons */}
+              <td className="py-4 px-6 text-right">
+                <div className="flex items-center justify-end gap-2">
                   <button
                     onClick={() => copyLink(f.r2Key, f)}
                     title="Copy detail page link"
-                    className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                   >
                     {copiedKey === f.r2Key ? (
                       <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -76,17 +79,6 @@ export function SizeTable({ files, typeLabel }: SizeTableProps) {
                       <Copy className="w-3.5 h-3.5" />
                     )}
                   </button>
-                </div>
-              </td>
-
-              {/* Downloads */}
-              <td className="py-4 px-4 text-center hidden lg:table-cell text-xs text-slate-400">
-                {f.baseDownloads.toLocaleString()}
-              </td>
-
-              {/* Action buttons */}
-              <td className="py-4 px-6 text-right">
-                <div className="flex items-center justify-end gap-2">
                   <Link
                     href={`/${f.type}/${f.slug}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-600/20 transition-all hover:scale-105"

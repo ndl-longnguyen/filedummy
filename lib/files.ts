@@ -22,9 +22,6 @@ export interface FileEntry {
   sizeBytes: number;
   r2Key: string;
   description: string;
-  sha256: string;
-  md5: string;
-  baseDownloads: number;
 }
 
 export const FILE_TYPES: Record<FileType, FileTypeMeta> = {
@@ -184,65 +181,39 @@ export const FILE_TYPES: Record<FileType, FileTypeMeta> = {
 
 // Document Sizes
 const DOC_SIZES = [
-  { slug: "1mb",   label: "1 MB",   bytes: 1_048_576, baseDl: 18450 },
-  { slug: "5mb",   label: "5 MB",   bytes: 5_242_880, baseDl: 15200 },
-  { slug: "10mb",  label: "10 MB",  bytes: 10_485_760, baseDl: 29800 },
-  { slug: "15mb",  label: "15 MB",  bytes: 15_728_640, baseDl: 8900 },
-  { slug: "20mb",  label: "20 MB",  bytes: 20_971_520, baseDl: 11400 },
-  { slug: "30mb",  label: "30 MB",  bytes: 31_457_280, baseDl: 6700 },
-  { slug: "50mb",  label: "50 MB",  bytes: 52_428_800, baseDl: 14300 },
-  { slug: "100mb", label: "100 MB", bytes: 104_857_600, baseDl: 19500 },
-  { slug: "200mb", label: "200 MB", bytes: 209_715_200, baseDl: 7800 },
-  { slug: "500mb", label: "500 MB", bytes: 524_288_000, baseDl: 9200 },
-  { slug: "1gb",   label: "1 GB",   bytes: 1_073_741_824, baseDl: 12100 },
+  { slug: "1mb",   label: "1 MB",   bytes: 1_048_576 },
+  { slug: "5mb",   label: "5 MB",   bytes: 5_242_880 },
+  { slug: "10mb",  label: "10 MB",  bytes: 10_485_760 },
+  { slug: "15mb",  label: "15 MB",  bytes: 15_728_640 },
+  { slug: "20mb",  label: "20 MB",  bytes: 20_971_520 },
+  { slug: "30mb",  label: "30 MB",  bytes: 31_457_280 },
+  { slug: "50mb",  label: "50 MB",  bytes: 52_428_800 },
+  { slug: "100mb", label: "100 MB", bytes: 104_857_600 },
+  { slug: "200mb", label: "200 MB", bytes: 209_715_200 },
+  { slug: "500mb", label: "500 MB", bytes: 524_288_000 },
+  { slug: "1gb",   label: "1 GB",   bytes: 1_073_741_824 },
 ];
-
-// Helper to generate mock hash
-function mockHash(seed: string) {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = (hash << 5) - hash + seed.charCodeAt(i);
-    hash |= 0;
-  }
-  const hex = Math.abs(hash).toString(16).padStart(8, "0");
-  return {
-    sha256: `${hex}8c4f9a72e19d36bb024a87e53d9c12b${hex}440f9172`,
-    md5: `${hex}b58a74e921d${hex}`.slice(0, 32),
-  };
-}
 
 export const FILES: FileEntry[] = [
   // PDF
-  ...DOC_SIZES.map((s) => {
-    const hashes = mockHash(`pdf-${s.slug}`);
-    return {
-      type: "pdf" as FileType,
-      slug: s.slug,
-      label: s.label,
-      sizeBytes: s.bytes,
-      r2Key: `pdf/sample-${s.slug}.pdf`,
-      description: `Download a valid sample PDF file ${s.label} in size. Perfect for testing file upload systems, email attachments, PDF viewers, and cloud storage APIs.`,
-      sha256: hashes.sha256,
-      md5: hashes.md5,
-      baseDownloads: s.baseDl,
-    };
-  }),
+  ...DOC_SIZES.map((s) => ({
+    type: "pdf" as FileType,
+    slug: s.slug,
+    label: s.label,
+    sizeBytes: s.bytes,
+    r2Key: `pdf/sample-${s.slug}.pdf`,
+    description: `Download a valid sample PDF file ${s.label} in size. Perfect for testing file upload systems, email attachments, PDF viewers, and cloud storage APIs.`,
+  })),
 
   // DOCX
-  ...DOC_SIZES.map((s) => {
-    const hashes = mockHash(`docx-${s.slug}`);
-    return {
-      type: "docx" as FileType,
-      slug: s.slug,
-      label: s.label,
-      sizeBytes: s.bytes,
-      r2Key: `docx/sample-${s.slug}.docx`,
-      description: `Download a sample Microsoft Word DOCX file ${s.label} in size. Useful for testing document parsers, Word processors, and enterprise file upload endpoints.`,
-      sha256: hashes.sha256,
-      md5: hashes.md5,
-      baseDownloads: Math.round(s.baseDl * 0.75),
-    };
-  }),
+  ...DOC_SIZES.map((s) => ({
+    type: "docx" as FileType,
+    slug: s.slug,
+    label: s.label,
+    sizeBytes: s.bytes,
+    r2Key: `docx/sample-${s.slug}.docx`,
+    description: `Download a sample Microsoft Word DOCX file ${s.label} in size. Useful for testing document parsers, Word processors, and enterprise file upload endpoints.`,
+  })),
 
   // TXT
   {
@@ -252,9 +223,6 @@ export const FILES: FileEntry[] = [
     sizeBytes: 51_200,
     r2Key: "txt/sample-lorem.txt",
     description: "Download a clean sample TXT file with standard Lorem Ipsum text. Ideal for testing text editors, parsers, and string manipulation.",
-    sha256: mockHash("txt-lorem").sha256,
-    md5: mockHash("txt-lorem").md5,
-    baseDownloads: 23100,
   },
   {
     type: "txt",
@@ -263,9 +231,6 @@ export const FILES: FileEntry[] = [
     sizeBytes: 51_200,
     r2Key: "txt/sample-unicode.txt",
     description: "Download a sample UTF-8 TXT file containing English, Japanese, Chinese, Arabic, Cyrillic, and Vietnamese characters for i18n testing.",
-    sha256: mockHash("txt-unicode").sha256,
-    md5: mockHash("txt-unicode").md5,
-    baseDownloads: 14700,
   },
   {
     type: "txt",
@@ -274,9 +239,6 @@ export const FILES: FileEntry[] = [
     sizeBytes: 102_400,
     r2Key: "txt/sample-ascii.txt",
     description: "Download a 100KB ASCII plain text sample file containing all standard printable characters for buffer and encoding checks.",
-    sha256: mockHash("txt-ascii").sha256,
-    md5: mockHash("txt-ascii").md5,
-    baseDownloads: 9800,
   },
   {
     type: "txt",
@@ -285,9 +247,6 @@ export const FILES: FileEntry[] = [
     sizeBytes: 1_048_576,
     r2Key: "txt/sample-large.txt",
     description: "Download a large 1 MB TXT file for stress-testing text parsers, log aggregators, and streaming readers.",
-    sha256: mockHash("txt-large").sha256,
-    md5: mockHash("txt-large").md5,
-    baseDownloads: 18400,
   },
   {
     type: "txt",
@@ -296,9 +255,6 @@ export const FILES: FileEntry[] = [
     sizeBytes: 5_242_880,
     r2Key: "txt/sample-5mb.txt",
     description: "Download a heavy 5 MB TXT file to evaluate memory consumption during text loading and search indexing.",
-    sha256: mockHash("txt-5mb").sha256,
-    md5: mockHash("txt-5mb").md5,
-    baseDownloads: 8100,
   },
   {
     type: "txt",
@@ -307,19 +263,16 @@ export const FILES: FileEntry[] = [
     sizeBytes: 10_485_760,
     r2Key: "txt/sample-10mb.txt",
     description: "Download a 10 MB plain text file for large data ingestion and string allocation testing.",
-    sha256: mockHash("txt-10mb").sha256,
-    md5: mockHash("txt-10mb").md5,
-    baseDownloads: 6200,
   },
 
   // JPG
   ...[
-    { slug: "100kb", label: "100 KB", bytes: 102_400, dl: 14500 },
-    { slug: "500kb", label: "500 KB", bytes: 512_000, dl: 19800 },
-    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576, dl: 24300 },
-    { slug: "2mb",   label: "2 MB",   bytes: 2_097_152, dl: 16700 },
-    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880, dl: 18900 },
-    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760, dl: 12200 },
+    { slug: "100kb", label: "100 KB", bytes: 102_400 },
+    { slug: "500kb", label: "500 KB", bytes: 512_000 },
+    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576 },
+    { slug: "2mb",   label: "2 MB",   bytes: 2_097_152 },
+    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880 },
+    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760 },
   ].map((s) => ({
     type: "jpg" as FileType,
     slug: s.slug,
@@ -327,19 +280,16 @@ export const FILES: FileEntry[] = [
     sizeBytes: s.bytes,
     r2Key: `jpg/sample-${s.slug}.jpg`,
     description: `Download a high quality sample JPG photo file ${s.label} in size for image gallery testing, upload limits, and CDN transformations.`,
-    sha256: mockHash(`jpg-${s.slug}`).sha256,
-    md5: mockHash(`jpg-${s.slug}`).md5,
-    baseDownloads: s.dl,
   })),
 
   // PNG
   ...[
-    { slug: "100kb", label: "100 KB", bytes: 102_400, dl: 12400 },
-    { slug: "500kb", label: "500 KB", bytes: 512_000, dl: 15300 },
-    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576, dl: 21200 },
-    { slug: "2mb",   label: "2 MB",   bytes: 2_097_152, dl: 13900 },
-    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880, dl: 14800 },
-    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760, dl: 9500 },
+    { slug: "100kb", label: "100 KB", bytes: 102_400 },
+    { slug: "500kb", label: "500 KB", bytes: 512_000 },
+    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576 },
+    { slug: "2mb",   label: "2 MB",   bytes: 2_097_152 },
+    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880 },
+    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760 },
   ].map((s) => ({
     type: "png" as FileType,
     slug: s.slug,
@@ -347,18 +297,15 @@ export const FILES: FileEntry[] = [
     sizeBytes: s.bytes,
     r2Key: `png/sample-${s.slug}.png`,
     description: `Download a sample lossless PNG image file ${s.label} in size with transparency support for graphic asset testing.`,
-    sha256: mockHash(`png-${s.slug}`).sha256,
-    md5: mockHash(`png-${s.slug}`).md5,
-    baseDownloads: s.dl,
   })),
 
   // CSV
   ...[
-    { slug: "100kb", label: "100 KB", bytes: 102_400, dl: 11200 },
-    { slug: "500kb", label: "500 KB", bytes: 512_000, dl: 13400 },
-    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576, dl: 17800 },
-    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880, dl: 12900 },
-    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760, dl: 8900 },
+    { slug: "100kb", label: "100 KB", bytes: 102_400 },
+    { slug: "500kb", label: "500 KB", bytes: 512_000 },
+    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576 },
+    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880 },
+    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760 },
   ].map((s) => ({
     type: "csv" as FileType,
     slug: s.slug,
@@ -366,18 +313,15 @@ export const FILES: FileEntry[] = [
     sizeBytes: s.bytes,
     r2Key: `csv/sample-${s.slug}.csv`,
     description: `Download a sample CSV data table file ${s.label} in size with headers, customer records, and numeric columns for import testing.`,
-    sha256: mockHash(`csv-${s.slug}`).sha256,
-    md5: mockHash(`csv-${s.slug}`).md5,
-    baseDownloads: s.dl,
   })),
 
   // JSON
   ...[
-    { slug: "50kb",  label: "50 KB",  bytes: 51_200, dl: 14200 },
-    { slug: "200kb", label: "200 KB", bytes: 204_800, dl: 16100 },
-    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576, dl: 22800 },
-    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880, dl: 14700 },
-    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760, dl: 9800 },
+    { slug: "50kb",  label: "50 KB",  bytes: 51_200 },
+    { slug: "200kb", label: "200 KB", bytes: 204_800 },
+    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576 },
+    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880 },
+    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760 },
   ].map((s) => ({
     type: "json" as FileType,
     slug: s.slug,
@@ -385,19 +329,16 @@ export const FILES: FileEntry[] = [
     sizeBytes: s.bytes,
     r2Key: `json/sample-${s.slug}.json`,
     description: `Download a valid dummy JSON file ${s.label} in size containing array of nested objects for REST API and parser load testing.`,
-    sha256: mockHash(`json-${s.slug}`).sha256,
-    md5: mockHash(`json-${s.slug}`).md5,
-    baseDownloads: s.dl,
   })),
 
   // ZIP
   ...[
-    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576, dl: 13900 },
-    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880, dl: 16500 },
-    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760, dl: 21800 },
-    { slug: "25mb",  label: "25 MB",  bytes: 26_214_400, dl: 10400 },
-    { slug: "50mb",  label: "50 MB",  bytes: 52_428_800, dl: 13800 },
-    { slug: "100mb", label: "100 MB", bytes: 104_857_600, dl: 17200 },
+    { slug: "1mb",   label: "1 MB",   bytes: 1_048_576 },
+    { slug: "5mb",   label: "5 MB",   bytes: 5_242_880 },
+    { slug: "10mb",  label: "10 MB",  bytes: 10_485_760 },
+    { slug: "25mb",  label: "25 MB",  bytes: 26_214_400 },
+    { slug: "50mb",  label: "50 MB",  bytes: 52_428_800 },
+    { slug: "100mb", label: "100 MB", bytes: 104_857_600 },
   ].map((s) => ({
     type: "zip" as FileType,
     slug: s.slug,
@@ -405,9 +346,6 @@ export const FILES: FileEntry[] = [
     sizeBytes: s.bytes,
     r2Key: `zip/sample-${s.slug}.zip`,
     description: `Download a sample ZIP archive file ${s.label} in size to test decompression engines, archive upload quotas, and virus scanning.`,
-    sha256: mockHash(`zip-${s.slug}`).sha256,
-    md5: mockHash(`zip-${s.slug}`).md5,
-    baseDownloads: s.dl,
   })),
 ];
 

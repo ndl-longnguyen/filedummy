@@ -1,15 +1,13 @@
 import Link from "next/link";
-import { Download, ArrowRight, HardDrive, DownloadCloud } from "lucide-react";
+import { Download, ArrowRight, HardDrive } from "lucide-react";
 import { FileEntry, FILE_TYPES, formatBytes } from "@/lib/files";
 
 interface FileCardProps {
   file: FileEntry;
-  count?: number;
 }
 
-export function FileCard({ file, count }: FileCardProps) {
+export function FileCard({ file }: FileCardProps) {
   const typeMeta = FILE_TYPES[file.type];
-  const downloadCount = count ?? file.baseDownloads;
 
   return (
     <div className="glass-panel glass-panel-hover rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group">
@@ -21,10 +19,9 @@ export function FileCard({ file, count }: FileCardProps) {
           >
             {typeMeta.name.split(" ")[0]}
           </span>
-          <div className="flex items-center gap-1 text-[11px] text-slate-400 font-medium">
-            <DownloadCloud className="w-3.5 h-3.5 text-blue-400" />
-            <span>{downloadCount.toLocaleString()}</span>
-          </div>
+          <span className="text-xs font-mono text-slate-500 font-semibold uppercase">
+            .{file.type}
+          </span>
         </div>
 
         {/* Title / Size */}

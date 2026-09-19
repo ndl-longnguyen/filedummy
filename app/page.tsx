@@ -9,7 +9,6 @@ import {
   Zap,
   ArrowRight,
   HardDrive,
-  DownloadCloud,
   CheckCircle2,
   Terminal,
   Globe,
