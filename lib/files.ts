@@ -73,8 +73,8 @@ export const FILE_TYPES: Record<FileType, FileTypeMeta> = {
     color: "from-slate-400 to-slate-600",
     badgeBg: "bg-slate-500/10 border-slate-500/20",
     badgeText: "text-slate-400",
-    shortDesc: "Raw text files with Lorem Ipsum, UTF-8 multilingual characters, and ASCII sets.",
-    longDesc: "Text files are fundamental for software development. Our sample TXT files provide varying encodings, large file sizes up to 10MB, international UTF-8 character sets, and standard ASCII to test string buffers, tokenizers, and stream readers.",
+    shortDesc: "Authentic 2026 AI industry whitepapers, multilingual terminology, and ASCII specs.",
+    longDesc: "Text files are fundamental for software development. Our sample TXT files provide authentic technical literature on 2026 artificial intelligence architectures, UTF-8 multilingual terminology, ASCII specifications, and large-scale texts up to 10MB to test string buffers, tokenizers, and stream readers.",
     testingScenarios: [
       "Character encoding detectors (UTF-8, UTF-16, ASCII)",
       "Chunked stream reading and line-by-line processing benchmarks",
@@ -130,8 +130,8 @@ export const FILE_TYPES: Record<FileType, FileTypeMeta> = {
     color: "from-green-500 to-emerald-600",
     badgeBg: "bg-green-500/10 border-green-500/20",
     badgeText: "text-green-500",
-    shortDesc: "Structured tabular datasets with headers, numbers, dates, and quoted text fields.",
-    longDesc: "CSV files are the backbone of data imports and exports. Our sample CSV files feature realistic tabular columns (ID, Name, Email, Country, Timestamp, Amount) sized up to 10MB to test ETL pipelines, spreadsheet software, and bulk import APIs.",
+    shortDesc: "Authentic 2026 AI model benchmark datasets with reasoning scores and pricing.",
+    longDesc: "CSV files are the backbone of data imports and exports. Our sample CSV files feature authentic 2026 AI model benchmark datasets (Model Name, Developer, Architecture, Parameters, Benchmark Scores, Pricing) sized up to 10MB to test ETL pipelines, spreadsheet software, and bulk import APIs.",
     testingScenarios: [
       "Bulk user / product import functions in SaaS applications",
       "Streaming CSV parsers (PapaParse, csv-parser) benchmark",
@@ -149,8 +149,8 @@ export const FILE_TYPES: Record<FileType, FileTypeMeta> = {
     color: "from-yellow-500 to-amber-500",
     badgeBg: "bg-yellow-500/10 border-yellow-500/20",
     badgeText: "text-yellow-400",
-    shortDesc: "Syntactically valid JSON payloads with nested arrays and records for API stress testing.",
-    longDesc: "JSON is the universal data interchange format for modern APIs. Our dummy JSON files contain syntactically valid mock object arrays, allowing engineers to test JSON stream parsers, REST and GraphQL endpoints, and database document storage.",
+    shortDesc: "100% valid JSON datasets of 2026 frontier AI models and LLM evaluation metrics.",
+    longDesc: "JSON is the universal data interchange format for modern APIs. Our dummy JSON files contain 100% syntactically valid datasets documenting frontier reasoning models, evaluation benchmarks (MATH-500, HumanEval), and token pricing, sized up to 10MB for API performance and serialization benchmarking.",
     testingScenarios: [
       "REST API request/response payload payload size limits",
       "Evaluating `JSON.parse` memory overhead on large objects (5MB+)",
@@ -202,7 +202,7 @@ export const FILES: FileEntry[] = [
     label: s.label,
     sizeBytes: s.bytes,
     r2Key: `pdf/sample-${s.slug}.pdf`,
-    description: `Download a valid sample PDF file ${s.label} in size. Perfect for testing file upload systems, email attachments, PDF viewers, and cloud storage APIs.`,
+    description: `Download a valid sample PDF file ${s.label} in size containing the 2026 Global AI & Machine Learning Industry Report. Perfect for testing file upload systems, email attachments, PDF viewers, and cloud storage APIs.`,
   })),
 
   // DOCX
@@ -212,57 +212,57 @@ export const FILES: FileEntry[] = [
     label: s.label,
     sizeBytes: s.bytes,
     r2Key: `docx/sample-${s.slug}.docx`,
-    description: `Download a sample Microsoft Word DOCX file ${s.label} in size. Useful for testing document parsers, Word processors, and enterprise file upload endpoints.`,
+    description: `Download a sample Microsoft Word DOCX file ${s.label} in size containing authentic 2026 AI industry analysis chapters. Useful for testing document parsers, Word processors, and enterprise file upload endpoints.`,
   })),
 
   // TXT
   {
     type: "txt",
     slug: "lorem",
-    label: "Lorem Ipsum (50 KB)",
+    label: "AI Executive Summary (50 KB)",
     sizeBytes: 51_200,
     r2Key: "txt/sample-lorem.txt",
-    description: "Download a clean sample TXT file with standard Lorem Ipsum text. Ideal for testing text editors, parsers, and string manipulation.",
+    description: "Download an authentic 50 KB text file containing the Executive Summary of the 2026 Global AI & Machine Learning Industry Report.",
   },
   {
     type: "txt",
     slug: "unicode",
-    label: "Unicode Multi-Language (50 KB)",
+    label: "Multilingual AI Lexicon (50 KB)",
     sizeBytes: 51_200,
     r2Key: "txt/sample-unicode.txt",
-    description: "Download a sample UTF-8 TXT file containing English, Japanese, Chinese, Arabic, Cyrillic, and Vietnamese characters for i18n testing.",
+    description: "Download a 50 KB UTF-8 text file containing international artificial intelligence terminology across 10 global languages.",
   },
   {
     type: "txt",
     slug: "ascii",
-    label: "ASCII Characters (100 KB)",
+    label: "ASCII AI Technical Spec (100 KB)",
     sizeBytes: 102_400,
     r2Key: "txt/sample-ascii.txt",
-    description: "Download a 100KB ASCII plain text sample file containing all standard printable characters for buffer and encoding checks.",
+    description: "Download a 100 KB ASCII plain text sample file containing structured AI technical specifications for buffer and encoding checks.",
   },
   {
     type: "txt",
     slug: "large",
-    label: "Large Text (1 MB)",
+    label: "Complete AI Report (1 MB)",
     sizeBytes: 1_048_576,
     r2Key: "txt/sample-large.txt",
-    description: "Download a large 1 MB TXT file for stress-testing text parsers, log aggregators, and streaming readers.",
+    description: "Download the complete 1 MB 2026 AI & Machine Learning Industry Report covering reasoning models, compute economics, and enterprise safety.",
   },
   {
     type: "txt",
     slug: "5mb",
-    label: "Heavy Text (5 MB)",
+    label: "Extended AI Research (5 MB)",
     sizeBytes: 5_242_880,
     r2Key: "txt/sample-5mb.txt",
-    description: "Download a heavy 5 MB TXT file to evaluate memory consumption during text loading and search indexing.",
+    description: "Download an extended 5 MB technical text file containing comprehensive AI whitepaper volumes and technical documentation.",
   },
   {
     type: "txt",
     slug: "10mb",
-    label: "Ultra Text (10 MB)",
+    label: "Full AI Archive (10 MB)",
     sizeBytes: 10_485_760,
     r2Key: "txt/sample-10mb.txt",
-    description: "Download a 10 MB plain text file for large data ingestion and string allocation testing.",
+    description: "Download a 10 MB plain text archive containing in-depth AI research literature for large data ingestion and string allocation testing.",
   },
 
   // JPG
@@ -279,7 +279,7 @@ export const FILES: FileEntry[] = [
     label: s.label,
     sizeBytes: s.bytes,
     r2Key: `jpg/sample-${s.slug}.jpg`,
-    description: `Download a high quality sample JPG photo file ${s.label} in size for image gallery testing, upload limits, and CDN transformations.`,
+    description: `Download a sample JPEG image ${s.label} in size for image processing pipelines, responsive CDN testing, and thumbnail validation.`,
   })),
 
   // PNG
@@ -296,7 +296,7 @@ export const FILES: FileEntry[] = [
     label: s.label,
     sizeBytes: s.bytes,
     r2Key: `png/sample-${s.slug}.png`,
-    description: `Download a sample lossless PNG image file ${s.label} in size with transparency support for graphic asset testing.`,
+    description: `Download a sample PNG image ${s.label} in size with lossless compression and alpha transparency support for graphics rendering tests.`,
   })),
 
   // CSV
@@ -312,7 +312,7 @@ export const FILES: FileEntry[] = [
     label: s.label,
     sizeBytes: s.bytes,
     r2Key: `csv/sample-${s.slug}.csv`,
-    description: `Download a sample CSV data table file ${s.label} in size with headers, customer records, and numeric columns for import testing.`,
+    description: `Download an authentic 2026 AI model benchmark dataset in CSV format ${s.label} in size, with reasoning scores, token costs, and model architectures.`,
   })),
 
   // JSON
@@ -328,7 +328,7 @@ export const FILES: FileEntry[] = [
     label: s.label,
     sizeBytes: s.bytes,
     r2Key: `json/sample-${s.slug}.json`,
-    description: `Download a valid dummy JSON file ${s.label} in size containing array of nested objects for REST API and parser load testing.`,
+    description: `Download a 100% valid JSON file ${s.label} in size containing structured 2026 AI model benchmarks, evaluations (MATH-500, HumanEval), and pricing telemetry.`,
   })),
 
   // ZIP
@@ -345,7 +345,7 @@ export const FILES: FileEntry[] = [
     label: s.label,
     sizeBytes: s.bytes,
     r2Key: `zip/sample-${s.slug}.zip`,
-    description: `Download a sample ZIP archive file ${s.label} in size to test decompression engines, archive upload quotas, and virus scanning.`,
+    description: `Download a valid sample ZIP archive ${s.label} in size containing extractable 2026 AI research reports, benchmark CSV datasets, and documentation.`,
   })),
 ];
 

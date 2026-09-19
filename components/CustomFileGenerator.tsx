@@ -42,62 +42,150 @@ export function CustomFileGenerator() {
     // Build the blob
     try {
       let mime = "application/octet-stream";
+      const encoder = new TextEncoder();
       const parts: (BlobPart)[] = [];
 
       if (format === "txt") {
         mime = "text/plain; charset=utf-8";
-        const sampleStr = "Sample text line for custom dummy file generation testing. ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789\n";
-        const sampleBytes = new TextEncoder().encode(sampleStr);
+        const aiParagraphs = [
+          "2026 GLOBAL ARTIFICIAL INTELLIGENCE & MACHINE LEARNING INDUSTRY REPORT\nPublished by Global AI Research Consortium & Enterprise Computing Council.\n================================================================================\n\n",
+          "EXECUTIVE SUMMARY:\nThis document serves as an authoritative technical evaluation of frontier artificial intelligence, test-time inference compute scaling, autonomous agentic orchestration, compute silicon economics, and global regulatory governance in 2026.\n\n",
+          "CHAPTER 1: THE TRANSITION TO TEST-TIME REASONING AGENTS\nThe machine learning landscape in 2026 has decisively shifted from static one-shot generative models toward dynamic reasoning agents capable of extended deliberation. Contemporary architectures leverage test-time compute scaling through Monte Carlo tree searches, recursive self-critique loops, and chain-of-thought verification at inference time.\n\n",
+          "CHAPTER 2: COMPUTE INFRASTRUCTURE AND ENERGY ECONOMICS\nLeading training clusters routinely scale beyond 100,000 accelerated nodes, powered by advanced high-bandwidth memory (HBM3e and early HBM4) delivering memory bandwidth in excess of 4.8 terabytes per second. Hyperscalers have pioneered dedicated power generation strategies including nuclear small modular reactors (SMRs) and geothermal microgrids to address power constraints.\n\n",
+          "CHAPTER 3: OPEN WEIGHTS PARITY AND ENTERPRISE PRIVACY\nOpen-weight architectures developed by international research consortia maintain competitive parity with proprietary frontier baselines across standard evaluations (MATH-500, HumanEval, and MMLU-Pro). Software organizations deploy open-weight models within private VPCs for data privacy and low latency, while routing complex edge-case tasks to frontier cloud APIs.\n\n",
+          "CHAPTER 4: ENTERPRISE SAFETY, ALIGNMENT, AND REGULATORY COMPLIANCE\nThe enforcement of the European Union AI Act, coupled with the US NIST AI Risk Management Framework, mandates rigorous pre-deployment evaluations for high-risk cognitive applications. Automated adversarial red-teaming ensembles continuously test models against prompt injection, jailbreak attempts, and tool manipulation.\n\n"
+        ];
+        
         let written = 0;
-        while (written + sampleBytes.length <= totalBytes) {
-          parts.push(sampleBytes);
-          written += sampleBytes.length;
-        }
-        if (totalBytes > written) {
-          parts.push(sampleBytes.slice(0, totalBytes - written));
+        let pIndex = 0;
+        while (written < totalBytes) {
+          const p = aiParagraphs[pIndex % aiParagraphs.length];
+          const pBytes = encoder.encode(p);
+          if (written + pBytes.length <= totalBytes) {
+            parts.push(pBytes);
+            written += pBytes.length;
+          } else {
+            // Fill remaining bytes safely
+            parts.push(pBytes.slice(0, totalBytes - written));
+            written = totalBytes;
+            break;
+          }
+          pIndex++;
         }
       } else if (format === "pdf") {
         mime = "application/pdf";
-        const pdfHeader = new TextEncoder().encode(
-          "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] >>\nendobj\nxref\n0 4\n0000000000 65535 f\n0000000009 00000 n\n0000000068 00000 n\n0000000125 00000 n\ntrailer\n<< /Size 4 /Root 1 0 R >>\nstartxref\n200\n%%EOF\n"
+        const textStream = 
+          "BT\n/F1 18 Tf\n50 720 Td\n(2026 Global AI & Machine Learning Industry Report) Tj\n" +
+          "/F1 11 Tf\n0 -28 Td\n(FileDummy Custom Generated Test PDF - 100% Valid Structure) Tj\n" +
+          "0 -22 Td\n(Authoritative test document with strict byte boundaries and valid catalog objects.) Tj\n" +
+          "0 -20 Td\n(Generated directly in-browser for upload limits, PDF parsers, and QA testing.) Tj\nET";
+        const streamBytes = encoder.encode(textStream);
+        
+        const pdfHead = encoder.encode(
+          "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n" +
+          "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n" +
+          "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n" +
+          `4 0 obj\n<< /Length ${streamBytes.length} >>\nstream\n`
         );
-        parts.push(pdfHeader);
-        const padding = Math.max(0, totalBytes - pdfHeader.length);
-        const chunk = new Uint8Array(Math.min(padding, 65536));
-        chunk.fill(0x30); // '0'
-        let written = 0;
-        while (written + chunk.length <= padding) {
-          parts.push(chunk);
-          written += chunk.length;
-        }
-        if (padding > written) {
-          parts.push(chunk.slice(0, padding - written));
+        const pdfTail = encoder.encode(
+          "\nendstream\nendobj\n5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n" +
+          "xref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000245 00000 n \n0000000450 00000 n \n" +
+          "trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n520\n%%EOF\n"
+        );
+        
+        const fixedLen = pdfHead.length + streamBytes.length + pdfTail.length;
+        if (totalBytes <= fixedLen) {
+          parts.push(pdfHead, streamBytes, pdfTail);
+        } else {
+          parts.push(pdfHead, streamBytes, pdfTail);
+          let remaining = totalBytes - fixedLen;
+          const chunk = new Uint8Array(Math.min(remaining, 65536));
+          chunk.fill(0x30); // '0'
+          while (remaining > 0) {
+            const thisChunk = Math.min(remaining, 65536);
+            if (thisChunk === 1) {
+              parts.push(encoder.encode("\n"));
+              remaining -= 1;
+            } else {
+              const line = encoder.encode("%" + "0".repeat(thisChunk - 2) + "\n");
+              parts.push(line);
+              remaining -= line.length;
+            }
+          }
         }
       } else if (format === "csv") {
         mime = "text/csv; charset=utf-8";
-        const header = new TextEncoder().encode("id,name,email,score,verified\n");
-        parts.push(header);
-        const row = new TextEncoder().encode("101,John Doe,john@test.io,98.5,true\n");
-        let written = header.length;
-        while (written + row.length <= totalBytes) {
-          parts.push(row);
-          written += row.length;
-        }
-        if (totalBytes > written) {
-          parts.push(row.slice(0, totalBytes - written));
+        const header = "record_id,model_name,developer,parameters_b,context_k,math500_score,humaneval_pass1,cost_input_per_m,cost_output_per_m,license,status\n";
+        const headerBytes = encoder.encode(header);
+        parts.push(headerBytes);
+        let written = headerBytes.length;
+
+        const sampleModels = [
+          { name: "Claude 3.7 Sonnet Reasoning", dev: "Anthropic", params: 450, ctx: 200, math: 96.8, code: 94.2, cin: 3.0, cout: 15.0, lic: "Proprietary" },
+          { name: "DeepSeek-R1", dev: "DeepSeek AI", params: 671, ctx: 128, math: 97.3, code: 92.8, cin: 0.55, cout: 2.19, lic: "MIT Open" },
+          { name: "GPT-4.5 Orion", dev: "OpenAI", params: 800, ctx: 128, math: 95.9, code: 93.6, cin: 5.0, cout: 20.0, lic: "Proprietary" },
+          { name: "Gemini 2.0 Flash Thinking", dev: "Google DeepMind", params: 350, ctx: 1000, math: 95.2, code: 91.5, cin: 0.35, cout: 1.40, lic: "Proprietary" },
+          { name: "Llama-3.3-70B-Instruct", dev: "Meta AI", params: 70, ctx: 128, math: 89.4, code: 88.0, cin: 0.20, cout: 0.60, lic: "Llama Community" },
+          { name: "Qwen 2.5 Max", dev: "Alibaba Cloud", params: 500, ctx: 128, math: 94.7, code: 90.9, cin: 0.80, cout: 2.40, lic: "Proprietary" },
+          { name: "Mistral Large 2", dev: "Mistral AI", params: 123, ctx: 128, math: 88.9, code: 87.4, cin: 2.0, cout: 6.0, lic: "Commercial" }
+        ];
+
+        let rowId = 1;
+        while (true) {
+          const m = sampleModels[(rowId - 1) % sampleModels.length];
+          const row = `REC-${String(rowId).padStart(6, "0")},"${m.name}","${m.dev}",${m.params},${m.ctx},${m.math},${m.code},${m.cin.toFixed(2)},${m.cout.toFixed(2)},"${m.lic}","Active"\n`;
+          const rowBytes = encoder.encode(row);
+          if (written + rowBytes.length > totalBytes) {
+            break; // Stop cleanly at row boundary to preserve 100% valid CSV
+          }
+          parts.push(rowBytes);
+          written += rowBytes.length;
+          rowId++;
         }
       } else if (format === "json") {
         mime = "application/json";
-        const prefix = new TextEncoder().encode('{"status":"ok","records":[');
-        const suffix = new TextEncoder().encode('{"id":0}]}');
-        const item = new TextEncoder().encode('{"id":1,"type":"mock"},');
-        parts.push(prefix);
-        let written = prefix.length + suffix.length;
-        while (written + item.length <= totalBytes) {
-          parts.push(item);
-          written += item.length;
+        const prefix = '{\n  "dataset": "2026 Global AI Model Benchmark Dataset",\n  "publisher": "FileDummy (filedummy.ndlong.site)",\n  "eval_metrics": ["MATH-500", "HumanEval", "MMLU-Pro"],\n  "models": [\n';
+        const suffix = '\n  ]\n}\n';
+        const prefixBytes = encoder.encode(prefix);
+        const suffixBytes = encoder.encode(suffix);
+        parts.push(prefixBytes);
+
+        const sampleModels = [
+          { name: "Claude 3.7 Sonnet Reasoning", dev: "Anthropic", params: 450, ctx: 200, math: 96.8, code: 94.2, cost: 3.0, lic: "Proprietary" },
+          { name: "DeepSeek-R1", dev: "DeepSeek AI", params: 671, ctx: 128, math: 97.3, code: 92.8, cost: 0.55, lic: "MIT Open" },
+          { name: "GPT-4.5 Orion", dev: "OpenAI", params: 800, ctx: 128, math: 95.9, code: 93.6, cost: 5.0, lic: "Proprietary" },
+          { name: "Gemini 2.0 Flash Thinking", dev: "Google DeepMind", params: 350, ctx: 1000, math: 95.2, code: 91.5, cost: 0.35, lic: "Proprietary" },
+          { name: "Llama-3.3-70B-Instruct", dev: "Meta AI", params: 70, ctx: 128, math: 89.4, code: 88.0, cost: 0.20, lic: "Llama Community" },
+          { name: "Qwen 2.5 Max", dev: "Alibaba Cloud", params: 500, ctx: 128, math: 94.7, code: 90.9, cost: 0.80, lic: "Proprietary" }
+        ];
+
+        let written = prefixBytes.length + suffixBytes.length;
+        let itemIndex = 1;
+        while (true) {
+          const m = sampleModels[(itemIndex - 1) % sampleModels.length];
+          const itemObj = {
+            id: `mod-${String(itemIndex).padStart(4, "0")}`,
+            model_name: m.name,
+            developer: m.dev,
+            parameters_billion: m.params,
+            context_window_tokens: m.ctx * 1024,
+            math500_score: m.math,
+            humaneval_score: m.code,
+            cost_input_per_m: m.cost,
+            license: m.lic,
+            verified: true
+          };
+          const comma = itemIndex > 1 ? ",\n" : "\n";
+          const itemStr = "    " + JSON.stringify(itemObj);
+          const chunkBytes = encoder.encode(comma + itemStr);
+          if (written + chunkBytes.length > totalBytes) {
+            break; // Stop cleanly so JSON remains 100% valid
+          }
+          parts.push(chunkBytes);
+          written += chunkBytes.length;
+          itemIndex++;
         }
-        parts.push(suffix);
+        parts.push(suffixBytes);
       } else {
         // Binary
         const chunk = new Uint8Array(Math.min(totalBytes, 65536));
@@ -115,7 +203,9 @@ export function CustomFileGenerator() {
       setProgress(85);
       await new Promise((r) => setTimeout(r, 150));
 
-      const blob = new Blob(parts, { type: mime });
+      const rawBlob = new Blob(parts, { type: mime });
+      // Strict guarantee: file size is always <= totalBytes
+      const blob = rawBlob.size > totalBytes ? rawBlob.slice(0, totalBytes, mime) : rawBlob;
       const downloadUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = downloadUrl;

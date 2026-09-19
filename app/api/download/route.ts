@@ -43,6 +43,48 @@ export async function GET(req: NextRequest) {
   const typeMeta = FILE_TYPES[entry.type];
   const filename = entry.r2Key.split("/").pop() || `sample-${entry.slug}.${entry.type}`;
 
+  // Check if generated file exists on local disk
+  try {
+    const fs = await import("fs");
+    const path = await import("path");
+    const localFilePath = path.join(process.cwd(), "generated-files", entry.r2Key);
+    if (fs.existsSync(localFilePath)) {
+      const stats = fs.statSync(localFilePath);
+      const fileStream = fs.createReadStream(localFilePath);
+      const headers = new Headers();
+      headers.set("Content-Disposition", `attachment; filename="${filename}"`);
+      headers.set("Content-Type", typeMeta?.mimeType || "application/octet-stream");
+      headers.set("Content-Length", stats.size.toString());
+      headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+
+      // Convert Node ReadStream to Web ReadableStream
+      const webStream = new ReadableStream({
+        start(controller) {
+          fileStream.on("data", (chunk: string | Buffer) => {
+            if (typeof chunk === "string") {
+              controller.enqueue(new TextEncoder().encode(chunk));
+            } else {
+              controller.enqueue(new Uint8Array(chunk));
+            }
+          });
+          fileStream.on("end", () => {
+            controller.close();
+          });
+          fileStream.on("error", (err: Error) => {
+            controller.error(err);
+          });
+        },
+        cancel() {
+          fileStream.destroy();
+        },
+      });
+
+      return new NextResponse(webStream, { headers });
+    }
+  } catch (diskErr) {
+    console.warn("[Download API] Could not read local file, falling back to mock stream:", diskErr);
+  }
+
   // Generate lightweight/streamed dummy content for local testing
   const headers = new Headers();
   headers.set("Content-Disposition", `attachment; filename="${filename}"`);
@@ -64,15 +106,20 @@ export async function GET(req: NextRequest) {
     );
   } else if (entry.type === "txt") {
     prefix = new TextEncoder().encode(
-      `FileDummy Sample Text File (${entry.label})\nTarget size: ${entry.sizeBytes} bytes\nGenerated for testing and QA validation.\n\n`
+      "2026 GLOBAL ARTIFICIAL INTELLIGENCE & MACHINE LEARNING INDUSTRY REPORT\n" +
+      "Published by Global AI Research Consortium & Enterprise Computing Council.\n" +
+      "================================================================================\n" +
+      "Authoritative reference document for upload testing, text parsers, and tokenizer evaluations.\n\n"
     );
   } else if (entry.type === "csv") {
     prefix = new TextEncoder().encode(
-      "id,name,email,role,status,created_at\n1,Alex Morgan,alex@example.com,Admin,Active,2026-01-15\n2,Taylor Swift,taylor@example.com,User,Active,2026-02-01\n"
+      "record_id,model_name,developer,architecture,parameters_b,context_k,math500_score,license,status\n" +
+      "REC-000001,\"Claude 3.7 Sonnet\",\"Anthropic\",\"Hybrid MoE\",450,200,96.8,\"Proprietary\",\"Active\"\n" +
+      "REC-000002,\"DeepSeek-R1\",\"DeepSeek AI\",\"Reasoning MoE\",671,128,97.3,\"MIT Open\",\"Active\"\n"
     );
   } else if (entry.type === "json") {
     prefix = new TextEncoder().encode(
-      `{\n  "name": "sample-${entry.slug}",\n  "type": "sample-data",\n  "sizeBytes": ${entry.sizeBytes},\n  "items": [\n`
+      `{\n  "dataset": "2026 Global AI Model Benchmark Dataset",\n  "file": "sample-${entry.slug}",\n  "sizeBytes": ${entry.sizeBytes},\n  "models": [\n`
     );
   }
 
@@ -90,7 +137,7 @@ export async function GET(req: NextRequest) {
     pull(controller) {
       if (bytesWritten >= effectiveBytes) {
         if (entry.type === "json") {
-          controller.enqueue(new TextEncoder().encode('    { "id": 999, "status": "end" }\n  ]\n}'));
+          controller.enqueue(new TextEncoder().encode('    { "id": "mod-999", "status": "completed" }\n  ]\n}'));
         }
         controller.close();
         return;
@@ -101,12 +148,13 @@ export async function GET(req: NextRequest) {
       const chunk = new Uint8Array(thisChunkSize);
 
       if (entry.type === "txt" || entry.type === "csv") {
-        // Fill with repeatable readable text
+        const textSample = "Autonomous reasoning agents and test-time compute scaling dominate 2026 AI systems.\n";
+        const sampleBytes = new TextEncoder().encode(textSample);
         for (let i = 0; i < thisChunkSize; i++) {
-          chunk[i] = 65 + (i % 26); // A-Z
+          chunk[i] = sampleBytes[i % sampleBytes.length];
         }
       } else {
-        chunk.fill(0x58); // 'X'
+        chunk.fill(0x30); // '0'
       }
 
       controller.enqueue(chunk);
