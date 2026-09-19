@@ -76,7 +76,7 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Col 3: NDL Ecosystem (Side by side on the same row with Legal & Trust) */}
+          {/* Col 3: NDL Ecosystem (Developer Tools only) */}
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-3 flex items-center gap-1.5">
               <span>NDL Ecosystem</span>
@@ -84,35 +84,16 @@ export function Footer() {
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
                 <a
-                  href="https://click.ndlong.site"
+                  href="https://tools.ndlong.site"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-rose-400 transition-colors flex items-center justify-between group"
+                  className="hover:text-purple-400 transition-colors flex items-center justify-between group"
                 >
-                  <span>Click 2 Top (Game)</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600 group-hover:text-rose-400 transition-colors" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://laisuat.ndlong.site"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-amber-400 transition-colors flex items-center justify-between group"
-                >
-                  <span>Tính Lãi Ngân Hàng</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600 group-hover:text-amber-400 transition-colors" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://tygia.ndlong.site"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-emerald-400 transition-colors flex items-center justify-between group"
-                >
-                  <span>Tỷ Giá & Vàng Hub</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600 group-hover:text-emerald-400 transition-colors" />
+                  <div>
+                    <span className="text-white group-hover:text-purple-400 transition-colors">NDL ToolsKit</span>
+                    <span className="block text-[11px] text-slate-500">Developer Toolbox &amp; Utilities</span>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-purple-400 transition-colors flex-shrink-0" />
                 </a>
               </li>
               <li>
@@ -122,8 +103,25 @@ export function Footer() {
                   rel="noreferrer"
                   className="hover:text-cyan-400 transition-colors flex items-center justify-between group"
                 >
-                  <span>NDL Image Tools</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600 group-hover:text-cyan-400 transition-colors" />
+                  <div>
+                    <span className="text-white group-hover:text-cyan-400 transition-colors">NDL Image Tools</span>
+                    <span className="block text-[11px] text-slate-500">Image Compressor &amp; WebP</span>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-cyan-400 transition-colors flex-shrink-0" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://link.ndlong.site"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-blue-400 transition-colors flex items-center justify-between group"
+                >
+                  <div>
+                    <span className="text-white group-hover:text-blue-400 transition-colors">NDL Short Link</span>
+                    <span className="block text-[11px] text-slate-500">Fast URL Shortener &amp; API</span>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-400 transition-colors flex-shrink-0" />
                 </a>
               </li>
               <li>
@@ -131,9 +129,13 @@ export function Footer() {
                   href="https://ndlong.site"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-blue-400 hover:text-blue-300 font-semibold transition-colors flex items-center gap-1"
+                  className="hover:text-indigo-400 transition-colors flex items-center justify-between group"
                 >
-                  <span>ndlong.site Portal →</span>
+                  <div>
+                    <span className="text-white group-hover:text-indigo-400 transition-colors">NDL Developer Hub</span>
+                    <span className="block text-[11px] text-slate-500">Engineering Portfolio &amp; Tools</span>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-indigo-400 transition-colors flex-shrink-0" />
                 </a>
               </li>
             </ul>
@@ -182,11 +184,7 @@ export function Footer() {
         {/* Centered NDL Copyright */}
         <div className="mt-12 pt-6 border-t border-slate-800/80 flex items-center justify-center text-center text-xs text-slate-500">
           <p>
-            © {new Date().getFullYear()} FileDummy (
-            <a href="https://filedummy.ndlong.site" className="hover:text-slate-400">
-              filedummy.ndlong.site
-            </a>
-            ) — Part of{" "}
+            © {new Date().getFullYear()} FileDummy — Part of{" "}
             <a
               href="https://ndlong.site"
               target="_blank"

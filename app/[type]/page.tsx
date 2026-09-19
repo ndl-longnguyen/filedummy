@@ -198,7 +198,7 @@ export default async function CategoryPage({
       </section>
 
       {/* Contextual NDL Cross-Promotion Banner */}
-      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "game"} />
+      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "default"} />
 
       {/* Other Categories */}
       <section className="space-y-4">

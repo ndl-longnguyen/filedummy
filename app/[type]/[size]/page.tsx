@@ -250,7 +250,7 @@ export default async function FileDetailPage({
       </div>
 
       {/* Contextual NDL Ecosystem Promo */}
-      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "game"} />
+      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "default"} />
 
       {/* Sibling Sizes of the same file type */}
       {siblingFiles.length > 0 && (

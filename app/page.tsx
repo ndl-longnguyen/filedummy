@@ -301,7 +301,7 @@ export default function HomePage() {
                 Explore More from the NDL Ecosystem
               </h2>
               <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                A connected suite of web utilities, competitive games, and financial calculators by Nguyen Dai Long.
+                A connected suite of developer tools, image utilities, and web engineering tools by Nguyen Dai Long.
               </p>
             </div>
             <a
@@ -316,7 +316,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {NDL_ECOSYSTEM_APPS.filter((a) => !a.isCurrent).slice(0, 4).map((app) => (
+            {NDL_ECOSYSTEM_APPS.filter((a) => !a.isCurrent).map((app) => (
               <a
                 key={app.id}
                 href={app.url}
