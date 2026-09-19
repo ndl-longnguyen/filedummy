@@ -130,6 +130,65 @@ export function Footer() {
               </li>
             </ul>
           </div>
+
+          {/* NDL Ecosystem */}
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-3 flex items-center gap-1.5">
+              <span>NDL Ecosystem</span>
+            </h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a
+                  href="https://click.ndlong.site"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-rose-400 transition-colors flex items-center gap-1"
+                >
+                  <span>Click 2 Top (Game)</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://laisuat.ndlong.site"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-amber-400 transition-colors"
+                >
+                  Tính Lãi Ngân Hàng
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://tygia.ndlong.site"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-emerald-400 transition-colors"
+                >
+                  Tỷ Giá & Vàng Hub
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://image.ndlong.site"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-cyan-400 transition-colors"
+                >
+                  NDL Image Tools
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://ndlong.site"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                >
+                  ndlong.site Portal →
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="mt-12 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">

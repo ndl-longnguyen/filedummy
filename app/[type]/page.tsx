@@ -8,6 +8,7 @@ import { SizeTable } from "@/components/SizeTable";
 import { FileCard } from "@/components/FileCard";
 import { AdUnit } from "@/components/AdUnit";
 import { StructuredData } from "@/components/StructuredData";
+import { CrossPromoBanner } from "@/components/CrossPromoBanner";
 
 export function generateStaticParams() {
   return getAllFileTypes().map((t) => ({ type: t.type }));
@@ -195,6 +196,9 @@ export default async function CategoryPage({
           ))}
         </div>
       </section>
+
+      {/* Contextual NDL Cross-Promotion Banner */}
+      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "game"} />
 
       {/* Other Categories */}
       <section className="space-y-4">

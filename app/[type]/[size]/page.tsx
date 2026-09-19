@@ -19,6 +19,7 @@ import { DownloadButton } from "@/components/DownloadButton";
 import { CliSnippet } from "@/components/CliSnippet";
 import { AdUnit } from "@/components/AdUnit";
 import { StructuredData } from "@/components/StructuredData";
+import { CrossPromoBanner } from "@/components/CrossPromoBanner";
 
 export function generateStaticParams() {
   return FILES.map((f) => ({
@@ -262,6 +263,9 @@ export default async function FileDetailPage({
           <AdUnit slot="6677889900" format="rectangle" label="Advertisement" />
         </div>
       </div>
+
+      {/* Contextual NDL Ecosystem Promo */}
+      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "game"} />
 
       {/* Sibling Sizes of the same file type */}
       {siblingFiles.length > 0 && (

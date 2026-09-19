@@ -3,8 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Sparkles, Sliders, Menu, X } from "lucide-react";
+import { Sparkles, Sliders, Menu, X, Globe } from "lucide-react";
 import { useState } from "react";
+import { NdlAppLauncher } from "./NdlEcosystemBar";
+import { NDL_PORTAL_URL } from "@/lib/ecosystem";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -71,25 +73,28 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Action Button: Custom Generator */}
-        <div className="hidden sm:flex items-center gap-3">
+        {/* Action Buttons: NDL App Launcher & Custom Generator */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Subtle NDL App Launcher (compact 9-dots icon, zero top-bar clutter) */}
+          <NdlAppLauncher />
+
           <Link
             href="/generator"
-            className="flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 hover:from-blue-500 hover:to-indigo-500 hover:shadow-lg transition-all"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 hover:from-blue-500 hover:to-indigo-500 hover:shadow-lg transition-all"
           >
             <Sliders className="w-3.5 h-3.5" />
             <span>Custom Generator</span>
           </Link>
-        </div>
 
-        {/* Mobile menu trigger */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
-          aria-label="Toggle navigation menu"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+          {/* Mobile menu trigger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu dropdown */}
@@ -107,14 +112,28 @@ export function Navbar() {
               </Link>
             ))}
           </div>
-          <Link
-            href="/generator"
-            onClick={() => setMobileMenuOpen(false)}
-            className="w-full flex items-center justify-center gap-2 text-xs font-semibold py-2.5 rounded-lg bg-blue-600 text-white"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Custom Dummy Generator</span>
-          </Link>
+
+          <div className="space-y-2 pt-1">
+            <Link
+              href="/generator"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 text-xs font-semibold py-2.5 rounded-lg bg-blue-600 text-white"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Custom Dummy Generator</span>
+            </Link>
+
+            <a
+              href={NDL_PORTAL_URL}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 text-xs font-semibold py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700"
+            >
+              <Globe className="w-3.5 h-3.5 text-blue-400" />
+              <span>Explore NDL Apps Hub (8+ tools)</span>
+            </a>
+          </div>
         </div>
       )}
     </header>
