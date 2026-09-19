@@ -1,4 +1,5 @@
 *
 !generate-files.sh
 !generate_authentic_files.py
+!upload-to-r2.mjs
 !.gitignore
