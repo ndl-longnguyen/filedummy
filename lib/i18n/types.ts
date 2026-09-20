@@ -115,4 +115,31 @@ export interface Dictionary {
     testFiles: string;
     allArticles: string;
   };
+  interactions: {
+    reactionsTitle: string;
+    reactionsSubtitle: string;
+    like: string;
+    love: string;
+    rocket: string;
+    insight: string;
+    fire: string;
+    commentsTitle: string;
+    commentsSubtitle: string;
+    quickLoginTitle: string;
+    quickLoginDesc: string;
+    signInWithGithub: string;
+    signInWithGoogle: string;
+    orJoinAsGuest: string;
+    guestNamePlaceholder: string;
+    joinGuestBtn: string;
+    loggedInAs: string;
+    signOut: string;
+    leaveCommentPlaceholder: string;
+    submitComment: string;
+    submitting: string;
+    loginToComment: string;
+    noCommentsYet: string;
+    deleteComment: string;
+    previewModeNotice: string;
+  };
 }

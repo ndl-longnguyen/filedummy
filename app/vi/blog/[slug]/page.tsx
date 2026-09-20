@@ -78,13 +78,14 @@ export default async function VietnameseBlogPostPage({ params }: PageProps) {
     datePublished: post.date,
     dateModified: post.date,
     author: {
-      "@type": "Organization",
-      name: "FileDummy",
-      url: SITE_URL,
+      "@type": "Person",
+      name: "Nguyễn Đại Long",
+      url: "https://ndlong.site",
+      jobTitle: "Backend Lead & Kỹ sư Hệ thống Phân tán",
     },
     publisher: {
       "@type": "Organization",
-      name: "FileDummy",
+      name: "FileDummy (NDL Ecosystem)",
       url: SITE_URL,
     },
     mainEntityOfPage: {

@@ -74,13 +74,14 @@ export default async function BlogPostPage({ params }: PageProps) {
     datePublished: post.date,
     dateModified: post.date,
     author: {
-      "@type": "Organization",
-      name: "FileDummy",
-      url: SITE_URL,
+      "@type": "Person",
+      name: "Nguyen Dai Long",
+      url: "https://ndlong.site",
+      jobTitle: "Backend Lead & Distributed Systems Engineer",
     },
     publisher: {
       "@type": "Organization",
-      name: "FileDummy",
+      name: "FileDummy (NDL Ecosystem)",
       url: SITE_URL,
     },
     mainEntityOfPage: {

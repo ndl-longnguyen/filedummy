@@ -3,6 +3,8 @@ import { Clock, Calendar, Tag, Home, ChevronRight, BookOpen } from "lucide-react
 import type { BlogPost } from "@/lib/blog";
 import type { Locale } from "@/lib/i18n/types";
 import { AdUnit } from "./AdUnit";
+import { AuthorBox } from "./AuthorBox";
+import { BlogInteractions } from "./BlogInteractions";
 
 interface BlogLayoutProps {
   post: BlogPost;
@@ -113,6 +115,14 @@ export function BlogLayout({ post, children, locale = "en" }: BlogLayoutProps) {
 
             {/* Ad — after content */}
             <AdUnit slot="blog-bottom" className="mt-8" label={isVi ? "Quảng cáo" : "Advertisement"} />
+
+            {/* Author Box & Content Originality (E-E-A-T) */}
+            <div className="mt-10">
+              <AuthorBox locale={locale} />
+            </div>
+
+            {/* Blog Reactions & Community Comments (via Supabase) */}
+            <BlogInteractions postSlug={post.slug} locale={locale} />
 
             {/* FAQ Section */}
             {post.faqItems && post.faqItems.length > 0 && (
