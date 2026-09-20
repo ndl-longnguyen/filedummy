@@ -116,12 +116,8 @@ export function HomePageContent({ locale = "en" }: { locale?: Locale }) {
             </Link>
           </div>
 
-          {/* Trust badges */}
+          {/* Technical highlights */}
           <div className="pt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs text-slate-400">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>{isVi ? "100% Sạch & Không Chứa Mã Độc" : "100% Virus & Malware Free"}</span>
-            </div>
             <div className="flex items-center gap-1.5">
               <HardDrive className="w-4 h-4 text-cyan-400" />
               <span>{isVi ? "Dung Lượng Byte Chuẩn Xác" : "Exact Byte Sizes"}</span>

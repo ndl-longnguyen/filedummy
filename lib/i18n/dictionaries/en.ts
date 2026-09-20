@@ -15,8 +15,8 @@ export const enDictionary: Dictionary = {
     globalEdge: "Cloudflare R2 Global Edge",
     virusFree: "100% Virus & Malware Free",
     sampleFilesTitle: "Sample Files",
-    customGenerator: "⚡ Custom Size Generator →",
-    techBlog: "📚 Developer Technical Blog →",
+    customGenerator: "Custom Size Generator →",
+    techBlog: "Developer Technical Blog →",
     ecosystemTitle: "NDL Ecosystem",
     legalTitle: "Resources & Legal",
     aboutUs: "About Us",
@@ -48,11 +48,11 @@ export const enDictionary: Dictionary = {
     articles: "articles",
   },
   home: {
-    badge: "High-Speed Global CDN Downloads via Cloudflare R2",
+    badge: "Standardized Sample & Dummy Files for QA & Testing",
     heroTitle: "Free Sample Files & Dummy Generator for",
     heroHighlight: "Testing & QA",
     heroSubtitle:
-      "Download standardized dummy files in exact sizes (100KB to 1GB) across PDF, DOCX, TXT, JPG, PNG, CSV, JSON, and ZIP formats. Zero malware, valid file headers, and lightning-fast direct CDN links.",
+      "Download standardized dummy files in exact sizes (100KB to 1GB) across PDF, DOCX, TXT, JPG, PNG, CSV, JSON, and ZIP formats. Authentic file headers, valid magic signatures, and direct CLI snippets.",
     ctaBrowse: "Browse Formats",
     ctaGenerator: "Create Custom File",
     popularTitle: "Most Popular Sample Downloads",
@@ -64,10 +64,10 @@ export const enDictionary: Dictionary = {
     features: {
       f1Title: "Valid Signatures & Headers",
       f1Desc:
-        "Files include authentic magic bytes (%PDF, PK..), passing strict server-side MIME validators and antivirus engines.",
-      f2Title: "Global Cloudflare R2 Edge",
+        "Files include authentic magic bytes (%PDF, PK..), passing strict server-side MIME validators and automated linters.",
+      f2Title: "High-Bandwidth Performance",
       f2Desc:
-        "Zero download latency and no throttling. Hosted directly on Cloudflare edge storage for multi-gigabit downloads.",
+        "Low latency and dependable throughput. Ready for multi-thread download benchmarks and system pipeline tests.",
       f3Title: "Ready for CI/CD & Testing",
       f3Desc:
         "Every file includes cURL, Wget, Python, and Node.js snippets for automated Playwright, Cypress, and Postman pipelines.",

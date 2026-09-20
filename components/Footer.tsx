@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ShieldCheck, Zap, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export function Footer() {
   const pathname = usePathname() || "/";
@@ -34,16 +34,6 @@ export function Footer() {
                 ? "Nền tảng tải tệp mẫu và file dummy chuẩn hóa hàng đầu. Cung cấp file sạch, chuẩn cấu trúc cho lập trình viên và kỹ sư QA toàn cầu."
                 : "Global sample and dummy file download platform. Clean, standardized files in multiple formats and sizes for developers, QA testers, and designers worldwide."}
             </p>
-            <div className="space-y-1.5 text-xs text-slate-500 pt-1">
-              <span className="flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />{" "}
-                {isVi ? "Cloudflare R2 Toàn Cầu" : "Cloudflare R2 Global Edge"}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />{" "}
-                {isVi ? "100% Sạch & An Toàn" : "100% Virus & Malware Free"}
-              </span>
-            </div>
           </div>
 
           {/* Col 2: Sample Files */}
@@ -82,13 +72,13 @@ export function Footer() {
                 href={`${prefix}/generator`}
                 className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors flex items-center gap-1"
               >
-                <span>{isVi ? "⚡ Tạo Dung Lượng Tùy Chỉnh →" : "⚡ Custom Size Generator →"}</span>
+                <span>{isVi ? "Tạo Dung Lượng Tùy Chỉnh →" : "Custom Size Generator →"}</span>
               </Link>
               <Link
                 href={`${prefix}/blog`}
                 className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors flex items-center gap-1"
               >
-                <span>{isVi ? "📚 Blog Kỹ Thuật Lập Trình →" : "📚 Developer Technical Blog →"}</span>
+                <span>{isVi ? "Blog Kỹ Thuật Lập Trình →" : "Developer Technical Blog →"}</span>
               </Link>
             </div>
           </div>
@@ -206,7 +196,7 @@ export function Footer() {
         {/* Centered NDL Copyright */}
         <div className="mt-12 pt-6 border-t border-slate-800/80 flex items-center justify-center text-center text-xs text-slate-500">
           <p>
-            © {new Date().getFullYear()} FileDummy — {isVi ? "Một sản phẩm thuộc" : "Part of"}{" "}
+            © {new Date().getFullYear()} FileDummy — Part of{" "}
             <a
               href="https://ndlong.site"
               target="_blank"
@@ -215,7 +205,7 @@ export function Footer() {
             >
               NDL Ecosystem
             </a>
-            . {isVi ? "Bảo lưu mọi quyền." : "All rights reserved."}
+            . All rights reserved.
           </p>
         </div>
       </div>

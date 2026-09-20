@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
   HardDrive,
-  ShieldCheck,
-  Zap,
   ArrowLeft,
   ArrowRight,
   FileCode,
@@ -117,9 +115,8 @@ export function FileDetailPageContent({
               <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300">
                 {formatBytes(file.sizeBytes)}
               </span>
-              <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-emerald-400 flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5" />{" "}
-                {isVi ? "Sạch / Đã Kiểm Định" : "Clean / Verified"}
+              <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-400">
+                {file.sizeBytes.toLocaleString()} B
               </span>
             </div>
 
@@ -144,16 +141,8 @@ export function FileDetailPageContent({
               locale={locale}
             />
 
-            <div className="flex items-center justify-center gap-4 text-[11px] text-slate-500 pt-1">
-              <span className="flex items-center gap-1">
-                <Zap className="w-3 h-3 text-amber-400" />{" "}
-                {isVi ? "Đường Truyền CDN Siêu Tốc" : "Direct High-Speed CDN"}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-400" />{" "}
-                {isVi ? "Không Cần Đăng Ký" : "No signup required"}
-              </span>
+            <div className="flex items-center justify-center text-[11px] text-slate-500 pt-1">
+              <span>{isVi ? "Tải trực tiếp không qua trung gian" : "Direct file stream download"}</span>
             </div>
           </div>
 
@@ -207,16 +196,6 @@ export function FileDetailPageContent({
               <div className="flex justify-between py-2">
                 <span className="text-slate-400">{isVi ? "Ký Hiệu Magic Bytes:" : "Magic Bytes:"}</span>
                 <span className="font-mono text-blue-400">{meta.magicBytes}</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-slate-400">{isVi ? "Lưu Trữ / CDN:" : "Hosting CDN:"}</span>
-                <span className="text-slate-200">Cloudflare R2 Global Edge</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-slate-400">{isVi ? "Trạng Thái Kiểm Định:" : "Verification:"}</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5" /> 100% Virus Free
-                </span>
               </div>
             </div>
           </div>

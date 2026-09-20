@@ -15,8 +15,8 @@ export const viDictionary: Dictionary = {
     globalEdge: "Mạng Phân Phối Toàn Cầu Cloudflare R2",
     virusFree: "100% Sạch & Không Chứa Mã Độc",
     sampleFilesTitle: "Danh Mục Tệp Mẫu",
-    customGenerator: "⚡ Công Cụ Tạo File Dung Lượng Tùy Chỉnh →",
-    techBlog: "📚 Blog Kỹ Thuật Lập Trình Viên →",
+    customGenerator: "Công Cụ Tạo File Dung Lượng Tùy Chỉnh →",
+    techBlog: "Blog Kỹ Thuật Lập Trình Viên →",
     ecosystemTitle: "Hệ Sinh Thái NDL",
     legalTitle: "Tài Nguyên & Pháp Lý",
     aboutUs: "Về Chúng Tôi",
@@ -48,11 +48,11 @@ export const viDictionary: Dictionary = {
     articles: "bài viết",
   },
   home: {
-    badge: "Tải Tốc Độ Cao Qua CDN Toàn Cầu Cloudflare R2",
+    badge: "Kho Tệp Mẫu Chuẩn Hoá Cho Kỹ Sư Phần Mềm & QA",
     heroTitle: "Kho File Mẫu & Tạo Dummy File Cho",
     heroHighlight: "Testing & QA",
     heroSubtitle:
-      "Tải file mẫu chuẩn hóa với kích thước chính xác từ 100KB đến 1GB cho các định dạng PDF, DOCX, TXT, JPG, PNG, CSV, JSON và ZIP. Cam kết 100% không virus, cấu trúc header hợp lệ và đường truyền CDN siêu tốc.",
+      "Tải file mẫu chuẩn hóa với kích thước chính xác từ 100KB đến 1GB cho các định dạng PDF, DOCX, TXT, JPG, PNG, CSV, JSON và ZIP. Cấu trúc header hợp lệ, magic bytes chuẩn xác và hỗ trợ tải trực tiếp qua CLI.",
     ctaBrowse: "Xem Định Dạng",
     ctaGenerator: "Tạo File Tùy Chỉnh",
     popularTitle: "Các File Mẫu Được Tải Nhiều Nhất",
@@ -64,10 +64,10 @@ export const viDictionary: Dictionary = {
     features: {
       f1Title: "Header & Magic Bytes Chuẩn",
       f1Desc:
-        "File chứa magic bytes chuẩn xác (%PDF, PK..), vượt qua các hệ thống kiểm tra MIME nghiêm ngặt và công cụ quét virus.",
-      f2Title: "Hạ Tầng Cloudflare R2 Edge",
+        "File chứa magic bytes chuẩn xác (%PDF, PK..), vượt qua các hệ thống kiểm tra MIME nghiêm ngặt và công cụ quét tự động.",
+      f2Title: "Băng Thông Tốc Độ Cao",
       f2Desc:
-        "Không độ trễ và không bóp băng thông. File được lưu trữ tại edge Cloudflare cho tốc độ tải nhiều Gigabit.",
+        "Đảm bảo độ trễ thấp và băng thông ổn định. Phục vụ trực tiếp cho các tác vụ tải file đa luồng và benchmark hiệu năng.",
       f3Title: "Tích Hợp Sẵn Cho CI/CD & Test",
       f3Desc:
         "Mỗi file đều có sẵn lệnh cURL, Wget, Python và Node.js để chạy tự động trong Playwright, Cypress và Postman.",

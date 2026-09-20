@@ -54,9 +54,9 @@ export default function VietnameseAboutPage() {
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
             <ShieldCheck className="w-5 h-5" />
           </div>
-          <h3 className="text-base font-bold text-white">100% Sạch &amp; Không Virus</h3>
+          <h3 className="text-base font-bold text-white">Cấu Trúc Tệp Hợp Lệ</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Mọi tệp tin được khởi tạo trong môi trường build cô lập với nội dung đệm tiêu chuẩn (Lorem Ipsum, bộ đệm nhị phân sạch). Tuyệt đối không chứa macro, file thực thi hay mã theo dõi.
+            Mọi tệp tin được khởi tạo trong môi trường build cô lập với nội dung đệm tiêu chuẩn và magic bytes hợp lệ. Không chứa macro, file thực thi hay mã theo dõi.
           </p>
         </div>
 
@@ -74,9 +74,9 @@ export default function VietnameseAboutPage() {
           <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
             <Zap className="w-5 h-5" />
           </div>
-          <h3 className="text-base font-bold text-white">Mạng Lưới Cloudflare R2 Toàn Cầu</h3>
+          <h3 className="text-base font-bold text-white">Hạ Tầng Lưu Trữ Tốc Độ Cao</h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Dữ liệu được lưu trữ trên Cloudflare R2 Object Storage và cache tại hơn 300 trung tâm dữ liệu toàn cầu, đem lại tốc độ tải xuống đa luồng cực nhanh mà không bị bóp băng thông.
+            Dữ liệu được phân phối trực tiếp từ hạ tầng edge cache độ trễ thấp, đem lại tốc độ truyền tải nhanh chóng cho các bài đo benchmark và kiểm thử tải lớn.
           </p>
         </div>
 
