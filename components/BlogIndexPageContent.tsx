@@ -40,14 +40,13 @@ export function BlogIndexPageContent({ locale = "en" }: BlogIndexPageContentProp
           <section key={cluster} className="mb-14">
             {/* Cluster header */}
             <div className="flex items-center gap-3 mb-5">
-              <span className="text-xl">{meta.icon}</span>
               <div>
-                <h2 className={`text-base font-bold bg-gradient-to-r ${meta.color} bg-clip-text text-transparent`}>
-                  {isVi ? `Chủ đề ${cluster}` : `Cluster ${cluster}`} — {meta.name}
+                <h2 className={`text-lg font-bold bg-gradient-to-r ${meta.color} bg-clip-text text-transparent`}>
+                  {meta.name}
                 </h2>
                 <p className="text-xs text-slate-500">{meta.description}</p>
               </div>
-              <span className="ml-auto text-[10px] font-medium text-slate-500 bg-slate-800/60 px-2 py-0.5 rounded-full border border-slate-700/40">
+              <span className="ml-auto text-[10px] font-medium text-slate-500 bg-slate-800/60 px-2.5 py-1 rounded-full border border-slate-700/40">
                 {posts.length} {isVi ? "bài viết" : "articles"}
               </span>
             </div>

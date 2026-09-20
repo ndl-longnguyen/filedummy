@@ -146,10 +146,17 @@ export function CategoryPageContent({ type, locale = "en" }: CategoryPageContent
       </section>
 
       {/* Visual Cards Grid */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-bold text-white tracking-tight">
-          {isVi ? `Tải Từng Tệp ${displayName} Riêng Lẻ` : `Individual ${meta.name} Downloads`}
-        </h2>
+      <section className="space-y-5">
+        <div>
+          <h2 className="text-2xl font-bold text-white tracking-tight">
+            {isVi ? `Danh Sách Tệp Mẫu ${displayName}` : `All ${meta.name} Sample Files`}
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            {isVi
+              ? `Chọn dung lượng phù hợp và tải trực tiếp qua CDN Cloudflare R2 tốc độ cao hoặc xem chi tiết mã lệnh.`
+              : `Choose a file size and download directly via high-speed Cloudflare R2 CDN or view developer CLI commands.`}
+          </p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {files.map((file) => (
             <FileCard key={file.r2Key} file={file} locale={locale} />

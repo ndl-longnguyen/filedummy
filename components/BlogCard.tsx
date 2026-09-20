@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Clock, TrendingUp, BookOpen } from "lucide-react";
+import { Clock, Calendar } from "lucide-react";
 import type { BlogPost } from "@/lib/blog";
 import type { Locale } from "@/lib/i18n/types";
 
@@ -12,12 +12,11 @@ export function BlogCard({ post, locale = "en" }: BlogCardProps) {
   const isVi = locale === "vi";
   const prefix = isVi ? "/vi" : "";
 
-  const kdColor =
-    post.keywordDifficulty <= 15
-      ? "text-emerald-400"
-      : post.keywordDifficulty <= 25
-      ? "text-amber-400"
-      : "text-red-400";
+  const dateFormatted = new Date(post.date).toLocaleDateString(isVi ? "vi-VN" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
   return (
     <Link
@@ -31,11 +30,10 @@ export function BlogCard({ post, locale = "en" }: BlogCardProps) {
         {/* Cluster badge */}
         <div className="flex items-center gap-2 mb-3">
           <span
-            className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gradient-to-r ${post.clusterColor} text-white`}
+            className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-gradient-to-r ${post.clusterColor} text-white`}
           >
-            {isVi ? "Chủ đề" : "Cluster"} {post.cluster}
+            {post.clusterName}
           </span>
-          <span className="text-[10px] text-slate-500 truncate">{post.clusterName}</span>
         </div>
 
         {/* Title */}
@@ -61,21 +59,18 @@ export function BlogCard({ post, locale = "en" }: BlogCardProps) {
         </div>
 
         {/* Meta row */}
-        <div className="flex items-center justify-between text-[10px] text-slate-500 pt-3 border-t border-slate-800/60">
-          <span className="flex items-center gap-1">
-            <Clock className="w-3 h-3" />
+        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-3 border-t border-slate-800/60">
+          <span className="flex items-center gap-1.5">
+            <Clock className="w-3 h-3 text-slate-500" />
             {post.readingTime} {isVi ? "phút đọc" : "min read"}
           </span>
-          <span className="flex items-center gap-1">
-            <BookOpen className="w-3 h-3" />
-            {(post.wordCount / 1000).toFixed(1)}k {isVi ? "từ" : "words"}
-          </span>
-          <span className={`flex items-center gap-1 font-medium ${kdColor}`}>
-            <TrendingUp className="w-3 h-3" />
-            KD {post.keywordDifficulty}
+          <span className="flex items-center gap-1.5 text-slate-500">
+            <Calendar className="w-3 h-3 text-slate-500" />
+            {dateFormatted}
           </span>
         </div>
       </div>
     </Link>
   );
 }
+

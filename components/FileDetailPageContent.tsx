@@ -128,12 +128,6 @@ export function FileDetailPageContent({
                 ? `Tải Tệp Mẫu ${displayName} ${file.label}`
                 : `Download Sample ${file.label} ${meta.name} File`}
             </h1>
-
-            <p className="text-sm text-slate-300 leading-relaxed">
-              {isVi
-                ? `Tải tệp mẫu ${displayName} chính xác ${file.label} (${file.sizeBytes.toLocaleString()} bytes). Cấu trúc chuẩn hóa, đường truyền Cloudflare R2 edge không giới hạn băng thông.`
-                : file.description}
-            </p>
           </div>
 
           {/* High-conversion Interstitial Download CTA */}

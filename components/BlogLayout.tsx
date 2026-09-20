@@ -182,22 +182,6 @@ export function BlogLayout({ post, children, locale = "en" }: BlogLayoutProps) {
                   {post.downloadCTA.buttonLabel}
                 </Link>
               </div>
-
-              {/* Volume / KD badge */}
-              <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 space-y-3">
-                <div>
-                  <p className="text-[10px] text-slate-500 uppercase tracking-wider">
-                    {isVi ? "Lượt Tìm Kiếm Tháng" : "Monthly Volume"}
-                  </p>
-                  <p className="text-base font-bold text-white">{post.monthlyVolume.toLocaleString()}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-500 uppercase tracking-wider">
-                    {isVi ? "Độ Khó Từ Khóa" : "Keyword Difficulty"}
-                  </p>
-                  <p className="text-base font-bold text-emerald-400">KD {post.keywordDifficulty}</p>
-                </div>
-              </div>
             </div>
           </aside>
         </div>
