@@ -44,15 +44,10 @@ export function Navbar() {
             />
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-lg text-white tracking-tight group-hover:text-blue-400 transition-colors">
-                FileDummy
-              </span>
-              <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                PRO
-              </span>
-            </div>
-            <span className="text-[11px] text-slate-400 -mt-1 hidden sm:inline">
+            <span className="font-bold text-lg text-white tracking-tight group-hover:text-blue-400 transition-colors">
+              FileDummy
+            </span>
+            <span className="text-[11px] text-slate-400 -mt-0.5 hidden sm:inline">
               {isVi ? "Tệp Mẫu Kiểm Thử" : "Sample File Templates"}
             </span>
           </div>

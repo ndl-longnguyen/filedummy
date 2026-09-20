@@ -44,7 +44,6 @@ export function LanguageSwitcher() {
       >
         <span className="text-sm">{isVi ? "🇻🇳" : "🇬🇧"}</span>
         <span className="font-semibold uppercase tracking-wider">{isVi ? "VI" : "EN"}</span>
-        <span className="text-slate-500 text-[10px]">▾</span>
       </button>
 
       {isOpen && (
@@ -52,11 +51,10 @@ export function LanguageSwitcher() {
           <Link
             href={enPath}
             onClick={() => setIsOpen(false)}
-            className={`flex items-center justify-between px-3.5 py-2 text-xs transition-colors ${
-              !isVi
+            className={`flex items-center justify-between px-3.5 py-2 text-xs transition-colors ${!isVi
                 ? "bg-blue-600/15 text-blue-400 font-semibold"
                 : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2">
               <span className="text-base">🇬🇧</span>
@@ -68,11 +66,10 @@ export function LanguageSwitcher() {
           <Link
             href={viPath}
             onClick={() => setIsOpen(false)}
-            className={`flex items-center justify-between px-3.5 py-2 text-xs transition-colors ${
-              isVi
+            className={`flex items-center justify-between px-3.5 py-2 text-xs transition-colors ${isVi
                 ? "bg-blue-600/15 text-blue-400 font-semibold"
                 : "text-slate-300 hover:text-white hover:bg-slate-800/60"
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2">
               <span className="text-base">🇻🇳</span>

@@ -118,9 +118,21 @@ export function CategoryPageContent({ type, locale = "en" }: CategoryPageContent
               <HardDrive className="w-4 h-4 text-cyan-400" />
               <span>{files.length} {isVi ? "mức dung lượng có sẵn" : "Size Variants Available"}</span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="relative group/tooltip flex items-center gap-1.5 cursor-help">
               <Info className="w-4 h-4 text-blue-400" />
               <span>Magic Bytes: {meta.magicBytes}</span>
+              <div className="absolute left-0 bottom-full mb-2 hidden group-hover/tooltip:block group-focus-within/tooltip:block w-72 p-3 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-slate-700 text-xs text-slate-300 leading-relaxed shadow-2xl shadow-black/80 z-50 pointer-events-none text-left font-normal">
+                <p className="font-semibold text-white mb-1 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                  {isVi ? "Magic Bytes là gì?" : "What are Magic Bytes?"}
+                </p>
+                <p className="text-[11px] text-slate-300">
+                  {isVi
+                    ? "Chữ ký byte ở đầu tệp (file signature) giúp hệ điều hành và server nhận diện chính xác định dạng tệp thực tế, ngăn chặn mã độc giả mạo đuôi tệp."
+                    : "Unique byte signature at the start of a file used by operating systems and servers to verify the true file format, preventing file extension spoofing."}
+                </p>
+                <div className="absolute left-4 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-slate-700" />
+              </div>
             </div>
           </div>
         </div>

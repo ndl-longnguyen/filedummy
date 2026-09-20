@@ -6,6 +6,7 @@ import {
   ArrowRight,
   FileCode,
   Layers,
+  HelpCircle,
 } from "lucide-react";
 import { getFile, FILE_TYPES, getFilesByType, formatBytes, FileType } from "@/lib/files";
 import { VI_FILE_TYPES } from "@/lib/i18n/files-i18n";
@@ -194,8 +195,31 @@ export function FileDetailPageContent({
                   {meta.mimeType}
                 </span>
               </div>
-              <div className="flex justify-between py-2">
-                <span className="text-slate-400">{isVi ? "Ký Hiệu Magic Bytes:" : "Magic Bytes:"}</span>
+              <div className="flex items-center justify-between py-2">
+                <div className="flex items-center gap-1.5 text-slate-400">
+                  <span>{isVi ? "Ký Hiệu Magic Bytes:" : "Magic Bytes:"}</span>
+                  <div className="relative group/tooltip inline-flex items-center">
+                    <button
+                      type="button"
+                      aria-label={isVi ? "Thông tin về Magic Bytes" : "Information about Magic Bytes"}
+                      className="text-slate-500 hover:text-blue-400 transition-colors focus:outline-none"
+                    >
+                      <HelpCircle className="w-3.5 h-3.5 cursor-help" />
+                    </button>
+                    <div className="absolute left-0 bottom-full mb-2 hidden group-hover/tooltip:block group-focus-within/tooltip:block w-72 p-3 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-slate-700 text-xs text-slate-300 leading-relaxed shadow-2xl shadow-black/80 z-50 pointer-events-none">
+                      <p className="font-semibold text-white mb-1 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                        {isVi ? "Magic Bytes là gì?" : "What are Magic Bytes?"}
+                      </p>
+                      <p className="text-[11px] text-slate-300">
+                        {isVi
+                          ? "Chữ ký byte ở đầu tệp (file signature) giúp hệ điều hành và server nhận diện chính xác định dạng tệp thực tế, ngăn chặn mã độc giả mạo đuôi tệp."
+                          : "Unique byte signature at the start of a file used by operating systems and servers to verify the true file format, preventing file extension spoofing."}
+                      </p>
+                      <div className="absolute left-3 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-slate-700" />
+                    </div>
+                  </div>
+                </div>
                 <span className="font-mono text-blue-400">{meta.magicBytes}</span>
               </div>
             </div>
