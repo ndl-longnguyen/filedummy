@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import fs from "fs";
 import path from "path";
-import { getBlogPost } from "@/lib/blog";
+import { getBlogPost, getPublishedPosts } from "@/lib/blog";
 import { BlogLayout } from "@/components/BlogLayout";
 import { StructuredData } from "@/components/StructuredData";
 import { getAlternateLanguages, SITE_URL } from "@/lib/i18n/seo";
@@ -12,15 +12,11 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const contentDir = path.join(process.cwd(), "content/blog");
-  if (!fs.existsSync(contentDir)) return [];
-  const files = fs.readdirSync(contentDir);
-  return files
-    .filter((file) => file.endsWith(".mdx"))
-    .map((file) => ({ slug: file.replace(/\.mdx$/, "") }));
+  return getPublishedPosts().map((post) => ({ slug: post.slug }));
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;

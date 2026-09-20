@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   alternates: getAlternateLanguages("/blog", "en"),
 };
 
+export const revalidate = 3600;
+
 export default function BlogIndexPage() {
   return <BlogIndexPageContent locale="en" />;
 }

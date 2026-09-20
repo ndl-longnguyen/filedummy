@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   alternates: getAlternateLanguages("/blog", "vi"),
 };
 
+export const revalidate = 3600;
+
 export default function VietnameseBlogIndexPage() {
   return <BlogIndexPageContent locale="vi" />;
 }

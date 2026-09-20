@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Clock, Calendar, Tag, Home, ChevronRight } from "lucide-react";
-import type { BlogPost } from "@/lib/blog";
+import { BlogPost, getRelatedPosts } from "@/lib/blog";
 import type { Locale } from "@/lib/i18n/types";
 import { AdUnit } from "./AdUnit";
 import { AuthorBox } from "./AuthorBox";
@@ -145,25 +145,29 @@ export function BlogLayout({ post, children, locale = "en" }: BlogLayoutProps) {
             )}
 
             {/* Related Articles */}
-            {post.relatedArticles && post.relatedArticles.length > 0 && (
-              <section className="mt-10 pt-8 border-t border-slate-800/60">
-                <h2 className="text-base font-bold text-white mb-4">
-                  {isVi ? "Bài Viết Liên Quan" : "Related Articles"}
-                </h2>
-                <div className="space-y-2">
-                  {post.relatedArticles.map((slug) => (
-                    <Link
-                      key={slug}
-                      href={`${prefix}/blog/${slug}`}
-                      className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
-                    >
-                      <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span>{getLocalizedArticleTitle(slug, locale)}</span>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
+            {(() => {
+              const related = getRelatedPosts(post.slug);
+              if (!related.length) return null;
+              return (
+                <section className="mt-10 pt-8 border-t border-slate-800/60">
+                  <h2 className="text-base font-bold text-white mb-4">
+                    {isVi ? "Bài Viết Liên Quan" : "Related Articles"}
+                  </h2>
+                  <div className="space-y-2">
+                    {related.map((item) => (
+                      <Link
+                        key={item.slug}
+                        href={`${prefix}/blog/${item.slug}`}
+                        className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span>{getLocalizedArticleTitle(item.slug, locale)}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              );
+            })()}
           </article>
 
           {/* Desktop sidebar */}

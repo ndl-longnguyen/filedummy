@@ -59,7 +59,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "chunked-file-upload-javascript",
     title: "How to Upload Large Files in Chunks with JavaScript",
     description: "Learn chunked file upload with JavaScript and the Fetch API. Includes working code, error handling, and free 100MB test files to validate your implementation.",
-    date: "2026-10-03", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
+    date: "2026-09-14", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
     tags: ["javascript","file-upload","fetch-api","frontend"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "chunked file upload javascript", monthlyVolume: 4400, keywordDifficulty: 22,
     downloadCTA: { text: "Test your chunked upload with a real 100MB file — no sign-up required.", fileType: "pdf", fileSlug: "100mb", buttonLabel: "Download 100MB PDF Sample →" },
@@ -76,7 +76,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "file-upload-progress-bar-html5",
     title: "File Upload Progress Bar: HTML5 + Fetch API Complete Guide",
     description: "Build a real-time file upload progress bar using HTML5 and XMLHttpRequest. Includes CSS animation and a free 50MB DOCX test file to validate your implementation.",
-    date: "2026-10-08", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
+    date: "2026-09-17", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
     tags: ["javascript","html5","xhr","progress-bar","frontend"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "file upload progress bar html5", monthlyVolume: 3200, keywordDifficulty: 18,
     downloadCTA: { text: "Need a large file to test your progress bar? Download a 50MB DOCX sample instantly.", fileType: "docx", fileSlug: "50mb", buttonLabel: "Download 50MB DOCX Sample →" },
@@ -93,7 +93,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "multipart-upload-s3-r2-nodejs",
     title: "Multipart Upload to S3 and Cloudflare R2 with Node.js",
     description: "Step-by-step guide to AWS S3 multipart uploads using the AWS SDK v3 in Node.js. Fully compatible with Cloudflare R2. Test with a free 500MB sample file.",
-    date: "2026-10-13", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
+    date: "2026-09-20", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
     tags: ["nodejs","aws-s3","cloudflare-r2","multipart-upload","backend"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "s3 multipart upload nodejs", monthlyVolume: 2900, keywordDifficulty: 25,
     downloadCTA: { text: "Test your multipart upload pipeline with a real 500MB sample file.", fileType: "pdf", fileSlug: "500mb", buttonLabel: "Download 500MB PDF Sample →" },
@@ -110,7 +110,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "resumable-file-upload-tus-javascript",
     title: "Resumable File Uploads with tus Protocol — JavaScript Guide",
     description: "Implement resumable file uploads in JavaScript using the tus protocol and tus-js-client. Handles network failures gracefully. Test with a free 1GB dummy file.",
-    date: "2026-10-17", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
+    date: "2026-09-23", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
     tags: ["javascript","tus-protocol","resumable-upload","file-upload"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "resumable file upload javascript", monthlyVolume: 2400, keywordDifficulty: 20,
     downloadCTA: { text: "Simulate a large file resumable upload — download our 1GB dummy file to test your tus server.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Sample →" },
@@ -127,7 +127,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "file-upload-validation-size-type",
     title: "File Upload Validation: Size, Type & Extension (Frontend + Backend)",
     description: "Complete guide to file upload validation — checking size, MIME type, and extension on both frontend and backend with Node.js. Download exact-size test files.",
-    date: "2026-10-22", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
+    date: "2026-10-11", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
     tags: ["javascript","nodejs","validation","file-upload","security"], wordCount: 1600, readingTime: 8,
     primaryKeyword: "file upload size limit validation", monthlyVolume: 3100, keywordDifficulty: 16,
     downloadCTA: { text: "Test your validation logic with exact-size files: 1MB, 10MB, and 100MB PDF samples.", fileType: "pdf", fileSlug: "100mb", buttonLabel: "Download 100MB PDF Sample →" },
@@ -144,7 +144,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "drag-drop-file-upload-react",
     title: "Drag and Drop File Upload in React with react-dropzone",
     description: "Build a polished drag-and-drop file upload component in React using react-dropzone. Covers MIME filtering, file previews, and upload progress with working code.",
-    date: "2026-10-27", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
+    date: "2026-10-29", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
     tags: ["react","react-dropzone","drag-drop","file-upload","frontend"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "drag and drop file upload react", monthlyVolume: 2900, keywordDifficulty: 24,
     downloadCTA: { text: "Test drag & drop with real files — download PDF, DOCX, and TXT samples of any size.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download 10MB PDF Sample →" },
@@ -163,7 +163,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "hash-file-javascript-sha256-md5",
     title: "How to Hash a File in JavaScript: SHA-256, MD5, and SHA-1",
     description: "Calculate file checksums in JavaScript using the Web Crypto API (SHA-256) and crypto-js (MD5, SHA-1). Browser and Node.js examples with sample test files.",
-    date: "2026-11-03", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
+    date: "2026-09-14", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
     tags: ["javascript","cryptography","sha256","checksum","web-crypto"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "hash file javascript", monthlyVolume: 3600, keywordDifficulty: 18,
     downloadCTA: { text: "Download sample files to test your hash function — PDF, DOCX, and TXT with known SHA-256 checksums.", fileType: "txt", fileSlug: "large", buttonLabel: "Download 1MB TXT Sample →" },
@@ -180,7 +180,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "verify-file-integrity-checksum",
     title: "How to Verify File Integrity After Download (Checksum Guide)",
     description: "Verify file integrity using MD5, SHA-256, and SHA-512 checksums on Windows, macOS, and Linux. Command-line examples and pre-hashed sample files for immediate testing.",
-    date: "2026-11-07", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
+    date: "2026-09-17", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
     tags: ["security","checksum","md5","sha256","file-integrity"], wordCount: 1600, readingTime: 8,
     primaryKeyword: "verify file integrity checksum", monthlyVolume: 2800, keywordDifficulty: 15,
     downloadCTA: { text: "Download our pre-hashed sample files — SHA-256 checksums published for immediate verification.", fileType: "pdf", fileSlug: "1mb", buttonLabel: "Download 1MB PDF Sample →" },
@@ -197,7 +197,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "virus-scan-file-upload-clamav-nodejs",
     title: "Scan Uploaded Files for Viruses: ClamAV + Node.js Integration",
     description: "Integrate ClamAV antivirus scanning into your Node.js file upload pipeline. Protect your application from malicious uploads with real-world code examples using clamscan.",
-    date: "2026-11-12", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
+    date: "2026-09-20", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
     tags: ["nodejs","security","clamav","antivirus","file-upload"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "scan uploaded files for viruses nodejs", monthlyVolume: 1300, keywordDifficulty: 18,
     downloadCTA: { text: "Need clean test files for your scanner? Download verified safe sample files for ClamAV pipeline testing.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download Safe 10MB PDF Sample →" },
@@ -214,7 +214,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "file-type-validation-magic-bytes",
     title: "File Type Validation with Magic Bytes (Not File Extension)",
     description: "Detect true file types using magic bytes in Node.js with the file-type library. Extension-based validation is trivially bypassed — learn the secure approach.",
-    date: "2026-11-17", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
+    date: "2026-09-26", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
     tags: ["nodejs","security","magic-bytes","mime-type","validation"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "file type detection magic bytes", monthlyVolume: 1600, keywordDifficulty: 15,
     downloadCTA: { text: "Test your validator with real PDF, DOCX, TXT samples — each served with the correct MIME type.", fileType: "pdf", fileSlug: "1mb", buttonLabel: "Download 1MB PDF Sample →" },
@@ -231,7 +231,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "encrypt-file-before-upload-aes-javascript",
     title: "How to Encrypt a File Before Uploading: AES-256 in the Browser",
     description: "Encrypt files client-side with AES-256-GCM using the Web Crypto API before uploading to cloud storage. Zero-knowledge upload tutorial with working code.",
-    date: "2026-11-21", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
+    date: "2026-10-14", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
     tags: ["javascript","cryptography","aes-256","web-crypto","privacy"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "encrypt file javascript browser", monthlyVolume: 1900, keywordDifficulty: 22,
     downloadCTA: { text: "Use our TXT samples as plaintext test vectors — download lorem ipsum TXT to test AES-256 encryption.", fileType: "txt", fileSlug: "lorem", buttonLabel: "Download 50KB TXT Test Vector →" },
@@ -248,7 +248,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "presigned-url-s3-r2-secure-download",
     title: "Presigned URLs: Secure File Downloads from S3 and Cloudflare R2",
     description: "Generate time-limited presigned URLs for secure file downloads from AWS S3 and Cloudflare R2 using the AWS SDK v3 in Node.js. No public bucket exposure required.",
-    date: "2026-11-26", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
+    date: "2026-11-01", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
     tags: ["nodejs","aws-s3","cloudflare-r2","presigned-url","security"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "s3 presigned url nodejs", monthlyVolume: 2400, keywordDifficulty: 25,
     downloadCTA: { text: "Test your presigned URL download flow with standardized test files.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download 10MB PDF Sample →" },
@@ -267,7 +267,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "convert-pdf-to-docx-nodejs",
     title: "Convert PDF to DOCX Programmatically with Node.js (2026 Guide)",
     description: "Convert PDF files to editable DOCX format in Node.js using LibreOffice headless and Adobe PDF Services API. Compare approaches with 1MB–50MB sample test files.",
-    date: "2026-11-03", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
+    date: "2026-09-14", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
     tags: ["nodejs","pdf","docx","conversion","libreoffice"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "convert pdf to docx nodejs", monthlyVolume: 2900, keywordDifficulty: 25,
     downloadCTA: { text: "Use our sample PDFs as test input for your conversion pipeline — 1MB to 50MB sizes available.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download 10MB PDF Sample →" },
@@ -284,7 +284,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "compress-pdf-javascript-nodejs",
     title: "How to Compress and Reduce PDF File Size with JavaScript",
     description: "Reduce PDF file size in Node.js using Ghostscript and pdf-lib. Compare compression methods and test results with 100MB–500MB sample PDF files.",
-    date: "2026-11-07", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
+    date: "2026-09-17", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
     tags: ["nodejs","pdf","compression","ghostscript","pdf-lib"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "compress pdf javascript", monthlyVolume: 2400, keywordDifficulty: 22,
     downloadCTA: { text: "Test PDF compression with our 100MB and 500MB sample PDFs — download free, no signup required.", fileType: "pdf", fileSlug: "100mb", buttonLabel: "Download 100MB PDF Sample →" },
@@ -301,7 +301,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "extract-text-pdf-javascript",
     title: "Extract Text from PDF in JavaScript: pdf-parse vs pdfjs-dist",
     description: "Compare pdf-parse and pdfjs-dist for extracting text from PDF files in Node.js and the browser. Covers multi-column layouts, Unicode text, and OCR for scanned PDFs.",
-    date: "2026-11-12", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
+    date: "2026-09-20", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
     tags: ["nodejs","pdf","text-extraction","pdfjs","pdf-parse"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "extract text from pdf javascript", monthlyVolume: 2200, keywordDifficulty: 22,
     downloadCTA: { text: "Test your text extractor with our sample PDFs containing real AI industry report content.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download 10MB PDF with Content →" },
@@ -318,7 +318,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "parse-docx-javascript-mammoth",
     title: "Parse and Read DOCX Files with mammoth.js — Node.js Tutorial",
     description: "Extract text and HTML from Microsoft Word DOCX files in Node.js using mammoth.js. Covers style mapping, custom transforms, and testing with 1MB–50MB DOCX samples.",
-    date: "2026-11-17", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
+    date: "2026-09-29", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
     tags: ["nodejs","docx","mammoth","word-processing","text-extraction"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "parse docx file javascript", monthlyVolume: 1900, keywordDifficulty: 18,
     downloadCTA: { text: "Test your DOCX parser with our 1MB–50MB Word document samples — all contain real structured content.", fileType: "docx", fileSlug: "10mb", buttonLabel: "Download 10MB DOCX Sample →" },
@@ -335,7 +335,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "merge-split-pdf-nodejs-pdflib",
     title: "Merge and Split PDF Files Programmatically with pdf-lib",
     description: "Merge multiple PDFs into one or split a PDF into pages using pdf-lib in Node.js. Pure JavaScript, no native binaries required. Working code examples included.",
-    date: "2026-11-21", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
+    date: "2026-10-17", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
     tags: ["nodejs","pdf","pdf-lib","merge-pdf","split-pdf"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "merge pdf javascript", monthlyVolume: 2400, keywordDifficulty: 20,
     downloadCTA: { text: "Download multiple sample PDFs to test your merge function — 1MB through 100MB sizes available.", fileType: "pdf", fileSlug: "50mb", buttonLabel: "Download 50MB PDF Sample →" },
@@ -352,7 +352,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "generate-pdf-from-html-nodejs-puppeteer",
     title: "Generate PDF from HTML in Node.js: Puppeteer vs playwright-pdf",
     description: "Compare Puppeteer and Playwright for HTML-to-PDF generation in Node.js. Covers CSS print styles, page size, headers and footers, and performance benchmarks.",
-    date: "2026-11-26", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
+    date: "2026-11-04", cluster: 3, clusterName: "File Processing & Conversion", clusterColor: "from-amber-500 to-orange-600",
     tags: ["nodejs","puppeteer","playwright","pdf-generation","headless-browser"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "generate pdf from html nodejs", monthlyVolume: 2900, keywordDifficulty: 28,
     downloadCTA: { text: "Compare your output against our reference sample PDFs — available in 1MB through 50MB sizes.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download Reference 10MB PDF →" },
@@ -371,7 +371,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "test-file-upload-api-postman",
     title: "How to Test File Upload APIs with Postman (Multipart & Binary)",
     description: "Learn to test file upload endpoints in Postman using multipart/form-data and binary body modes. Covers Postman scripts, large file testing, and common error codes.",
-    date: "2026-10-01", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
+    date: "2026-09-14", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
     tags: ["postman","api-testing","file-upload","qa","multipart"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "test file upload api postman", monthlyVolume: 5400, keywordDifficulty: 15,
     downloadCTA: { text: "Download ready-to-use test files for Postman — PDF, DOCX, TXT in all sizes. No sign-up required.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download 10MB PDF Test File →" },
@@ -388,7 +388,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "load-test-file-download-k6-jmeter",
     title: "Load Testing File Download Endpoints with k6 and JMeter",
     description: "Load test file download servers with k6 (JavaScript) and Apache JMeter. Measure throughput, latency, and error rate under concurrent download load. Free 1GB test file.",
-    date: "2026-10-06", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
+    date: "2026-09-17", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
     tags: ["k6","jmeter","load-testing","performance","file-download"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "load test file download server k6", monthlyVolume: 1600, keywordDifficulty: 15,
     downloadCTA: { text: "Use our 1GB sample file to stress-test your download server and pipeline throughput.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Test File →" },
@@ -405,7 +405,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "unit-test-file-handling-nodejs-jest",
     title: "Unit Testing File Handling in Node.js with Jest and memfs",
     description: "Write robust unit tests for file handling code in Node.js using Jest and the memfs in-memory file system. Mock the fs module, test edge cases, and avoid real disk I/O.",
-    date: "2026-10-10", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
+    date: "2026-09-20", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
     tags: ["jest","nodejs","unit-testing","memfs","mocking"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "jest test file upload mock", monthlyVolume: 1800, keywordDifficulty: 16,
     downloadCTA: { text: "Download small TXT and PDF samples as Jest fixture files — 50KB to 1MB, perfectly sized for unit tests.", fileType: "txt", fileSlug: "lorem", buttonLabel: "Download 50KB TXT Fixture →" },
@@ -422,7 +422,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "generate-dummy-files-qa-testing",
     title: "Generate Dummy Files for QA: Scripts, Tools, and Best Practices",
     description: "Generate dummy test files of any size for QA testing — PDF, DOCX, TXT, CSV, ZIP. Compare dd, Faker.js, and pre-built download services. Save hours of setup time.",
-    date: "2026-10-01", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
+    date: "2026-10-02", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
     tags: ["qa","testing","dummy-files","test-fixtures","tools"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "generate dummy test files", monthlyVolume: 8100, keywordDifficulty: 12,
     downloadCTA: { text: "Skip the scripting — download pre-generated dummy files instantly. PDF, DOCX, TXT from 1MB to 1GB.", fileType: "pdf", fileSlug: "100mb", buttonLabel: "Download 100MB PDF Dummy File →" },
@@ -439,7 +439,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "test-pdf-download-playwright-cypress",
     title: "Test PDF File Downloads with Playwright and Cypress",
     description: "Write E2E tests for PDF and file downloads using Playwright and Cypress. Verify download completion, file size, and content type with working code examples.",
-    date: "2026-10-13", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
+    date: "2026-10-20", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
     tags: ["playwright","cypress","e2e-testing","pdf","file-download"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "test pdf download playwright", monthlyVolume: 1800, keywordDifficulty: 18,
     downloadCTA: { text: "Download our sample PDFs as E2E test fixtures — from 1MB to 1GB, valid format for CI pipelines.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download 10MB PDF Fixture →" },
@@ -456,7 +456,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "mock-filesystem-jest-memfs",
     title: "How to Mock the File System in Jest Tests (memfs Guide)",
     description: "Mock the Node.js file system in Jest unit tests using memfs. Avoid real disk I/O, control test state precisely, and write faster and more reliable file handling tests.",
-    date: "2026-10-17", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
+    date: "2026-11-07", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
     tags: ["jest","memfs","mocking","unit-testing","nodejs"], wordCount: 1600, readingTime: 8,
     primaryKeyword: "mock file system jest", monthlyVolume: 1500, keywordDifficulty: 14,
     downloadCTA: { text: "Download real fixture files as a baseline for your mocked filesystem — 100KB ASCII TXT and 1MB PDF.", fileType: "txt", fileSlug: "ascii", buttonLabel: "Download 100KB ASCII TXT →" },
@@ -475,7 +475,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "cloudflare-r2-vs-aws-s3-comparison",
     title: "Cloudflare R2 vs AWS S3: Full Comparison for Developers (2026)",
     description: "Compare Cloudflare R2 and AWS S3 on pricing, egress costs, performance, S3 API compatibility, and developer experience. Which is right for your project in 2026?",
-    date: "2026-12-01", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
+    date: "2026-09-14", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["cloudflare-r2","aws-s3","cloud-storage","object-storage","comparison"], wordCount: 2500, readingTime: 13,
     primaryKeyword: "cloudflare r2 vs aws s3", monthlyVolume: 2900, keywordDifficulty: 28,
     downloadCTA: { text: "Test your cloud storage architecture and client downloads with standardized test files.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Benchmark File →" },
@@ -492,7 +492,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "serve-large-files-cdn-best-practices",
     title: "Best Practices for Serving Large Files with a CDN",
     description: "Optimize large file delivery with a CDN — cache headers, range requests, edge caching, chunked transfer, and cost reduction strategies. Test with a free 1GB sample file.",
-    date: "2026-12-05", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
+    date: "2026-09-17", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["cdn","large-files","performance","cache","http-headers"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "serve large files cdn", monthlyVolume: 1800, keywordDifficulty: 20,
     downloadCTA: { text: "Download a 1GB sample file to benchmark download throughput and streaming performance.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB Test File →" },
@@ -509,7 +509,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "stream-large-file-download-nodejs",
     title: "How to Stream Large File Downloads in Node.js Without Memory Issues",
     description: "Stream large files in Node.js using fs.createReadStream and Express without loading into memory. Covers backpressure, range request support, and CDN integration.",
-    date: "2026-12-10", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
+    date: "2026-09-20", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["nodejs","streaming","express","file-download","performance"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "stream large file nodejs", monthlyVolume: 2200, keywordDifficulty: 20,
     downloadCTA: { text: "Stress-test your stream endpoint and memory consumption with large sample files.", fileType: "pdf", fileSlug: "500mb", buttonLabel: "Download 500MB Stream Test →" },
@@ -526,7 +526,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "http-range-request-partial-content",
     title: "HTTP Range Requests Explained: Resumable and Partial Downloads",
     description: "Understand HTTP Range requests and 206 Partial Content. Learn how browsers, download managers, and video players use range requests — with a full Node.js implementation.",
-    date: "2026-12-15", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
+    date: "2026-10-05", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["http","range-requests","206","resumable-download","nodejs"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "http range request 206 partial content", monthlyVolume: 2400, keywordDifficulty: 20,
     downloadCTA: { text: "Test Range requests against our sample file endpoints — all files support HTTP 206 range responses.", fileType: "pdf", fileSlug: "100mb", buttonLabel: "Download Range-Ready 100MB PDF →" },
@@ -543,7 +543,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "s3-bucket-policy-public-private",
     title: "S3 Bucket Policies: Public vs Private File Access Explained",
     description: "Understand S3 and Cloudflare R2 bucket policies for public and private file access. Learn IAM roles, presigned URLs, and the principle of least privilege with examples.",
-    date: "2026-12-19", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
+    date: "2026-10-23", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["aws-s3","cloudflare-r2","bucket-policy","iam","security"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "s3 bucket policy public private", monthlyVolume: 2200, keywordDifficulty: 22,
     downloadCTA: { text: "Test secure download flows and archive extraction with a 50MB ZIP sample.", fileType: "zip", fileSlug: "50mb", buttonLabel: "Download 50MB ZIP Sample →" },
@@ -560,7 +560,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "cloud-storage-cost-comparison-2025",
     title: "Cloud Storage Cost Comparison: S3 vs R2 vs Backblaze B2 (2026)",
     description: "Compare cloud object storage pricing in 2026: AWS S3, Cloudflare R2, Backblaze B2, and Google Cloud Storage. Storage, egress, and operations costs with real scenarios.",
-    date: "2026-12-23", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
+    date: "2026-11-10", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["cloud-storage","aws-s3","cloudflare-r2","backblaze-b2","cost"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "cloud storage cost comparison 2025", monthlyVolume: 2200, keywordDifficulty: 22,
     downloadCTA: { text: "Benchmark data transfer rates and test large-scale storage downloads with a 1GB sample file.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Sample →" },
@@ -579,7 +579,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "pdf-file-format-structure-internals",
     title: "PDF File Format Internals: How a PDF Is Actually Structured",
     description: "Deep dive into the PDF file format — cross-reference tables, object streams, page tree, content streams, and fonts. Understand what is inside a PDF at the binary level.",
-    date: "2026-12-05", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
+    date: "2026-09-14", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
     tags: ["pdf","file-format","internals","binary","deep-dive"], wordCount: 2500, readingTime: 13,
     primaryKeyword: "pdf file format structure", monthlyVolume: 2900, keywordDifficulty: 25,
     downloadCTA: { text: "Inspect our sample PDFs yourself — download and open in a hex editor to explore the binary structure.", fileType: "pdf", fileSlug: "1mb", buttonLabel: "Download 1MB PDF to Inspect →" },
@@ -596,7 +596,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "docx-file-format-openxml-explained",
     title: "DOCX File Format: It's Just a ZIP of XML Files (Deep Dive)",
     description: "Explore the DOCX OpenXML format — unzip a Word document and discover the XML structure inside. Learn about document.xml, relationships, styles, and embedded media files.",
-    date: "2026-12-10", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
+    date: "2026-09-17", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
     tags: ["docx","openxml","file-format","xml","deep-dive"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "docx file format openxml", monthlyVolume: 1900, keywordDifficulty: 18,
     downloadCTA: { text: "Unzip our sample DOCX and explore the XML structure yourself — download a 1MB DOCX file.", fileType: "docx", fileSlug: "1mb", buttonLabel: "Download 1MB DOCX to Explore →" },
@@ -613,7 +613,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "utf8-utf16-utf32-text-encoding",
     title: "UTF-8 vs UTF-16 vs UTF-32: Text File Encoding Explained Simply",
     description: "Understand the difference between UTF-8, UTF-16, and UTF-32 text encoding. Learn BOM, code points, byte order, and when each encoding is the right choice for developers.",
-    date: "2026-12-15", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
+    date: "2026-09-20", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
     tags: ["encoding","utf-8","utf-16","unicode","text-files"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "utf8 vs utf16 difference", monthlyVolume: 3600, keywordDifficulty: 12,
     downloadCTA: { text: "Download our Unicode and ASCII TXT samples to compare encodings — multilingual AI terminology in 10 languages.", fileType: "txt", fileSlug: "unicode", buttonLabel: "Download 50KB Unicode TXT →" },
@@ -630,7 +630,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "file-size-bytes-kb-mb-gb-explained",
     title: "File Sizes Explained: Bytes, KB, MB, GB, TB — The Developer Guide",
     description: "Understand file size units — the difference between kilobytes and kibibytes, decimal vs binary prefixes, and how operating systems calculate and display file sizes.",
-    date: "2026-12-19", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
+    date: "2026-10-08", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
     tags: ["file-size","bytes","kb","mb","gb","fundamentals"], wordCount: 1600, readingTime: 8,
     primaryKeyword: "file size kb mb gb difference", monthlyVolume: 5400, keywordDifficulty: 8,
     downloadCTA: { text: "Download files at exact sizes: 1MB, 10MB, 100MB, 1GB — verify them with your OS file size reporting tool.", fileType: "pdf", fileSlug: "100mb", buttonLabel: "Download Exact 100MB PDF →" },
@@ -647,7 +647,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "mime-types-complete-guide-web-developer",
     title: "MIME Types Complete Reference: The Web Developer's Guide",
     description: "Complete guide to MIME types (Content-Type) for web developers. Common MIME types, how browsers use them, server configuration, and security implications.",
-    date: "2026-12-23", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
+    date: "2026-10-26", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
     tags: ["mime-types","content-type","http","web","reference"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "mime types list web developer", monthlyVolume: 4400, keywordDifficulty: 15,
     downloadCTA: { text: "Download PDF, DOCX, TXT — every FileDummy file is served with the correct MIME type Content-Type header.", fileType: "pdf", fileSlug: "1mb", buttonLabel: "Download 1MB PDF (Correct MIME) →" },
@@ -664,7 +664,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "binary-vs-text-files-explained",
     title: "Binary vs Text Files: What Every Developer Should Know",
     description: "Understand the fundamental difference between binary and text files. Learn how line endings, null bytes, and encoding affect file processing in every programming language.",
-    date: "2026-12-27", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
+    date: "2026-11-13", cluster: 6, clusterName: "File Formats & Deep Dives", clusterColor: "from-cyan-500 to-sky-600",
     tags: ["binary","text-files","encoding","fundamentals","programming"], wordCount: 1600, readingTime: 8,
     primaryKeyword: "binary vs text file difference", monthlyVolume: 2500, keywordDifficulty: 10,
     downloadCTA: { text: "Download binary (PDF, DOCX) and text (TXT) samples side by side — compare them in a hex editor.", fileType: "txt", fileSlug: "ascii", buttonLabel: "Download 100KB ASCII TXT →" },
@@ -680,31 +680,73 @@ export const BLOG_POSTS: BlogPost[] = [
 ];
 
 // ─────────────────────────────────────────────────────────
-// Helper Functions
+// Helper Functions & Drip-Feed Publishing Logic
 // ─────────────────────────────────────────────────────────
 
+export function getTodayDateString(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function isPostPublished(post: BlogPost): boolean {
+  if (!post.published) return false;
+  if (process.env.NEXT_PUBLIC_SHOW_ALL_POSTS === "true") return true;
+  return post.date <= getTodayDateString();
+}
+
 export function getPublishedPosts(): BlogPost[] {
-  return BLOG_POSTS.filter((p) => p.published).sort(
+  return BLOG_POSTS.filter(isPostPublished).sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
 
+export function getAllBlogPosts(): BlogPost[] {
+  return BLOG_POSTS;
+}
+
 export function getBlogPost(slug: string): BlogPost | undefined {
-  return BLOG_POSTS.find((p) => p.slug === slug && p.published);
+  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  if (!post || !isPostPublished(post)) return undefined;
+  return post;
 }
 
 export function getBlogPostsByCluster(cluster: BlogCluster): BlogPost[] {
-  return BLOG_POSTS.filter((p) => p.cluster === cluster && p.published).sort(
+  return BLOG_POSTS.filter((p) => p.cluster === cluster && isPostPublished(p)).sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
 
 export function getRelatedPosts(slug: string): BlogPost[] {
-  const post = getBlogPost(slug);
+  const post = BLOG_POSTS.find((p) => p.slug === slug);
   if (!post) return [];
-  return post.relatedArticles
+
+  const directRelated = post.relatedArticles
     .map((s) => getBlogPost(s))
     .filter(Boolean) as BlogPost[];
+
+  if (directRelated.length >= 3) {
+    return directRelated.slice(0, 3);
+  }
+
+  // Fallback: other published posts in same cluster
+  const sameCluster = getBlogPostsByCluster(post.cluster).filter(
+    (p) => p.slug !== slug && !directRelated.some((d) => d.slug === p.slug)
+  );
+
+  const combined = [...directRelated, ...sameCluster];
+  if (combined.length >= 3) {
+    return combined.slice(0, 3);
+  }
+
+  // Fallback: any other published posts
+  const otherPosts = getPublishedPosts().filter(
+    (p) => p.slug !== slug && !combined.some((c) => c.slug === p.slug)
+  );
+
+  return [...combined, ...otherPosts].slice(0, 3);
 }
 
 export function getLatestPosts(limit = 3): BlogPost[] {
@@ -712,11 +754,13 @@ export function getLatestPosts(limit = 3): BlogPost[] {
 }
 
 export function getAllSlugs(): string[] {
-  return BLOG_POSTS.filter((p) => p.published).map((p) => p.slug);
+  return BLOG_POSTS.filter(isPostPublished).map((p) => p.slug);
 }
 
 export function getPostCountByCluster(): Record<BlogCluster, number> {
   const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } as Record<BlogCluster, number>;
-  BLOG_POSTS.filter((p) => p.published).forEach((p) => { counts[p.cluster]++; });
+  BLOG_POSTS.filter(isPostPublished).forEach((p) => {
+    counts[p.cluster]++;
+  });
   return counts;
 }
