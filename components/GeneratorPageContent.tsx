@@ -33,7 +33,7 @@ export function GeneratorPageContent({ locale = "en" }: GeneratorPageContentProp
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
       <StructuredData data={appSchema} />
 
-      <Breadcrumbs items={[{ label: isVi ? "Tạo File Tùy Chỉnh" : "Custom Generator" }]} />
+      <Breadcrumbs items={[{ label: isVi ? "Tạo File Tùy Chỉnh" : "Custom Generator" }]} locale={locale} />
 
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">

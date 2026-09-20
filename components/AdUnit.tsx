@@ -17,11 +17,13 @@ export function AdUnit({
 }: AdUnitProps) {
   const adRef = useRef<HTMLModElement>(null);
   const isLoadedRef = useRef(false);
-  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
-  const isRealAdsense = adsenseId && !adsenseId.includes("XXXXXXXX") && !adsenseId.includes("1234567890");
+  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID || "ca-pub-9166964727480227";
+  const isRealAdsense = adsenseId && !adsenseId.includes("XXXXXXXX");
+  // Only render ad slot when a valid numeric slot is provided, keeping the site 100% clean for Google review
+  const isRealSlot = slot && /^\d{9,12}$/.test(slot) && !slot.includes("1234567890") && !slot.includes("1122334455");
 
   useEffect(() => {
-    if (!isRealAdsense) return;
+    if (!isRealAdsense || !isRealSlot) return;
     if (isLoadedRef.current) return;
 
     try {
@@ -33,10 +35,10 @@ export function AdUnit({
     } catch (e) {
       console.warn("AdSense push error:", e);
     }
-  }, [isRealAdsense]);
+  }, [isRealAdsense, isRealSlot]);
 
-  // If no real AdSense client ID is configured, render nothing to maintain a 100% clean, professional site for approval
-  if (!isRealAdsense) {
+  // If no real slot ID is configured yet, render nothing to maintain a 100% clean, professional site for AdSense review
+  if (!isRealAdsense || !isRealSlot) {
     return null;
   }
 

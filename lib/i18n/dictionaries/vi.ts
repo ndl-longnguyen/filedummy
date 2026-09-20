@@ -12,8 +12,6 @@ export const viDictionary: Dictionary = {
   footer: {
     aboutText:
       "Nền tảng tải tệp mẫu và file dummy chuẩn hóa hàng đầu. Cung cấp file sạch, đúng cấu trúc kỹ thuật với đa dạng định dạng và kích thước cho lập trình viên, kỹ sư QA và chuyên viên thiết kế.",
-    globalEdge: "Mạng Phân Phối Toàn Cầu Cloudflare R2",
-    virusFree: "100% Sạch & Không Chứa Mã Độc",
     sampleFilesTitle: "Danh Mục Tệp Mẫu",
     customGenerator: "Công Cụ Tạo File Dung Lượng Tùy Chỉnh →",
     techBlog: "Blog Kỹ Thuật Lập Trình Viên →",
@@ -86,7 +84,7 @@ export const viDictionary: Dictionary = {
       },
       {
         q: "Tốc độ tải file như thế nào?",
-        a: "Tất cả file được phân phối trực tiếp từ Cloudflare R2 với mạng lưới edge cache hơn 300 địa điểm toàn cầu, mang lại tốc độ tải tối đa và không giới hạn băng thông.",
+        a: "Tất cả file được phân phối trực tiếp từ hạ tầng lưu trữ đối tượng phân tán tốc độ cao với bộ đệm biên, mang lại tốc độ tải tối ưu và không giới hạn băng thông.",
       },
       {
         q: "Tôi có thể dùng API hoặc gọi trực tiếp trong test script không?",
@@ -137,7 +135,7 @@ export const viDictionary: Dictionary = {
     relatedSizesTitle: "Các Mức Dung Lượng Khác Cho Định Dạng Này",
   },
   blog: {
-    badge: "36 Bài Viết · 6 Chủ Đề · Chuẩn SEO",
+    badge: "Bài Viết Kỹ Thuật Chuyên Sâu Cho Lập Trình Viên",
     heroTitle: "Blog Kỹ Thuật Xử Lý File Cho Lập Trình Viên",
     heroSubtitle:
       "Hướng dẫn chuyên sâu về upload file, bảo mật checksum, xử lý dữ liệu, kiểm thử QA và lưu trữ đám mây. Mỗi bài viết đều có file mẫu thực tế để thử nghiệm.",

@@ -1,19 +1,30 @@
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
+import { Locale } from "@/lib/i18n/types";
 
 export interface BreadcrumbItem {
   label: string;
   href?: string;
 }
 
-export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+export function Breadcrumbs({
+  items,
+  locale = "en",
+}: {
+  items: BreadcrumbItem[];
+  locale?: Locale;
+}) {
+  const isVi = locale === "vi";
+  const homeHref = isVi ? "/vi" : "/";
+  const homeLabel = isVi ? "Trang Chủ" : "Home";
+
   return (
     <nav aria-label="Breadcrumb" className="flex items-center text-xs text-slate-400 py-3">
       <ol className="flex items-center space-x-2">
         <li>
-          <Link href="/" className="hover:text-blue-400 transition-colors flex items-center gap-1">
+          <Link href={homeHref} className="hover:text-blue-400 transition-colors flex items-center gap-1">
             <Home className="w-3.5 h-3.5" />
-            <span>Home</span>
+            <span>{homeLabel}</span>
           </Link>
         </li>
         {items.map((item, index) => {

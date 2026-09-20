@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function VietnameseContactPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-      <Breadcrumbs items={[{ label: "Liên hệ" }]} />
+      <Breadcrumbs items={[{ label: "Liên hệ" }]} locale="vi" />
 
       {/* Header */}
       <div className="space-y-4">

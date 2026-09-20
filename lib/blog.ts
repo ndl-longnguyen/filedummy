@@ -96,7 +96,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-10-13", cluster: 1, clusterName: "File Upload & Handling", clusterColor: "from-blue-500 to-indigo-600",
     tags: ["nodejs","aws-s3","cloudflare-r2","multipart-upload","backend"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "s3 multipart upload nodejs", monthlyVolume: 2900, keywordDifficulty: 25,
-    downloadCTA: { text: "Test your multipart upload pipeline with a real 500MB file served from Cloudflare R2 CDN.", fileType: "pdf", fileSlug: "500mb", buttonLabel: "Download 500MB PDF Sample →" },
+    downloadCTA: { text: "Test your multipart upload pipeline with a real 500MB sample file.", fileType: "pdf", fileSlug: "500mb", buttonLabel: "Download 500MB PDF Sample →" },
     relatedFiles: [{ type: "pdf", slug: "500mb" },{ type: "pdf", slug: "1gb" }],
     relatedArticles: ["resumable-file-upload-tus-javascript","cloudflare-r2-vs-aws-s3-comparison","presigned-url-s3-r2-secure-download"],
     faqItems: [
@@ -251,7 +251,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-11-26", cluster: 2, clusterName: "File Security & Integrity", clusterColor: "from-red-500 to-rose-600",
     tags: ["nodejs","aws-s3","cloudflare-r2","presigned-url","security"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "s3 presigned url nodejs", monthlyVolume: 2400, keywordDifficulty: 25,
-    downloadCTA: { text: "Test your presigned URL download flow with our sample files — served via Cloudflare R2 secure CDN.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download via Secure CDN →" },
+    downloadCTA: { text: "Test your presigned URL download flow with standardized test files.", fileType: "pdf", fileSlug: "10mb", buttonLabel: "Download 10MB PDF Sample →" },
     relatedFiles: [{ type: "pdf", slug: "10mb" },{ type: "zip", slug: "50mb" }],
     relatedArticles: ["multipart-upload-s3-r2-nodejs","s3-bucket-policy-public-private","cloudflare-r2-vs-aws-s3-comparison"],
     faqItems: [
@@ -391,7 +391,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-10-06", cluster: 4, clusterName: "Testing & QA with Files", clusterColor: "from-emerald-500 to-teal-600",
     tags: ["k6","jmeter","load-testing","performance","file-download"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "load test file download server k6", monthlyVolume: 1600, keywordDifficulty: 15,
-    downloadCTA: { text: "Use our 1GB sample file to stress-test your download server — served from Cloudflare R2 global edge.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Test File →" },
+    downloadCTA: { text: "Use our 1GB sample file to stress-test your download server and pipeline throughput.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Test File →" },
     relatedFiles: [{ type: "pdf", slug: "500mb" },{ type: "pdf", slug: "1gb" }],
     relatedArticles: ["test-file-upload-api-postman","stream-large-file-download-nodejs","serve-large-files-cdn-best-practices"],
     faqItems: [
@@ -478,7 +478,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-12-01", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["cloudflare-r2","aws-s3","cloud-storage","object-storage","comparison"], wordCount: 2500, readingTime: 13,
     primaryKeyword: "cloudflare r2 vs aws s3", monthlyVolume: 2900, keywordDifficulty: 28,
-    downloadCTA: { text: "FileDummy.dev serves all sample files from Cloudflare R2 — see R2 in action and download any file free.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB from Cloudflare R2 →" },
+    downloadCTA: { text: "Test your cloud storage architecture and client downloads with standardized test files.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Benchmark File →" },
     relatedFiles: [{ type: "pdf", slug: "1gb" },{ type: "zip", slug: "100mb" }],
     relatedArticles: ["serve-large-files-cdn-best-practices","s3-bucket-policy-public-private","cloud-storage-cost-comparison-2025"],
     faqItems: [
@@ -495,7 +495,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-12-05", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["cdn","large-files","performance","cache","http-headers"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "serve large files cdn", monthlyVolume: 1800, keywordDifficulty: 20,
-    downloadCTA: { text: "Download a 1GB sample file via Cloudflare CDN — measure actual download speed and CDN performance yourself.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB via CDN →" },
+    downloadCTA: { text: "Download a 1GB sample file to benchmark download throughput and streaming performance.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB Test File →" },
     relatedFiles: [{ type: "pdf", slug: "500mb" },{ type: "pdf", slug: "1gb" }],
     relatedArticles: ["cloudflare-r2-vs-aws-s3-comparison","http-range-request-partial-content","stream-large-file-download-nodejs"],
     faqItems: [
@@ -512,7 +512,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-12-10", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["nodejs","streaming","express","file-download","performance"], wordCount: 2000, readingTime: 10,
     primaryKeyword: "stream large file nodejs", monthlyVolume: 2200, keywordDifficulty: 20,
-    downloadCTA: { text: "Stress-test your stream endpoint with our 500MB and 1GB sample files — zero-egress from Cloudflare R2.", fileType: "pdf", fileSlug: "500mb", buttonLabel: "Download 500MB Stream Test →" },
+    downloadCTA: { text: "Stress-test your stream endpoint and memory consumption with large sample files.", fileType: "pdf", fileSlug: "500mb", buttonLabel: "Download 500MB Stream Test →" },
     relatedFiles: [{ type: "pdf", slug: "500mb" },{ type: "pdf", slug: "1gb" }],
     relatedArticles: ["http-range-request-partial-content","serve-large-files-cdn-best-practices","load-test-file-download-k6-jmeter"],
     faqItems: [
@@ -546,7 +546,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-12-19", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["aws-s3","cloudflare-r2","bucket-policy","iam","security"], wordCount: 1800, readingTime: 9,
     primaryKeyword: "s3 bucket policy public private", monthlyVolume: 2200, keywordDifficulty: 22,
-    downloadCTA: { text: "See how FileDummy.dev serves files securely from a private R2 bucket — try a download yourself.", fileType: "zip", fileSlug: "50mb", buttonLabel: "Download 50MB ZIP Sample →" },
+    downloadCTA: { text: "Test secure download flows and archive extraction with a 50MB ZIP sample.", fileType: "zip", fileSlug: "50mb", buttonLabel: "Download 50MB ZIP Sample →" },
     relatedFiles: [{ type: "zip", slug: "50mb" }],
     relatedArticles: ["presigned-url-s3-r2-secure-download","cloudflare-r2-vs-aws-s3-comparison","cloud-storage-cost-comparison-2025"],
     faqItems: [
@@ -563,7 +563,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "2026-12-23", cluster: 5, clusterName: "Cloud Storage & CDN", clusterColor: "from-purple-500 to-violet-600",
     tags: ["cloud-storage","aws-s3","cloudflare-r2","backblaze-b2","cost"], wordCount: 2200, readingTime: 11,
     primaryKeyword: "cloud storage cost comparison 2025", monthlyVolume: 2200, keywordDifficulty: 22,
-    downloadCTA: { text: "FileDummy uses R2 zero-egress model — that is why downloads are always free. Try it yourself.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Free Download from R2 CDN →" },
+    downloadCTA: { text: "Benchmark data transfer rates and test large-scale storage downloads with a 1GB sample file.", fileType: "pdf", fileSlug: "1gb", buttonLabel: "Download 1GB PDF Sample →" },
     relatedFiles: [{ type: "pdf", slug: "1gb" }],
     relatedArticles: ["cloudflare-r2-vs-aws-s3-comparison","s3-bucket-policy-public-private","serve-large-files-cdn-best-practices"],
     faqItems: [

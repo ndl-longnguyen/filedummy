@@ -82,7 +82,7 @@ export function CategoryPageContent({ type, locale = "en" }: CategoryPageContent
       <StructuredData data={[breadcrumbSchema, datasetSchema]} />
 
       {/* Breadcrumbs */}
-      <Breadcrumbs items={[{ label: displayName }]} />
+      <Breadcrumbs items={[{ label: displayName }]} locale={locale} />
 
       {/* Category Header */}
       <div className="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden border border-slate-800">
@@ -153,8 +153,8 @@ export function CategoryPageContent({ type, locale = "en" }: CategoryPageContent
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
             {isVi
-              ? `Chọn dung lượng phù hợp và tải trực tiếp qua CDN Cloudflare R2 tốc độ cao hoặc xem chi tiết mã lệnh.`
-              : `Choose a file size and download directly via high-speed Cloudflare R2 CDN or view developer CLI commands.`}
+              ? `Chọn dung lượng phù hợp để tải trực tiếp hoặc xem chi tiết mã lệnh và thông số kỹ thuật.`
+              : `Choose a file size to download directly or view technical specifications and CLI commands.`}
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -189,7 +189,7 @@ export function CategoryPageContent({ type, locale = "en" }: CategoryPageContent
       </section>
 
       {/* Contextual NDL Cross-Promotion Banner */}
-      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "default"} />
+      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "default"} locale={locale} />
 
       {/* Other Categories */}
       <section className="space-y-4">

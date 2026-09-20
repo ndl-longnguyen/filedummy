@@ -81,7 +81,7 @@ export const VI_POST_TRANSLATIONS: Record<string, ViPostTranslation> = {
   "multipart-upload-s3-r2-nodejs": {
     title: "Tải Lên Đa Phần (Multipart Upload) Tới S3 & Cloudflare R2 Bằng Node.js",
     description: "Hướng dẫn từng bước sử dụng AWS SDK v3 trong Node.js để upload file lớn tới AWS S3 và Cloudflare R2. Tải kèm file mẫu 500MB để thử nghiệm.",
-    ctaText: "Kiểm thử pipeline multipart upload với file 500MB từ Cloudflare R2 CDN.",
+    ctaText: "Kiểm thử pipeline multipart upload với tệp mẫu 500MB chuẩn xác.",
     buttonLabel: "Tải File Mẫu 500MB PDF →",
   },
   "resumable-file-upload-tus-javascript": {
@@ -227,7 +227,7 @@ export const VI_POST_TRANSLATIONS: Record<string, ViPostTranslation> = {
   "cloudflare-r2-vs-aws-s3-comparison": {
     title: "So Sánh Cloudflare R2 vs AWS S3: Tiết Kiệm Chi Phí Băng Thông Egress",
     description: "Phân tích kiến trúc và chi phí lưu trữ tệp giữa Cloudflare R2 và Amazon S3. Tại sao chính sách miễn phí 100% egress của R2 lại vượt trội.",
-    ctaText: "Trải nghiệm tốc độ tải độ trễ cực thấp được phục vụ trực tiếp từ Cloudflare R2.",
+    ctaText: "Kiểm thử kiến trúc lưu trữ và tốc độ tải xuống với file mẫu dung lượng lớn.",
     buttonLabel: "Tải File Mẫu 100MB PDF →",
   },
   "serve-large-files-cdn-best-practices": {
@@ -257,7 +257,7 @@ export const VI_POST_TRANSLATIONS: Record<string, ViPostTranslation> = {
   "cloud-storage-cost-comparison-2025": {
     title: "So Sánh Chi Phí Lưu Trữ Đám Mây: AWS S3 vs Cloudflare R2 vs Google Cloud",
     description: "Bảng phân tích chi phí lưu trữ và băng thông truyền tải 100TB dữ liệu hàng tháng giữa các nhà cung cấp đám mây hàng đầu hiện nay.",
-    ctaText: "Tải file 1GB mẫu để đo lường băng thông truyền tải thực tế từ Cloudflare R2.",
+    ctaText: "Tải file 1GB mẫu để đo lường băng thông và tốc độ truyền tải thực tế.",
     buttonLabel: "Tải File Mẫu 1GB PDF →",
   },
   "pdf-file-format-structure-internals": {

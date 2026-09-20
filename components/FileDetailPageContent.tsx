@@ -99,6 +99,7 @@ export function FileDetailPageContent({
           { label: displayName, href: `${prefix}/${type}` },
           { label: file.label },
         ]}
+        locale={locale}
       />
 
       {/* Main Download Hero Block */}
@@ -218,7 +219,7 @@ export function FileDetailPageContent({
       </div>
 
       {/* Cross-Promotion Banner */}
-      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "default"} />
+      <CrossPromoBanner type={type === "jpg" || type === "png" ? "image" : "default"} locale={locale} />
 
       {/* Sibling Sizes */}
       {siblingFiles.length > 0 && (

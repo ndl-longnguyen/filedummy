@@ -12,8 +12,6 @@ export const enDictionary: Dictionary = {
   footer: {
     aboutText:
       "Global sample and dummy file download platform. Clean, standardized files in multiple formats and sizes for developers, QA testers, and designers worldwide.",
-    globalEdge: "Cloudflare R2 Global Edge",
-    virusFree: "100% Virus & Malware Free",
     sampleFilesTitle: "Sample Files",
     customGenerator: "Custom Size Generator →",
     techBlog: "Developer Technical Blog →",
@@ -86,7 +84,7 @@ export const enDictionary: Dictionary = {
       },
       {
         q: "How fast are the file downloads?",
-        a: "All files are served directly from Cloudflare R2 object storage with global edge caching across 300+ worldwide locations, providing maximum download speeds and zero bandwidth throttling.",
+        a: "All files are served directly from high-speed distributed object storage with edge caching, providing fast download speeds and zero bandwidth throttling.",
       },
       {
         q: "Can I hotlink or use the API in my automated scripts?",
@@ -137,7 +135,7 @@ export const enDictionary: Dictionary = {
     relatedSizesTitle: "Other Sizes for This Format",
   },
   blog: {
-    badge: "36 Articles · 6 Clusters · SEO Optimized",
+    badge: "Technical Guides for Developers",
     heroTitle: "Developer File Handling Blog",
     heroSubtitle:
       "Practical tutorials on file upload, security, processing, QA testing, and cloud storage. Every article links to a free sample file download.",

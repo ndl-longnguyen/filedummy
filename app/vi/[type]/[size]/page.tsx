@@ -27,7 +27,7 @@ export async function generateMetadata({
   const name = viMeta ? viMeta.name : meta.name;
   const filename = file.r2Key.split("/").pop();
   const title = `Tải Tệp Mẫu ${name} ${file.label} (${filename}) | FileDummy`;
-  const description = `Tải tệp mẫu ${name} chính xác ${file.label} (${file.sizeBytes.toLocaleString()} bytes). Đảm bảo sạch, không virus, tải trực tiếp qua Cloudflare R2 tốc độ cao.`;
+  const description = `Tải tệp mẫu ${name} chuẩn xác ${file.label} (${file.sizeBytes.toLocaleString()} bytes). Cấu trúc header hợp lệ, magic bytes chuẩn xác cho kiểm thử tải lên và phát triển phần mềm.`;
 
   return {
     title,

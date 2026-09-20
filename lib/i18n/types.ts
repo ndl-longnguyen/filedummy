@@ -11,8 +11,6 @@ export interface Dictionary {
   };
   footer: {
     aboutText: string;
-    globalEdge: string;
-    virusFree: string;
     sampleFilesTitle: string;
     customGenerator: string;
     techBlog: string;

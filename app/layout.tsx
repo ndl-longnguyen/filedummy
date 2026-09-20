@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://filedummy.ndlong.site";
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "FileDummy";
-const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
+const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID || "ca-pub-9166964727480227";
 const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
@@ -66,7 +73,7 @@ export const metadata: Metadata = {
       "Instant free download of clean sample dummy files in PDF, DOCX, TXT, Images, Datasets, and Archives from 100KB to 1GB.",
     images: [
       {
-        url: `${siteUrl}/og-image.png`,
+        url: `${siteUrl}/opengraph-image.png`,
         width: 1200,
         height: 630,
         alt: "FileDummy — Free Sample Files & Dummy Generator Platform",
@@ -78,10 +85,15 @@ export const metadata: Metadata = {
     title: "FileDummy — Free Sample Files & Dummy Generator for Testing",
     description:
       "Instant free download of clean sample dummy files in PDF, DOCX, TXT, Images, Datasets, and Archives from 100KB to 1GB.",
-    images: [`${siteUrl}/og-image.png`],
+    images: [`${siteUrl}/opengraph-image.png`],
   },
   alternates: {
     canonical: siteUrl,
+    languages: {
+      en: siteUrl,
+      vi: `${siteUrl}/vi`,
+      "x-default": siteUrl,
+    },
   },
 };
 
@@ -91,7 +103,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className={`${inter.variable} dark scroll-smooth`}>
       <head>
         {/* Google AdSense */}
         {adsenseId && (
@@ -99,7 +111,7 @@ export default function RootLayout({
             async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
             crossOrigin="anonymous"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
         )}
 
@@ -124,7 +136,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className="min-h-screen bg-[#090d16] text-slate-100 antialiased flex flex-col selection:bg-blue-600 selection:text-white">
+      <body className="min-h-screen bg-[#090d16] text-slate-100 font-sans antialiased flex flex-col selection:bg-blue-600 selection:text-white">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
