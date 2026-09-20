@@ -80,7 +80,7 @@ CREATE POLICY "Allow users to delete their own reactions"
   USING (auth.uid()::text = user_id OR user_id = current_setting('request.jwt.claims', true)::json->>'sub');
 
 
--- 3. Table: post_comments (Authenticated Comments)
+-- 3. Table: post_comments (Authenticated Comments with Admin Moderation)
 CREATE TABLE IF NOT EXISTS public.post_comments (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   post_slug TEXT NOT NULL,
@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS public.post_comments (
   user_avatar TEXT,
   user_email TEXT,
   content TEXT NOT NULL CHECK (char_length(content) >= 2 AND char_length(content) <= 3000),
+  is_approved BOOLEAN DEFAULT true NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
@@ -96,24 +97,42 @@ CREATE TABLE IF NOT EXISTS public.post_comments (
 -- Index for fast comment loading sorted by newest
 CREATE INDEX IF NOT EXISTS idx_post_comments_slug_created ON public.post_comments (post_slug, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_post_comments_user ON public.post_comments (user_id);
+CREATE INDEX IF NOT EXISTS idx_post_comments_approved ON public.post_comments (is_approved);
 
 -- Enable RLS for post_comments
 ALTER TABLE public.post_comments ENABLE ROW LEVEL SECURITY;
 
+-- Public can read approved comments (or users can read their own pending comment, or admin can read all)
 CREATE POLICY "Public read post comments"
   ON public.post_comments
   FOR SELECT
-  USING (true);
+  USING (
+    is_approved = true 
+    OR auth.uid()::text = user_id 
+    OR auth.jwt()->>'email' IN ('ndl.long.nguyendai@gmail.com', 'admin@filedummy.com')
+  );
 
 CREATE POLICY "Allow authenticated insert comments"
   ON public.post_comments
   FOR INSERT
   WITH CHECK (char_length(content) >= 2);
 
-CREATE POLICY "Allow authors to delete own comments"
+-- Allow users to delete their own comments, or admin to delete any comment
+CREATE POLICY "Allow delete comments"
   ON public.post_comments
   FOR DELETE
-  USING (auth.uid()::text = user_id OR user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  USING (
+    auth.uid()::text = user_id 
+    OR user_id = current_setting('request.jwt.claims', true)::json->>'sub'
+    OR auth.jwt()->>'email' IN ('ndl.long.nguyendai@gmail.com', 'admin@filedummy.com')
+  );
+
+-- Admin can approve / update comments
+CREATE POLICY "Allow admin approve comments"
+  ON public.post_comments
+  FOR UPDATE
+  USING (auth.jwt()->>'email' IN ('ndl.long.nguyendai@gmail.com', 'admin@filedummy.com'))
+  WITH CHECK (auth.jwt()->>'email' IN ('ndl.long.nguyendai@gmail.com', 'admin@filedummy.com'));
 
 -- Enable Realtime
 ALTER PUBLICATION supabase_realtime ADD TABLE public.post_reactions;

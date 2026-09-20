@@ -238,8 +238,25 @@ export const togglePostLike = async (
 };
 
 // -------------------------------------------------------------
-// COMMENTS API (Strictly Authenticated, No Guest Form)
+// COMMENTS API (Strictly Authenticated, With Admin Moderation)
 // -------------------------------------------------------------
+
+import { isUserAdmin } from "./client";
+
+export const setStoredDevAdmin = (): UserProfile => {
+  const profile: UserProfile = {
+    id: "admin_ndlong",
+    name: "Nguyễn Đại Long (Admin)",
+    email: "ndl.long.nguyendai@gmail.com",
+    avatar_url: "https://api.dicebear.com/7.x/bottts/svg?seed=NDLongAdmin",
+    isGuest: false,
+    role: "admin",
+  };
+  if (typeof window !== "undefined") {
+    localStorage.setItem(DEV_USER_KEY, JSON.stringify(profile));
+  }
+  return profile;
+};
 
 const INITIAL_MOCK_COMMENTS: Record<string, PostComment[]> = {
   default: [
@@ -252,6 +269,7 @@ const INITIAL_MOCK_COMMENTS: Record<string, PostComment[]> = {
       content:
         "Great technical breakdown! Tested this in our Node.js and AWS S3 staging pipeline. The boundary chunk sizes matched perfectly.",
       created_at: new Date(Date.now() - 3600 * 1000 * 48).toISOString(),
+      is_approved: true,
     },
     {
       id: "mock_c2",
@@ -262,20 +280,40 @@ const INITIAL_MOCK_COMMENTS: Record<string, PostComment[]> = {
       content:
         "Rất hữu ích cho đội ngũ QA khi test multipart form và boundary limits. Tệp sạch và không bị timeout khi benchmark mạng.",
       created_at: new Date(Date.now() - 3600 * 1000 * 12).toISOString(),
+      is_approved: true,
+    },
+    {
+      id: "mock_c3",
+      post_slug: "default",
+      user_id: "dev_hoang",
+      user_name: "Hoàng Lê (Backend Dev)",
+      user_avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Hoang",
+      content:
+        "Có thể dùng thư viện này kết hợp với Cloudflare Workers stream multipart được không anh Long? Em thấy buffer trên edge hơi giới hạn.",
+      created_at: new Date(Date.now() - 3600 * 1000 * 2).toISOString(),
+      is_approved: false, // Pending approval for demonstration
     },
   ],
 };
 
-export const fetchPostComments = async (postSlug: string): Promise<PostComment[]> => {
+export const fetchPostComments = async (
+  postSlug: string,
+  includeUnapproved: boolean = false
+): Promise<PostComment[]> => {
   const client = getSupabaseClient();
   if (client) {
     try {
-      const { data, error } = await client
+      let query = client
         .from("post_comments")
         .select("*")
         .eq("post_slug", postSlug)
         .order("created_at", { ascending: false });
 
+      if (!includeUnapproved) {
+        query = query.eq("is_approved", true);
+      }
+
+      const { data, error } = await query;
       if (!error && data) {
         return data as PostComment[];
       }
@@ -289,14 +327,16 @@ export const fetchPostComments = async (postSlug: string): Promise<PostComment[]
     try {
       const stored = localStorage.getItem(`mock_comments_${postSlug}`);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed: PostComment[] = JSON.parse(stored);
+        return includeUnapproved ? parsed : parsed.filter((c) => c.is_approved !== false);
       }
     } catch {
       // ignore
     }
   }
 
-  return INITIAL_MOCK_COMMENTS.default.map((c) => ({ ...c, post_slug: postSlug }));
+  const list = INITIAL_MOCK_COMMENTS.default.map((c) => ({ ...c, post_slug: postSlug }));
+  return includeUnapproved ? list : list.filter((c) => c.is_approved !== false);
 };
 
 export const addPostComment = async (
@@ -304,6 +344,7 @@ export const addPostComment = async (
   user: UserProfile,
   content: string
 ): Promise<PostComment> => {
+  const isAdmin = isUserAdmin(user);
   const newComment: PostComment = {
     id: `c_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
     post_slug: postSlug,
@@ -313,6 +354,8 @@ export const addPostComment = async (
     user_email: user.email,
     content: content.trim(),
     created_at: new Date().toISOString(),
+    is_approved: isAdmin ? true : false, // Admin comments are auto-approved; users require review
+    is_admin: isAdmin,
   };
 
   const client = getSupabaseClient();
@@ -327,6 +370,7 @@ export const addPostComment = async (
           user_avatar: newComment.user_avatar,
           user_email: user.email,
           content: newComment.content,
+          is_approved: newComment.is_approved,
         })
         .select()
         .single();
@@ -342,7 +386,7 @@ export const addPostComment = async (
   // Local fallback storage
   if (typeof window !== "undefined") {
     try {
-      const existing = await fetchPostComments(postSlug);
+      const existing = await fetchPostComments(postSlug, true);
       const updated = [newComment, ...existing];
       localStorage.setItem(`mock_comments_${postSlug}`, JSON.stringify(updated));
     } catch {
@@ -353,15 +397,49 @@ export const addPostComment = async (
   return newComment;
 };
 
-export const deletePostComment = async (
+export const approvePostComment = async (
   postSlug: string,
-  commentId: string,
-  userId: string
+  commentId: string
 ): Promise<void> => {
   const client = getSupabaseClient();
   if (client) {
     try {
-      await client.from("post_comments").delete().match({ id: commentId, user_id: userId });
+      await client
+        .from("post_comments")
+        .update({ is_approved: true })
+        .eq("id", commentId);
+    } catch (e) {
+      console.warn("Error approving comment on Supabase:", e);
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    try {
+      const existing = await fetchPostComments(postSlug, true);
+      const updated = existing.map((c) =>
+        c.id === commentId ? { ...c, is_approved: true } : c
+      );
+      localStorage.setItem(`mock_comments_${postSlug}`, JSON.stringify(updated));
+    } catch {
+      // ignore
+    }
+  }
+};
+
+export const deletePostComment = async (
+  postSlug: string,
+  commentId: string,
+  userId: string,
+  isAdmin: boolean = false
+): Promise<void> => {
+  const client = getSupabaseClient();
+  if (client) {
+    try {
+      const query = client.from("post_comments").delete().eq("id", commentId);
+      if (!isAdmin) {
+        query.eq("user_id", userId);
+      }
+      await query;
     } catch (e) {
       console.warn("Error deleting comment from Supabase:", e);
     }
@@ -369,7 +447,7 @@ export const deletePostComment = async (
 
   if (typeof window !== "undefined") {
     try {
-      const existing = await fetchPostComments(postSlug);
+      const existing = await fetchPostComments(postSlug, true);
       const updated = existing.filter((c) => c.id !== commentId);
       localStorage.setItem(`mock_comments_${postSlug}`, JSON.stringify(updated));
     } catch {

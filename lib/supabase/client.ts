@@ -11,6 +11,8 @@ export interface PostComment {
   user_email?: string | null;
   content: string;
   created_at: string;
+  is_approved?: boolean;
+  is_admin?: boolean;
 }
 
 export interface PostReactionsSummary {
@@ -28,7 +30,27 @@ export interface UserProfile {
   avatar_url?: string;
   email?: string;
   isGuest?: boolean;
+  role?: "admin" | "user";
 }
+
+export const ADMIN_EMAILS = [
+  "ndl.long.nguyendai@gmail.com",
+  "admin@filedummy.com",
+  "ndlong.site@gmail.com",
+];
+
+export const isUserAdmin = (user: UserProfile | null): boolean => {
+  if (!user) return false;
+  if (user.role === "admin") return true;
+  if (user.email && ADMIN_EMAILS.some((e) => e.toLowerCase() === user.email?.toLowerCase())) {
+    return true;
+  }
+  const name = user.name.toLowerCase();
+  if (name.includes("nguyễn đại long") || name.includes("nguyen dai long") || name === "admin") {
+    return true;
+  }
+  return false;
+};
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
