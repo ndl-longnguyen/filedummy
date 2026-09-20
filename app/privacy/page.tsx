@@ -2,11 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { NDL_PORTAL_URL } from "@/lib/ecosystem";
+import { getAlternateLanguages } from "@/lib/i18n/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — FileDummy | Google AdSense & GDPR Compliance",
   description:
     "FileDummy Privacy Policy: How we handle user data, analytics, third-party cookies, Google AdSense compliance, GDPR, and CCPA protections.",
+  alternates: getAlternateLanguages("/privacy", "en"),
 };
 
 export default function PrivacyPage() {

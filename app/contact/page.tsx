@@ -3,11 +3,13 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Mail, MessageSquare, HelpCircle, ShieldAlert, Globe, Clock } from "lucide-react";
 import { NDL_PORTAL_URL } from "@/lib/ecosystem";
+import { getAlternateLanguages } from "@/lib/i18n/seo";
 
 export const metadata: Metadata = {
   title: "Contact & Support — FileDummy | NDL Ecosystem",
   description:
     "Official contact channels, publisher information, and support for FileDummy and NDL Ecosystem developer tools. Email ndl.long.nguyendai@gmail.com.",
+  alternates: getAlternateLanguages("/contact", "en"),
 };
 
 export default function ContactPage() {

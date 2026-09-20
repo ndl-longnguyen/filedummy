@@ -1,0 +1,113 @@
+Building a smooth drag-and-drop file upload interface in React enhances usability and engagement. In this guide, we build an accessible, responsive dropzone component using `react-dropzone` with full file preview support and upload progress.
+
+## Installing react-dropzone
+
+```bash
+npm install react-dropzone lucide-react
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="10mb"
+  message="Download a standard 10MB test PDF to test your React drag-and-drop dropzone component."
+  buttonLabel="Download 10MB PDF Sample →"
+/>
+
+## Complete React Component
+
+```tsx
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { UploadCloud, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+
+export function FileDropzone() {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const onDrop = useCallback((acceptedFiles: File[], fileRejections: any[]) => {
+    setErrorMessage(null);
+
+    if (fileRejections.length > 0) {
+      const error = fileRejections[0].errors[0];
+      setErrorMessage(error.message);
+      return;
+    }
+
+    if (acceptedFiles.length > 0) {
+      setSelectedFile(acceptedFiles[0]);
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
+    onDrop,
+    maxFiles: 1,
+    maxSize: 20 * 1024 * 1024, // 20MB
+    accept: {
+      'application/pdf': ['.pdf'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+      'image/*': ['.png', '.jpg', '.jpeg'],
+    },
+  });
+
+  return (
+    <div className="max-w-xl mx-auto my-8">
+      <div
+        {...getRootProps()}
+        className={`p-8 border-2 border-dashed rounded-2xl text-center cursor-pointer transition-colors ${
+          isDragActive
+            ? 'border-blue-500 bg-blue-500/10'
+            : isDragReject
+            ? 'border-red-500 bg-red-500/10'
+            : 'border-slate-700 bg-slate-900/50 hover:border-slate-600'
+        }`}
+      >
+        <input {...getInputProps()} />
+        <div className="flex flex-col items-center justify-center space-y-3">
+          <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400">
+            <UploadCloud className="w-8 h-8" />
+          </div>
+          {isDragActive ? (
+            <p className="text-sm font-medium text-blue-400">Drop the file here...</p>
+          ) : (
+            <div>
+              <p className="text-sm font-semibold text-white">
+                Click to upload or drag and drop
+              </p>
+              <p className="text-xs text-slate-400 mt-1">
+                PDF, DOCX, PNG, or JPG (max 20MB)
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {selectedFile && (
+        <div className="mt-4 p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <FileText className="w-5 h-5 text-blue-400" />
+            <div>
+              <p className="text-sm font-medium text-white">{selectedFile.name}</p>
+              <p className="text-xs text-slate-400">
+                {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+              </p>
+            </div>
+          </div>
+          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center space-x-2">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Dropzone UX Best Practices
+- **Visual feedback on drag over:** Dim background or illuminate borders when a valid file is hovering.
+- **Clear rejection states:** Show distinct red styling if an unsupported file format is dragged over.
+- **Keyboard navigation:** Ensure users who rely on keyboards can press `Tab` to focus the dropzone and `Enter` to open the native OS file picker.

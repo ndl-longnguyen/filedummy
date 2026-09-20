@@ -1,0 +1,38 @@
+Configuring S3 and R2 bucket policies correctly is critical to prevent accidental data leaks while ensuring authorized downloads function seamlessly.
+
+## The Principle of Least Privilege
+
+By default, all cloud object storage buckets should have **Block Public Access** enabled. Individual files should only be exposed via CloudFront/Cloudflare CDN distributions or generated presigned URLs.
+
+<BlogDownloadCTA
+  fileType="txt"
+  fileSlug="large"
+  message="Download our sample file to test private bucket retrieval policies with S3 SigV4 authentication."
+  buttonLabel="Download 1MB TXT Sample →"
+/>
+
+## Example: Read-Only Public Bucket Policy for CDN Origins
+
+If your bucket is dedicated to serving static public assets via a custom domain:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowPublicReadForAssets",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-public-bucket/*"
+    }
+  ]
+}
+```
+
+## Restricting Access to Cloudflare CDN (R2 Origin Access)
+
+To ensure users cannot bypass your CDN and access your storage origin directly:
+1. In Cloudflare R2, navigate to **Settings > Custom Domains**.
+2. Connect your custom subdomain (e.g., `cdn.example.com`).
+3. Turn off **R2.dev public URL** access. All traffic is now routed through Cloudflare's WAF and caching rules.

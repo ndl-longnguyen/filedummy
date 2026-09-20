@@ -1,0 +1,151 @@
+import { Dictionary } from "../types";
+
+export const enDictionary: Dictionary = {
+  locale: "en",
+  nav: {
+    brandSubtitle: "Sample File Templates",
+    proBadge: "PRO",
+    generatorBtn: "Custom Generator",
+    appsHub: "Explore NDL Apps Hub (8+ tools)",
+    blog: "Blog",
+  },
+  footer: {
+    aboutText:
+      "Global sample and dummy file download platform. Clean, standardized files in multiple formats and sizes for developers, QA testers, and designers worldwide.",
+    globalEdge: "Cloudflare R2 Global Edge",
+    virusFree: "100% Virus & Malware Free",
+    sampleFilesTitle: "Sample Files",
+    customGenerator: "⚡ Custom Size Generator →",
+    techBlog: "📚 Developer Technical Blog →",
+    ecosystemTitle: "NDL Ecosystem",
+    legalTitle: "Resources & Legal",
+    aboutUs: "About Us",
+    privacy: "Privacy Policy",
+    terms: "Terms of Service",
+    contact: "Contact & Support",
+    copyright: "All rights reserved.",
+  },
+  common: {
+    download: "Download",
+    downloadFile: "Download File",
+    instantDownload: "Instant Download",
+    generateCustom: "Generate Custom Size",
+    directDownload: "Direct High-Speed Download",
+    copyCli: "Copy Command",
+    copied: "Copied to clipboard!",
+    testThisFile: "Test This File",
+    testScenarios: "Testing Scenarios",
+    specs: "Technical Specifications",
+    fileDetails: "File Details",
+    popularFiles: "Popular Sample Files",
+    allFormats: "All File Formats",
+    sponsored: "Sponsored",
+    advertisement: "Advertisement",
+    backTo: "Back to",
+    viewAll: "View All",
+    minRead: "min read",
+    words: "words",
+    articles: "articles",
+  },
+  home: {
+    badge: "High-Speed Global CDN Downloads via Cloudflare R2",
+    heroTitle: "Free Sample Files & Dummy Generator for",
+    heroHighlight: "Testing & QA",
+    heroSubtitle:
+      "Download standardized dummy files in exact sizes (100KB to 1GB) across PDF, DOCX, TXT, JPG, PNG, CSV, JSON, and ZIP formats. Zero malware, valid file headers, and lightning-fast direct CDN links.",
+    ctaBrowse: "Browse Formats",
+    ctaGenerator: "Create Custom File",
+    popularTitle: "Most Popular Sample Downloads",
+    popularSubtitle:
+      "Instant downloads for QA file upload limits, memory benchmarks, and system integration testing.",
+    formatsTitle: "Standardized Formats Available",
+    formatsSubtitle:
+      "Every format features structurally valid byte padding and legitimate MIME magic signatures.",
+    features: {
+      f1Title: "Valid Signatures & Headers",
+      f1Desc:
+        "Files include authentic magic bytes (%PDF, PK..), passing strict server-side MIME validators and antivirus engines.",
+      f2Title: "Global Cloudflare R2 Edge",
+      f2Desc:
+        "Zero download latency and no throttling. Hosted directly on Cloudflare edge storage for multi-gigabit downloads.",
+      f3Title: "Ready for CI/CD & Testing",
+      f3Desc:
+        "Every file includes cURL, Wget, Python, and Node.js snippets for automated Playwright, Cypress, and Postman pipelines.",
+    },
+    blogTitle: "From the Developer Blog",
+    blogBadge: "Technical Guides & Tutorials",
+    blogSubtitle:
+      "Deep dives into file uploads, security hashes, QA testing, and cloud storage architectures.",
+    viewAllBlog: "View All 36 Articles",
+    faqBadge: "Got Questions?",
+    faqTitle: "Frequently Asked Questions",
+    faqs: [
+      {
+        q: "Are these sample files safe and virus-free?",
+        a: "Yes, 100%. All sample files are generated programmatically with valid headers and clean padded binary/text data. None of our files contain macros, executables, or malicious scripts.",
+      },
+      {
+        q: "How fast are the file downloads?",
+        a: "All files are served directly from Cloudflare R2 object storage with global edge caching across 300+ worldwide locations, providing maximum download speeds and zero bandwidth throttling.",
+      },
+      {
+        q: "Can I hotlink or use the API in my automated scripts?",
+        a: "Yes, you can use our `/api/download?type=...&size=...` endpoint with standard tools like `curl -L` and `wget` in your CI/CD test pipelines.",
+      },
+      {
+        q: "What sizes are available for download?",
+        a: "Standard sizes range from 50KB, 100KB, 1MB, 5MB, 10MB, 20MB, 50MB, 100MB, 500MB up to 1GB. You can also generate exact custom byte sizes with our browser generator.",
+      },
+    ],
+  },
+  generator: {
+    badge: "Client-Side Dummy File Generator",
+    title: "Generate Custom Sample Files",
+    subtitle:
+      "Create deterministic dummy files of any exact size directly in your browser. Generated on-the-fly using browser memory with zero server uploads.",
+    formatLabel: "Select File Format",
+    sizeLabel: "File Size",
+    unitLabel: "Unit",
+    contentPatternLabel: "Data Pattern",
+    generateBtn: "Generate & Download File",
+    generatingBtn: "Generating Binary Stream...",
+    downloadReady: "File generated successfully! Your download should start automatically.",
+    presetsLabel: "Quick Size Presets",
+    howItWorksTitle: "How Browser File Generation Works",
+    howItWorksDesc:
+      "Our generator uses the HTML5 Blob and TypedArray APIs to assemble chunks in client memory, then triggers a native browser download without sending data to any external server.",
+  },
+  category: {
+    downloadSizesTitle: "Available Size Variants",
+    testingScenariosTitle: "Common QA & Testing Scenarios",
+    techSpecsTitle: "Technical File Specifications",
+    exploreOtherFormatsTitle: "Explore Other File Formats",
+    faqTitle: "Frequently Asked Questions",
+  },
+  fileDetail: {
+    detailsTitle: "File Specifications",
+    checksumsTitle: "File Integrity & Checksums",
+    cliCommandsTitle: "Automated Download Commands",
+    cliDesc: "Copy and run directly in terminal, CI/CD runners, or automated test scripts:",
+    checklistTitle: "QA Testing Verification Checklist",
+    checklistItems: [
+      "Confirm server upload limit accepts or rejects exact byte boundaries.",
+      "Verify magic-byte inspection detects format accurately without extension reliance.",
+      "Profile memory consumption during upload stream and garbage collection.",
+      "Check antivirus / malware scanner handles large file buffers gracefully.",
+    ],
+    relatedSizesTitle: "Other Sizes for This Format",
+  },
+  blog: {
+    badge: "36 Articles · 6 Clusters · SEO Optimized",
+    heroTitle: "Developer File Handling Blog",
+    heroSubtitle:
+      "Practical tutorials on file upload, security, processing, QA testing, and cloud storage. Every article links to a free sample file download.",
+    readingTime: "min read",
+    tableOfContents: "Table of Contents",
+    faqTitle: "Frequently Asked Questions",
+    relatedArticles: "Related Articles",
+    testFiles: "Test Files",
+    allArticles: "All Articles",
+  },
+};

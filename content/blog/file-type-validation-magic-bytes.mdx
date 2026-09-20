@@ -1,0 +1,61 @@
+Relying solely on file extensions (like `.pdf` or `.jpg`) or the client-supplied `Content-Type` header is dangerous. An attacker can easily rename `malware.exe` to `invoice.pdf` and bypass standard filters. True file validation requires inspecting magic bytes.
+
+## What Are Magic Bytes?
+
+Magic bytes (file signatures) are specific hexadecimal byte sequences located at the exact beginning of a file:
+
+| File Format | Extension | Magic Bytes (Hex) | ASCII Representation |
+|-------------|-----------|-------------------|----------------------|
+| PDF         | .pdf      | `25 50 44 46`     | `%PDF`               |
+| PNG         | .png      | `89 50 4E 47`     | `.PNG`               |
+| JPEG        | .jpg      | `FF D8 FF`        | `ÿØÿ`                |
+| ZIP / DOCX  | .zip/.docx| `50 4B 03 04`     | `PK..`               |
+| GIF         | .gif      | `47 49 46 38`     | `GIF8`               |
+
+<BlogDownloadCTA
+  fileType="docx"
+  fileSlug="1mb"
+  message="Download a real 1MB DOCX file to inspect its PK ZIP container magic bytes in your code."
+  buttonLabel="Download 1MB DOCX Sample →"
+/>
+
+## Detecting Magic Bytes in Node.js with file-type
+
+```bash
+npm install file-type
+```
+
+```typescript
+import { fileTypeFromBuffer } from 'file-type';
+
+export async function validateActualFileType(buffer: Buffer, expectedMime: string): Promise<boolean> {
+  const detected = await fileTypeFromBuffer(buffer);
+
+  if (!detected) {
+    console.error('Unknown or unsupported binary structure.');
+    return false;
+  }
+
+  console.log(`Detected true format: ${detected.ext} (${detected.mime})`);
+  return detected.mime === expectedMime;
+}
+```
+
+## Reading Magic Bytes in the Browser
+
+You can read the first 16 bytes of any File or Blob without loading the whole file into RAM:
+
+```typescript
+export async function checkPdfHeaderInBrowser(file: File): Promise<boolean> {
+  const headerBlob = file.slice(0, 4);
+  const arrayBuffer = await headerBlob.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+
+  // %PDF in ASCII is [0x25, 0x50, 0x44, 0x46]
+  return bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46;
+}
+```
+
+## Security Gotchas
+- **Polyglot files:** Files crafted to be simultaneously valid JPEGs and executable scripts. Always pair magic byte validation with format re-encoding or sandboxed processing.
+- **DOCX/XLSX detection:** Office documents are ZIP archives. Their magic bytes will report as `application/zip`. Use an OpenXML validator to check for `word/document.xml` inside the archive.

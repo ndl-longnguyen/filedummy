@@ -1,0 +1,57 @@
+Manipulating PDF pages—combining multiple reports into a single file or extracting specific pages—can be performed entirely in pure JavaScript without external system dependencies like Poppler or Ghostscript using the `pdf-lib` library.
+
+## Installing pdf-lib
+
+```bash
+npm install pdf-lib
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="10mb"
+  message="Download a multi-page 10MB PDF sample to test splitting and merging functions with pdf-lib."
+  buttonLabel="Download 10MB PDF Sample →"
+/>
+
+## Merging Multiple PDFs
+
+```typescript
+import { PDFDocument } from 'pdf-lib';
+import fs from 'fs';
+
+export async function mergePdfFiles(pdfBuffers: Buffer[]): Promise<Uint8Array> {
+  const mergedPdf = await PDFDocument.create();
+
+  for (const buffer of pdfBuffers) {
+    const donorPdf = await PDFDocument.load(buffer);
+    const copiedPages = await mergedPdf.copyPages(donorPdf, donorPdf.getPageIndices());
+
+    copiedPages.forEach((page) => mergedPdf.addPage(page));
+  }
+
+  return await mergedPdf.save();
+}
+```
+
+## Splitting a PDF (Extracting Page Ranges)
+
+```typescript
+import { PDFDocument } from 'pdf-lib';
+
+export async function extractPdfPages(
+  sourceBuffer: Buffer,
+  pageIndices: number[] // 0-indexed page numbers
+): Promise<Uint8Array> {
+  const sourcePdf = await PDFDocument.load(sourceBuffer);
+  const newPdf = await PDFDocument.create();
+
+  const copiedPages = await newPdf.copyPages(sourcePdf, pageIndices);
+  copiedPages.forEach((page) => newPdf.addPage(page));
+
+  return await newPdf.save();
+}
+```
+
+## In-Memory Performance Tips
+- **Keep byte streams in memory:** Avoid writing intermediary files to disk during multi-step merge operations.
+- **Preserve metadata:** Use `mergedPdf.setTitle('Merged Report')` and `mergedPdf.setAuthor('My App')` to maintain clean document properties.

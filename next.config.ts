@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   async headers() {
     return [
       {
         source: "/api/download",
-        headers: [
-          { key: "Cache-Control", value: "no-store, no-cache, must-revalidate" },
-        ],
+        headers: [{ key: "Cache-Control", value: "no-store, no-cache, must-revalidate" }],
       },
       {
         source: "/(.*)",
@@ -21,4 +21,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ["remark-gfm"],
+    rehypePlugins: [],
+  },
+});
+
+export default withMDX(nextConfig);
+

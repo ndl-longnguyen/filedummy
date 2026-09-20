@@ -3,19 +3,23 @@
 import Link from "next/link";
 import { Download, ArrowUpRight, Copy, Check } from "lucide-react";
 import { FileEntry, formatBytes } from "@/lib/files";
+import type { Locale } from "@/lib/i18n/types";
 import { useState } from "react";
 
 interface SizeTableProps {
   files: FileEntry[];
   typeLabel: string;
+  locale?: Locale;
 }
 
-export function SizeTable({ files, typeLabel }: SizeTableProps) {
+export function SizeTable({ files, typeLabel, locale = "en" }: SizeTableProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const isVi = locale === "vi";
+  const prefix = isVi ? "/vi" : "";
 
   const copyLink = (key: string, file: FileEntry) => {
     const origin = typeof window !== "undefined" ? window.location.origin : "https://filedummy.ndlong.site";
-    const url = `${origin}/${file.type}/${file.slug}`;
+    const url = `${origin}${prefix}/${file.type}/${file.slug}`;
     navigator.clipboard.writeText(url);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2000);
@@ -26,10 +30,10 @@ export function SizeTable({ files, typeLabel }: SizeTableProps) {
       <table className="w-full text-left border-collapse text-sm">
         <thead>
           <tr className="border-b border-slate-800/80 bg-slate-900/50 text-slate-400 text-xs uppercase tracking-wider">
-            <th className="py-4 px-6 font-semibold">File & Size</th>
-            <th className="py-4 px-4 font-semibold">Exact Bytes</th>
-            <th className="py-4 px-4 font-semibold hidden md:table-cell">Format</th>
-            <th className="py-4 px-6 font-semibold text-right">Action</th>
+            <th className="py-4 px-6 font-semibold">{isVi ? "Tệp & Dung Lượng" : "File & Size"}</th>
+            <th className="py-4 px-4 font-semibold">{isVi ? "Số Byte Chuẩn" : "Exact Bytes"}</th>
+            <th className="py-4 px-4 font-semibold hidden md:table-cell">{isVi ? "Định Dạng" : "Format"}</th>
+            <th className="py-4 px-6 font-semibold text-right">{isVi ? "Thao Tác" : "Action"}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-800/60">
@@ -41,7 +45,7 @@ export function SizeTable({ files, typeLabel }: SizeTableProps) {
               {/* File label & name */}
               <td className="py-4 px-6">
                 <Link
-                  href={`/${f.type}/${f.slug}`}
+                  href={`${prefix}/${f.type}/${f.slug}`}
                   className="font-bold text-white hover:text-blue-400 transition-colors flex items-center gap-1.5"
                 >
                   <span>{f.label}</span>
@@ -70,7 +74,7 @@ export function SizeTable({ files, typeLabel }: SizeTableProps) {
                 <div className="flex items-center justify-end gap-2">
                   <button
                     onClick={() => copyLink(f.r2Key, f)}
-                    title="Copy detail page link"
+                    title={isVi ? "Sao chép link chi tiết" : "Copy detail page link"}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                   >
                     {copiedKey === f.r2Key ? (
@@ -80,11 +84,11 @@ export function SizeTable({ files, typeLabel }: SizeTableProps) {
                     )}
                   </button>
                   <Link
-                    href={`/${f.type}/${f.slug}`}
+                    href={`${prefix}/${f.type}/${f.slug}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-600/20 transition-all hover:scale-105"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    <span>Get {typeLabel}</span>
+                    <span>{isVi ? `Tải ${typeLabel}` : `Get ${typeLabel}`}</span>
                   </Link>
                 </div>
               </td>

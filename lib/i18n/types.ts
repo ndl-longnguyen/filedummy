@@ -1,0 +1,118 @@
+export type Locale = "en" | "vi";
+
+export interface Dictionary {
+  locale: Locale;
+  nav: {
+    brandSubtitle: string;
+    proBadge: string;
+    generatorBtn: string;
+    appsHub: string;
+    blog: string;
+  };
+  footer: {
+    aboutText: string;
+    globalEdge: string;
+    virusFree: string;
+    sampleFilesTitle: string;
+    customGenerator: string;
+    techBlog: string;
+    ecosystemTitle: string;
+    legalTitle: string;
+    aboutUs: string;
+    privacy: string;
+    terms: string;
+    contact: string;
+    copyright: string;
+  };
+  common: {
+    download: string;
+    downloadFile: string;
+    instantDownload: string;
+    generateCustom: string;
+    directDownload: string;
+    copyCli: string;
+    copied: string;
+    testThisFile: string;
+    testScenarios: string;
+    specs: string;
+    fileDetails: string;
+    popularFiles: string;
+    allFormats: string;
+    sponsored: string;
+    advertisement: string;
+    backTo: string;
+    viewAll: string;
+    minRead: string;
+    words: string;
+    articles: string;
+  };
+  home: {
+    badge: string;
+    heroTitle: string;
+    heroHighlight: string;
+    heroSubtitle: string;
+    ctaBrowse: string;
+    ctaGenerator: string;
+    popularTitle: string;
+    popularSubtitle: string;
+    formatsTitle: string;
+    formatsSubtitle: string;
+    features: {
+      f1Title: string;
+      f1Desc: string;
+      f2Title: string;
+      f2Desc: string;
+      f3Title: string;
+      f3Desc: string;
+    };
+    blogTitle: string;
+    blogBadge: string;
+    blogSubtitle: string;
+    viewAllBlog: string;
+    faqBadge: string;
+    faqTitle: string;
+    faqs: Array<{ q: string; a: string }>;
+  };
+  generator: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    formatLabel: string;
+    sizeLabel: string;
+    unitLabel: string;
+    contentPatternLabel: string;
+    generateBtn: string;
+    generatingBtn: string;
+    downloadReady: string;
+    presetsLabel: string;
+    howItWorksTitle: string;
+    howItWorksDesc: string;
+  };
+  category: {
+    downloadSizesTitle: string;
+    testingScenariosTitle: string;
+    techSpecsTitle: string;
+    exploreOtherFormatsTitle: string;
+    faqTitle: string;
+  };
+  fileDetail: {
+    detailsTitle: string;
+    checksumsTitle: string;
+    cliCommandsTitle: string;
+    cliDesc: string;
+    checklistTitle: string;
+    checklistItems: string[];
+    relatedSizesTitle: string;
+  };
+  blog: {
+    badge: string;
+    heroTitle: string;
+    heroSubtitle: string;
+    readingTime: string;
+    tableOfContents: string;
+    faqTitle: string;
+    relatedArticles: string;
+    testFiles: string;
+    allArticles: string;
+  };
+}

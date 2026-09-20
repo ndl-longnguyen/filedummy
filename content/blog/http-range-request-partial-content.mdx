@@ -1,0 +1,61 @@
+HTTP Range Requests (RFC 7233) allow clients to download specific byte ranges of a resource. This is the underlying technology powering video seek bars, multi-threaded download managers (IDM, aria2), and resumable downloads.
+
+## The HTTP 206 Partial Content Lifecycle
+
+1. **Client probe:** Client makes a `HEAD` request. The server replies with `Accept-Ranges: bytes`.
+2. **Range request:** Client sends `Range: bytes=0-1048575` (requesting the first 1MB).
+3. **Partial response:** Server returns **HTTP 206 Partial Content** with:
+   - `Content-Range: bytes 0-1048575/10485760`
+   - `Content-Length: 1048576`
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="10mb"
+  message="Test HTTP byte range requests with curl against our 10MB PDF sample."
+  buttonLabel="Download 10MB PDF Sample →"
+/>
+
+## Testing Byte Ranges with cURL
+
+```bash
+# Request only the first 500 bytes (to inspect file magic headers)
+curl -r 0-499 -i https://filedummy.dev/api/download?type=pdf&size=10mb
+```
+
+## Implementing Range Requests in Node.js
+
+```typescript
+import fs from 'fs';
+import { IncomingMessage, ServerResponse } from 'http';
+
+export function handleRangeRequest(req: IncomingMessage, res: ServerResponse, filePath: string) {
+  const stat = fs.statSync(filePath);
+  const total = stat.size;
+  const range = req.headers.range;
+
+  if (!range) {
+    res.writeHead(200, {
+      'Content-Length': total,
+      'Content-Type': 'application/pdf',
+      'Accept-Ranges': 'bytes',
+    });
+    fs.createReadStream(filePath).pipe(res);
+    return;
+  }
+
+  const parts = range.replace(/bytes=/, '').split('-');
+  const start = parseInt(parts[0], 10);
+  const end = parts[1] ? parseInt(parts[1], 10) : total - 1;
+  const chunksize = end - start + 1;
+
+  res.writeHead(206, {
+    'Content-Range': `bytes ${start}-${end}/${total}`,
+    'Accept-Ranges': 'bytes',
+    'Content-Length': chunksize,
+    'Content-Type': 'application/pdf',
+  });
+
+  const stream = fs.createReadStream(filePath, { start, end });
+  stream.pipe(res);
+}
+```

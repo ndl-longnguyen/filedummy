@@ -1,0 +1,73 @@
+When uploading large assets like documents, videos, or raw datasets, providing visual feedback with an accurate progress bar is essential for user experience. While the modern Fetch API does not expose upload progress events, XMLHttpRequest (XHR) and the browser Streams API provide full control.
+
+## Why Fetch API Lacks Upload Progress
+
+The Fetch API was designed around WHATWG Streams. While streaming request bodies are becoming supported in some modern browsers, `fetch()` still does not offer a standardized `onUploadProgress` callback.
+
+To track upload bytes sent over the wire, **XMLHttpRequest** remains the industry standard.
+
+<BlogDownloadCTA
+  fileType="docx"
+  fileSlug="50mb"
+  message="Need a large file to test smooth progress animation? Download our 50MB DOCX test file."
+  buttonLabel="Download 50MB DOCX Sample →"
+/>
+
+## Building an Upload Progress Bar Component
+
+Here is a complete, clean implementation using modern TypeScript and Tailwind CSS:
+
+```typescript
+export function uploadWithProgress(
+  file: File,
+  url: string,
+  onProgress: (percent: number, loaded: number, total: number) => void
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    // Listen to upload progress events
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        onProgress(percent, event.loaded, event.total);
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(xhr.responseText);
+      } else {
+        reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+      }
+    });
+
+    xhr.addEventListener('error', () => reject(new Error('Network error during upload')));
+    xhr.addEventListener('abort', () => reject(new Error('Upload aborted by user')));
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    xhr.open('POST', url, true);
+    xhr.send(formData);
+  });
+}
+```
+
+## Styling with Tailwind CSS and CSS Transitions
+
+Smooth animations prevent the progress bar from jumping erratically:
+
+```html
+<div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5">
+  <div
+    id="progress-bar"
+    class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-200 ease-out"
+    style="width: 0%"
+  ></div>
+</div>
+```
+
+## Practical Tips
+- **Compute transfer speed:** Measure `event.loaded - lastLoaded` every second to display dynamic upload speed in MB/s and estimated time remaining (ETA).
+- **Handle artificial pauses:** Browsers fire the final 100% event once all bytes leave the client socket, but the server may take several additional seconds to scan or persist the file before sending the HTTP 200 response. Indicate a "Processing..." state between 100% and response arrival.

@@ -2,11 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { NDL_PORTAL_URL } from "@/lib/ecosystem";
+import { getAlternateLanguages } from "@/lib/i18n/seo";
 
 export const metadata: Metadata = {
   title: "Terms of Service — FileDummy | NDL Ecosystem",
   description:
     "Terms of Service, acceptable use guidelines, disclaimer of warranties, and legal conditions for using FileDummy sample file download services.",
+  alternates: getAlternateLanguages("/terms", "en"),
 };
 
 export default function TermsPage() {

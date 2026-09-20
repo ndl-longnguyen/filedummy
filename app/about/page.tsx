@@ -4,10 +4,13 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ShieldCheck, HardDrive, Terminal, Zap, Globe, Code2, Users, ArrowRight } from "lucide-react";
 import { NDL_PORTAL_URL } from "@/lib/ecosystem";
 
+import { getAlternateLanguages } from "@/lib/i18n/seo";
+
 export const metadata: Metadata = {
   title: "About Us — FileDummy | Part of NDL Ecosystem",
   description:
     "Learn about FileDummy, our engineering mission, infrastructure, and role in the NDL Ecosystem (ndlong.site) providing standardized sample files for global software testing.",
+  alternates: getAlternateLanguages("/about", "en"),
 };
 
 export default function AboutPage() {

@@ -1,0 +1,21 @@
+Cloud storage pricing consists of three components: **Storage** (per GB/month), **Operations** (PUT, GET requests), and **Data Egress** (bandwidth transferred out to the internet). For download-heavy platforms, egress frequently accounts for over 80% of the total infrastructure cost.
+
+## Cost Comparison: 100TB Monthly Egress Scenario
+
+| Provider | Storage (10TB) | Operations (1M GETs) | Egress (100TB) | Estimated Total |
+|----------|----------------|----------------------|----------------|-----------------|
+| **AWS S3 Standard** | $230.00 | $0.40 | $9,000.00 | **~$9,230 / mo** |
+| **Google Cloud Storage** | $200.00 | $0.40 | $8,500.00 | **~$8,700 / mo** |
+| **Wasabi** | $69.90 | $0.00 | $0.00 (Fair use) | **~$70 / mo** |
+| **Cloudflare R2** | $150.00 | $0.36 | **$0.00** | **~$150 / mo** |
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="1gb"
+  message="Download our 1GB test file to measure real-world transfer throughput from Cloudflare R2."
+  buttonLabel="Download 1GB PDF Sample →"
+/>
+
+## Key Takeaways
+- **The Egress Trap:** Amazon S3 charges $0.09/GB for data transfer out. Serving just 100TB of files to your users costs $9,000 every month on AWS.
+- **Why R2 Wins:** Cloudflare does not charge for egress bandwidth. You only pay $0.015/GB/month for data stored and standard per-operation fees ($0.36 per million Class B read operations).

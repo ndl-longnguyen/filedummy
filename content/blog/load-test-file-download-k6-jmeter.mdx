@@ -1,0 +1,56 @@
+Stress testing file download endpoints guarantees that your CDN, edge caching rules, and origin object storage servers handle concurrent spikes without throttling or high error rates. This guide demonstrates how to build load tests using Grafana k6 and Apache JMeter.
+
+## Writing a File Download Load Test with Grafana k6
+
+k6 is a modern, developer-friendly load testing tool written in Go with JavaScript test scripting.
+
+```javascript
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+
+export const options = {
+  stages: [
+    { duration: '30s', target: 20 },  // Ramp up to 20 users
+    { duration: '1m', target: 50 },   // Maintain 50 concurrent downloads
+    { duration: '20s', target: 0 },   // Ramp down
+  ],
+  thresholds: {
+    http_req_duration: ['p(95)<1500'], // 95% of requests must finish under 1.5s
+    http_req_failed: ['rate<0.01'],    // Error rate must remain under 1%
+  },
+};
+
+export default function () {
+  const url = 'https://filedummy.dev/api/download?type=pdf&size=10mb';
+  const res = http.get(url, {
+    responseType: 'binary',
+  });
+
+  check(res, {
+    'status is 200': (r) => r.status === 200,
+    'content length matches': (r) => r.body.length === 10485760,
+    'cache-control is present': (r) => r.headers['Cache-Control'] !== undefined,
+  });
+
+  sleep(1);
+}
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="10mb"
+  message="Run high-concurrency download benchmarks using our globally cached 10MB test file."
+  buttonLabel="Download 10MB PDF Test Sample →"
+/>
+
+## Configuring Apache JMeter for Download Load Testing
+
+1. Create a **Thread Group** with your desired number of concurrent virtual users (e.g. 100 threads, 30-second ramp-up).
+2. Add an **HTTP Request** sampler pointing to your download URL.
+3. Check the **Save response as MD5 hash** box if you do not want JMeter to retain massive multi-gigabyte payloads in test runner memory.
+4. Add a **Response Assertion** checking for HTTP 200 and valid headers.
+
+## Metrics to Track During File Download Tests
+- **Throughput (MB/s):** Aggregate network egress from your origin or CDN.
+- **Time to First Byte (TTFB):** Highlights whether origin lookup or presigned URL signing is creating bottlenecks.
+- **Error Spikes (HTTP 429 / 503):** Indicates rate limiting or upstream connection pool saturation.

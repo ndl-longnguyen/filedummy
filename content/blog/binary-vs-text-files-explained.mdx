@@ -1,0 +1,40 @@
+At the physical storage level, all computer files are sequences of binary bits (0s and 1s). However, operating systems and programming languages distinguish fundamentally between text files and binary files.
+
+## What Distinguishes Text from Binary?
+
+- **Text Files (.txt, .json, .csv, .html, .xml):** Byte sequences intended to be interpreted directly through a character encoding map (such as UTF-8 or ASCII). Bytes map directly to printable glyphs, line breaks (`\n`, `\r\n`), and whitespace.
+- **Binary Files (.pdf, .png, .docx, .zip, .exe):** Byte sequences representing structured machine data, compiled instructions, compressed streams, or image raster matrices. Arbitrary byte values (from `0x00` to `0xFF`) occur throughout the file.
+
+<BlogDownloadCTA
+  fileType="png"
+  fileSlug="1mb"
+  message="Download our 1MB PNG sample to analyze raw raster chunks and compare with text file representations."
+  buttonLabel="Download 1MB PNG Sample →"
+/>
+
+## Inspecting the Null Byte (`0x00`) Test
+
+A classic heuristic used by Git and Unix tools like `file` to determine whether a file is binary is checking for null bytes (`0x00`) in the first 8,000 bytes:
+
+```typescript
+import fs from 'fs';
+
+export function isBinaryFile(filePath: string): boolean {
+  const buffer = Buffer.alloc(8000);
+  const fd = fs.openSync(filePath, 'r');
+  const bytesRead = fs.readSync(fd, buffer, 0, 8000, 0);
+  fs.closeSync(fd);
+
+  for (let i = 0; i < bytesRead; i++) {
+    // If a null byte is found, it's almost certainly binary data
+    if (buffer[i] === 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+```
+
+## Handling Line Ending Conversions
+Text files undergo carriage return / line feed translations across operating systems (`CRLF` on Windows vs `LF` on Linux/macOS). Attempting to read a binary file in "text mode" in legacy runtimes can corrupt binary streams by altering `0x0D 0x0A` sequences. Always open binary files with binary flags (`'rb'` or `'binary'`).

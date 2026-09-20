@@ -1,0 +1,39 @@
+Text encoding bugs—mojibake characters like `Ã©` instead of `é`—happen when software misinterprets the byte sequences representing Unicode code points. Understanding how UTF-8, UTF-16, and UTF-32 encode characters is essential for building resilient file processing pipelines.
+
+## The Unicode Model: Code Points vs Bytes
+
+Unicode maps abstract characters to numeric **code points** (e.g. `U+0041` for 'A', `U+1F600` for '😀'). The transformation format (UTF) dictates how those numbers are serialized into binary bytes.
+
+| Encoding | Bytes per Character | Self-Synchronizing? | Web Adoption |
+|----------|---------------------|---------------------|--------------|
+| **UTF-8** | 1 to 4 bytes (Variable) | Yes | **98.2% of all websites** |
+| **UTF-16**| 2 or 4 bytes (Variable) | No (Requires BOM/Endianness) | Windows internal / JVM / JS engine |
+| **UTF-32**| Exactly 4 bytes (Fixed) | Yes | Rare (high memory overhead) |
+
+<BlogDownloadCTA
+  fileType="txt"
+  fileSlug="large"
+  message="Download our 1MB UTF-8 text file to test character decoding and multibyte parsing."
+  buttonLabel="Download 1MB TXT Sample →"
+/>
+
+## How UTF-8 Variable Length Works
+
+- **ASCII characters (0-127):** Encoded in 1 byte (`0xxxxxxx`), maintaining 100% backwards compatibility with legacy ASCII.
+- **Latin, Greek, Cyrillic (128-2047):** Encoded in 2 bytes.
+- **Asian scripts, CJK (2048-65535):** Encoded in 3 bytes.
+- **Emojis & rare symbols (65536+):** Encoded in 4 bytes.
+
+```typescript
+// Decoding bytes safely in Node.js
+import { TextDecoder } from 'util';
+
+export function decodeTextSafely(buffer: Buffer): string {
+  // fatal: true throws an exception instead of inserting  replacement characters
+  const decoder = new TextDecoder('utf-8', { fatal: true });
+  return decoder.decode(buffer);
+}
+```
+
+## The Byte Order Mark (BOM)
+UTF-8 does not require a Byte Order Mark because bytes are ordered identically on big-endian and little-endian machines. However, some Windows software (Notepad, Excel) prepends `0xEF 0xBB 0xBF`. Always strip leading BOM bytes when parsing text files in Node.js.

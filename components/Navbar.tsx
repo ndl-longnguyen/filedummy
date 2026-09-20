@@ -6,28 +6,33 @@ import { usePathname } from "next/navigation";
 import { Sparkles, Sliders, Menu, X, Globe } from "lucide-react";
 import { useState } from "react";
 import { NdlAppLauncher } from "./NdlEcosystemBar";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NDL_PORTAL_URL } from "@/lib/ecosystem";
 
 export function Navbar() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const isVi = pathname.startsWith("/vi/") || pathname === "/vi";
+  const prefix = isVi ? "/vi" : "";
+
   const navLinks = [
-    { href: "/pdf", label: "PDF" },
-    { href: "/docx", label: "DOCX" },
-    { href: "/txt", label: "TXT" },
-    { href: "/jpg", label: "JPG" },
-    { href: "/png", label: "PNG" },
-    { href: "/csv", label: "CSV" },
-    { href: "/json", label: "JSON" },
-    { href: "/zip", label: "ZIP" },
+    { href: `${prefix}/pdf`, label: "PDF" },
+    { href: `${prefix}/docx`, label: "DOCX" },
+    { href: `${prefix}/txt`, label: "TXT" },
+    { href: `${prefix}/jpg`, label: "JPG" },
+    { href: `${prefix}/png`, label: "PNG" },
+    { href: `${prefix}/csv`, label: "CSV" },
+    { href: `${prefix}/json`, label: "JSON" },
+    { href: `${prefix}/zip`, label: "ZIP" },
+    { href: `${prefix}/blog`, label: isVi ? "Blog" : "Blog" },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5 group">
+        <Link href={prefix || "/"} className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 p-1.5 flex items-center justify-center shadow-lg shadow-blue-500/10 group-hover:scale-105 group-hover:border-blue-500/40 transition-all overflow-hidden">
             <Image
               src="/logo-icon.png"
@@ -48,7 +53,7 @@ export function Navbar() {
               </span>
             </div>
             <span className="text-[11px] text-slate-400 -mt-1 hidden sm:inline">
-              Sample File Templates
+              {isVi ? "Tệp Mẫu Kiểm Thử" : "Sample File Templates"}
             </span>
           </div>
         </Link>
@@ -56,7 +61,7 @@ export function Navbar() {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href || pathname?.startsWith(link.href + "/");
+            const isActive = pathname === link.href || (link.href !== prefix && pathname?.startsWith(link.href + "/"));
             return (
               <Link
                 key={link.href}
@@ -73,17 +78,20 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Action Buttons: NDL App Launcher & Custom Generator */}
+        {/* Action Buttons: Language Switcher, NDL App Launcher & Custom Generator */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Subtle NDL App Launcher (compact 9-dots icon, zero top-bar clutter) */}
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
+          {/* Subtle NDL App Launcher */}
           <NdlAppLauncher />
 
           <Link
-            href="/generator"
+            href={`${prefix}/generator`}
             className="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 hover:from-blue-500 hover:to-indigo-500 hover:shadow-lg transition-all"
           >
             <Sliders className="w-3.5 h-3.5" />
-            <span>Custom Generator</span>
+            <span>{isVi ? "Tạo File Tùy Chỉnh" : "Custom Generator"}</span>
           </Link>
 
           {/* Mobile menu trigger */}
@@ -115,12 +123,12 @@ export function Navbar() {
 
           <div className="space-y-2 pt-1">
             <Link
-              href="/generator"
+              href={`${prefix}/generator`}
               onClick={() => setMobileMenuOpen(false)}
               className="w-full flex items-center justify-center gap-2 text-xs font-semibold py-2.5 rounded-lg bg-blue-600 text-white"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Custom Dummy Generator</span>
+              <span>{isVi ? "Công Cụ Tạo File Mẫu" : "Custom Dummy Generator"}</span>
             </Link>
 
             <a
@@ -131,7 +139,7 @@ export function Navbar() {
               className="w-full flex items-center justify-center gap-2 text-xs font-semibold py-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700"
             >
               <Globe className="w-3.5 h-3.5 text-blue-400" />
-              <span>Explore NDL Apps Hub (8+ tools)</span>
+              <span>{isVi ? "Khám Phá Hub Tiện Ích NDL (8+ Công Cụ)" : "Explore NDL Apps Hub (8+ tools)"}</span>
             </a>
           </div>
         </div>

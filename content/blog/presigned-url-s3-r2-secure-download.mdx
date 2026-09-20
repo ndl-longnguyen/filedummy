@@ -1,0 +1,56 @@
+Allowing users to download private assets directly from Amazon S3 or Cloudflare R2 without routing massive data streams through your application servers drastically reduces server load and bandwidth costs. Presigned URLs provide secure, time-limited download links signed by your cloud credentials.
+
+## Architecture: Why Direct Presigned Downloads?
+
+```
+[Browser] -- 1. GET /api/download-link?file=report.pdf --> [Node.js API Server]
+                                                            | Generates Presigned URL
+[Browser] <-- 2. Returns signed URL (expires in 15m) <-----+ (Zero bandwidth used!)
+
+[Browser] -- 3. GET https://bucket.r2.cloudflarestorage.com/report.pdf?X-Amz-Signature=... --> [Cloudflare R2]
+[Browser] <-- 4. Direct high-speed download at line rate ---------------------------------------+
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="100mb"
+  message="Download our 100MB PDF sample to benchmark time-to-first-byte (TTFB) with presigned download URLs."
+  buttonLabel="Download 100MB PDF Sample →"
+/>
+
+## Generating Presigned GET URLs in Node.js (AWS SDK v3)
+
+```typescript
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: process.env.R2_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+export async function createDownloadUrl(
+  bucketName: string,
+  objectKey: string,
+  fileName: string,
+  expiresInSeconds = 900 // 15 minutes
+): Promise<string> {
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: objectKey,
+    // Force browser to download with proper filename instead of opening in tab
+    ResponseContentDisposition: `attachment; filename="${encodeURIComponent(fileName)}"`,
+  });
+
+  const presignedUrl = await getSignedUrl(s3, command, { expiresIn: expiresInSeconds });
+  return presignedUrl;
+}
+```
+
+## Security Best Practices
+- **Short expiration windows:** Limit expiration to 5–15 minutes. Once the browser initiates the download stream, connection continuity is preserved even if the URL expires mid-transfer.
+- **Authorization checks first:** Always verify user session permissions and rate limits in your API endpoint before generating and returning the signed URL.

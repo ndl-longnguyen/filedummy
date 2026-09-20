@@ -1,0 +1,49 @@
+Amazon S3 has long been the dominant cloud object storage solution, but its data egress (bandwidth) fees remain a significant cost pain point for high-traffic download platforms. Cloudflare R2 entered the market with full S3 API compatibility and zero egress fees. Here is an architectural and financial breakdown.
+
+## Core Architectural Differences
+
+| Feature | AWS S3 Standard | Cloudflare R2 |
+|---------|-----------------|---------------|
+| S3 API Compatibility | Native | 99% Compatible (SigV4) |
+| Egress Fees | $0.09 / GB (US/EU) | **$0.00 / GB (Free)** |
+| Storage Cost | $0.023 / GB / month | $0.015 / GB / month |
+| Global Edge Integration | Requires CloudFront ($) | Direct Cloudflare CDN integration |
+| Minimum Storage Duration | None on Standard (90d on Glacier) | None |
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="100mb"
+  message="Test low-latency downloads served directly from Cloudflare R2 edge object storage."
+  buttonLabel="Download 100MB PDF Sample →"
+/>
+
+## Code Migration: Connecting to R2 with AWS SDK v3
+
+Migrating from S3 to R2 requires changing only the client endpoint:
+
+```typescript
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+
+const r2Client = new S3Client({
+  region: 'auto',
+  endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+});
+
+export async function uploadToR2(bucket: string, key: string, data: Buffer) {
+  return await r2Client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: data,
+    })
+  );
+}
+```
+
+## When to Choose Which?
+- **Choose Cloudflare R2:** For public file distributions, software releases, game patchers, and video assets where download egress dominates your AWS bill.
+- **Choose AWS S3:** If your application relies deeply on AWS services like Athena, SageMaker, or fine-grained IAM resource tagging.

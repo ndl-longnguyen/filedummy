@@ -1,0 +1,85 @@
+Uploading large files (100MB to 5GB+) over the web presents significant engineering challenges: connection timeouts, memory spikes in browser tabs, and lost progress on transient network dropouts. Slicing files into sequential binary chunks using the browser File API solves these issues.
+
+## Understanding the Chunked Upload Architecture
+
+The HTML5 `File` interface extends `Blob`, which gives you access to the `slice(start, end)` method. Slicing does not read the entire file into memory; it creates a reference pointer to byte offsets on disk.
+
+```
+[------------- 100MB File Object on Disk -------------]
+  |-- Chunk 0 (0 to 5MB)      --> POST /upload?chunk=0
+  |-- Chunk 1 (5 to 10MB)     --> POST /upload?chunk=1
+  |-- Chunk 2 (10 to 15MB)    --> POST /upload?chunk=2
+  |-- ...
+  +-- Complete Signal         --> POST /upload/complete
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="100mb"
+  message="Download a real 100MB test PDF to test your chunked upload logic without generating synthetic files."
+  buttonLabel="Download 100MB PDF Sample →"
+/>
+
+## Complete Client-Side Implementation
+
+Here is a production-ready JavaScript implementation with chunk retry logic and progress calculation:
+
+```typescript
+interface UploadOptions {
+  file: File;
+  endpoint: string;
+  chunkSize?: number; // default 5MB
+  onProgress?: (percent: number) => void;
+}
+
+async function uploadFileInChunks({
+  file,
+  endpoint,
+  chunkSize = 5 * 1024 * 1024,
+  onProgress,
+}: UploadOptions): Promise<void> {
+  const totalChunks = Math.ceil(file.size / chunkSize);
+  const uploadId = crypto.randomUUID();
+
+  for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+    const start = chunkIndex * chunkSize;
+    const end = Math.min(start + chunkSize, file.size);
+    const chunkBlob = file.slice(start, end);
+
+    let success = false;
+    let retries = 3;
+
+    while (!success && retries > 0) {
+      try {
+        const formData = new FormData();
+        formData.append('file', chunkBlob, file.name);
+        formData.append('uploadId', uploadId);
+        formData.append('chunkIndex', String(chunkIndex));
+        formData.append('totalChunks', String(totalChunks));
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!res.ok) throw new Error(`Upload failed with status ${res.status}`);
+        success = true;
+
+        if (onProgress) {
+          const percent = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+          onProgress(percent);
+        }
+      } catch (err) {
+        retries--;
+        if (retries === 0) throw err;
+        await new Promise((r) => setTimeout(r, 1000 * (4 - retries))); // Exponential backoff
+      }
+    }
+  }
+}
+```
+
+## Backend Assembly Considerations
+- **Storage for partial chunks:** Store incoming parts in a temporary staging directory or cloud bucket prefix (`tmp/uploads/<uploadId>/`).
+- **Atomic concatenation:** In Node.js, use readable and writable streams with `fs.createWriteStream({ flags: 'a' })` to append chunks sequentially without loading them all into memory.
+- **Orphan chunk cleanup:** Configure lifecycle policies or cron tasks to remove abandoned partial uploads older than 24 hours.

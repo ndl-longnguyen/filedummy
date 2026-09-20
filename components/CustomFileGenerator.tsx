@@ -3,8 +3,14 @@
 import { useState } from "react";
 import { Sparkles, Download, CheckCircle, RefreshCw, AlertCircle, FileType as FileIcon } from "lucide-react";
 import { AdUnit } from "./AdUnit";
+import type { Locale } from "@/lib/i18n/types";
 
-export function CustomFileGenerator() {
+interface CustomFileGeneratorProps {
+  locale?: Locale;
+}
+
+export function CustomFileGenerator({ locale = "en" }: CustomFileGeneratorProps) {
+  const isVi = locale === "vi";
   const [format, setFormat] = useState<"txt" | "pdf" | "bin" | "csv" | "json">("txt");
   const [sizeValue, setSizeValue] = useState<number>(5);
   const [sizeUnit, setSizeUnit] = useState<"KB" | "MB">("MB");
@@ -233,10 +239,12 @@ export function CustomFileGenerator() {
         </div>
         <div>
           <h2 className="text-xl font-bold text-white tracking-tight">
-            Custom Dummy File Generator
+            {isVi ? "Tạo Dummy File Tùy Chỉnh Kích Thước" : "Custom Dummy File Generator"}
           </h2>
           <p className="text-xs text-slate-400">
-            Generate custom test files with exact byte sizes instantly inside your browser.
+            {isVi
+              ? "Tạo file kiểm thử với kích thước chính xác ngay trên trình duyệt của bạn."
+              : "Generate custom test files with exact byte sizes instantly inside your browser."}
           </p>
         </div>
       </div>
@@ -245,7 +253,7 @@ export function CustomFileGenerator() {
         {/* Format selector */}
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-            1. Select File Format
+            {isVi ? "1. Chọn Định Dạng File" : "1. Select File Format"}
           </label>
           <div className="grid grid-cols-5 gap-2">
             {(["txt", "pdf", "csv", "json", "bin"] as const).map((fmt) => (
@@ -269,7 +277,7 @@ export function CustomFileGenerator() {
         {/* Size presets */}
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-            2. Quick Presets
+            {isVi ? "2. Kích Thước Gợi Ý Nhanh" : "2. Quick Presets"}
           </label>
           <div className="flex flex-wrap gap-2">
             {presets.map((p) => (
@@ -295,7 +303,7 @@ export function CustomFileGenerator() {
         {/* Custom size input */}
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-            3. Exact Target Size
+            {isVi ? "3. Nhập Dung Lượng Chính Xác" : "3. Exact Target Size"}
           </label>
           <div className="flex gap-2">
             <input
@@ -325,13 +333,15 @@ export function CustomFileGenerator() {
           </div>
           <p className="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
             <AlertCircle className="w-3.5 h-3.5" />
-            Browser generator supports up to 100MB directly. For files up to 1GB, browse our pre-built downloads.
+            {isVi
+              ? "Trình tạo file hỗ trợ tối đa 100MB trong RAM. Với file lớn hơn tới 1GB, vui lòng tải các file mẫu dựng sẵn."
+              : "Browser generator supports up to 100MB directly. For files up to 1GB, browse our pre-built downloads."}
           </p>
         </div>
 
         {/* Ad unit in generator */}
         <div className="pt-2">
-          <AdUnit slot="5566778899" format="horizontal" label="Advertisement" />
+          <AdUnit slot="5566778899" format="horizontal" label={isVi ? "Quảng cáo" : "Advertisement"} />
         </div>
 
         {/* Action Button */}
@@ -345,12 +355,20 @@ export function CustomFileGenerator() {
             {isGenerating ? (
               <>
                 <RefreshCw className="w-5 h-5 animate-spin" />
-                <span>Generating {sizeValue} {sizeUnit} .{format} file... ({progress}%)</span>
+                <span>
+                  {isVi
+                    ? `Đang khởi tạo file ${sizeValue} ${sizeUnit} .${format}... (${progress}%)`
+                    : `Generating ${sizeValue} ${sizeUnit} .${format} file... (${progress}%)`}
+                </span>
               </>
             ) : (
               <>
                 <Download className="w-5 h-5" />
-                <span>Generate & Download ({sizeValue} {sizeUnit} .{format})</span>
+                <span>
+                  {isVi
+                    ? `Tạo & Tải File (${sizeValue} ${sizeUnit} .${format})`
+                    : `Generate & Download (${sizeValue} ${sizeUnit} .${format})`}
+                </span>
               </>
             )}
           </button>
@@ -359,7 +377,11 @@ export function CustomFileGenerator() {
         {isDone && (
           <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl">
             <CheckCircle className="w-4 h-4 flex-shrink-0" />
-            <span>Success! File created and download started in your browser.</span>
+            <span>
+              {isVi
+                ? "Thành công! File đã được tạo và quá trình tải xuống đang bắt đầu."
+                : "Success! File created and download started in your browser."}
+            </span>
           </div>
         )}
       </div>

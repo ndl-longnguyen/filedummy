@@ -1,0 +1,70 @@
+When handling sensitive personal documents, medical records, or proprietary source code, zero-knowledge client-side encryption ensures that files are encrypted in the user's browser before transmission. Even if cloud storage is breached, the stored data remains encrypted.
+
+## Cryptographic Setup: AES-256-GCM
+
+We use **AES-GCM** (Galois/Counter Mode) via the browser's native **Web Crypto API**:
+- Provides 256-bit symmetric encryption.
+- Built-in authenticated data (integrity check) prevents tampering.
+- Requires a unique Initialization Vector (IV) for every encryption pass.
+
+<BlogDownloadCTA
+  fileType="txt"
+  fileSlug="lorem"
+  message="Download a standard text test file to test your browser-based AES-256 encryption and decryption functions."
+  buttonLabel="Download 50KB TXT Sample →"
+/>
+
+## Complete Client-Side Encryption Implementation
+
+```typescript
+export interface EncryptedPayload {
+  cipherBuffer: ArrayBuffer;
+  iv: Uint8Array;
+}
+
+// 1. Generate an AES-256 Encryption Key
+export async function generateAesKey(): Promise<CryptoKey> {
+  return await crypto.subtle.generateKey(
+    { name: 'AES-GCM', length: 256 },
+    true, // extractable
+    ['encrypt', 'decrypt']
+  );
+}
+
+// 2. Encrypt File ArrayBuffer
+export async function encryptFile(file: File, key: CryptoKey): Promise<EncryptedPayload> {
+  const iv = crypto.getRandomValues(new Uint8Array(12)); // 96-bit IV recommended for AES-GCM
+  const plaintextBuffer = await file.arrayBuffer();
+
+  const cipherBuffer = await crypto.subtle.encrypt(
+    {
+      name: 'AES-GCM',
+      iv: iv,
+    },
+    key,
+    plaintextBuffer
+  );
+
+  return { cipherBuffer, iv };
+}
+
+// 3. Decrypt CipherBuffer
+export async function decryptFile(
+  cipherBuffer: ArrayBuffer,
+  key: CryptoKey,
+  iv: Uint8Array
+): Promise<ArrayBuffer> {
+  return await crypto.subtle.decrypt(
+    {
+      name: 'AES-GCM',
+      iv: iv,
+    },
+    key,
+    cipherBuffer
+  );
+}
+```
+
+## Key Management Considerations
+- **Password derivation:** Never use raw user passwords directly as keys. Derive the AES key using **PBKDF2** with at least 600,000 iterations and a unique salt.
+- **Store the IV:** The 12-byte IV is not a secret. Prepend the IV to the encrypted ciphertext before transmitting to the server.

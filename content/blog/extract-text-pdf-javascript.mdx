@@ -1,0 +1,64 @@
+Extracting structured text from PDFs is a core component of search indexing, invoice parsing, LLM retrieval-augmented generation (RAG), and data analysis. This guide shows how to extract raw text and layout data in JavaScript and Node.js.
+
+## Using pdf-parse in Node.js
+
+`pdf-parse` is a lightweight Node.js library built on top of Mozilla's PDF.js:
+
+```bash
+npm install pdf-parse
+```
+
+```typescript
+import fs from 'fs';
+import pdf from 'pdf-parse';
+
+export async function extractPdfText(filePath: string) {
+  const dataBuffer = fs.readFileSync(filePath);
+
+  const data = await pdf(dataBuffer);
+
+  return {
+    pageCount: data.numpages,
+    text: data.text,
+    info: data.info,
+    metadata: data.metadata,
+  };
+}
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="5mb"
+  message="Download our structured 5MB PDF test file to test text extraction, page counts, and metadata inspection."
+  buttonLabel="Download 5MB PDF Sample →"
+/>
+
+## Extracting Text in the Browser with PDF.js
+
+Mozilla's `pdfjs-dist` allows client-side parsing without server roundtrips:
+
+```typescript
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Set worker source
+pdfjsLib.GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+export async function extractTextInBrowser(file: File): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let fullText = '';
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map((item: any) => item.str).join(' ');
+    fullText += `--- Page ${i} ---\n${pageText}\n\n`;
+  }
+
+  return fullText;
+}
+```
+
+## Handling Text Extraction Gotchas
+- **Two-column layouts:** Text extractors reading stream order may read across columns instead of down.
+- **Font encoding:** Non-standard embedded font encodings can output garbled Unicode characters without appropriate character map tables.
