@@ -1,0 +1,62 @@
+Verifying file downloads in end-to-end (E2E) automation suites ensures that reporting tools, invoices, and export features work reliably across browser engines. Here is how to test file downloads using Playwright and Cypress.
+
+## Testing File Downloads in Playwright
+
+Playwright provides first-class support for browser download events via the `waitForEvent('download')` API.
+
+```typescript
+import { test, expect } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+
+test('Verify PDF download event and file size', async ({ page }) => {
+  await page.goto('https://filedummy.dev/pdf/5mb');
+
+  // Start waiting for download before clicking the trigger
+  const downloadPromise = page.waitForEvent('download');
+  await page.click('button:has-text("Download 5MB PDF")');
+  const download = await downloadPromise;
+
+  // Validate suggested filename
+  expect(download.suggestedFilename()).toBe('sample-5mb.pdf');
+
+  // Save to temporary test directory
+  const downloadPath = path.join('/tmp', download.suggestedFilename());
+  await download.saveAs(downloadPath);
+
+  // Assert file exists on disk and verify byte size
+  const stats = fs.statSync(downloadPath);
+  expect(stats.size).toBe(5 * 1024 * 1024); // 5,242,880 bytes
+});
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="5mb"
+  message="Download a standardized 5MB PDF to test Playwright download events and assertions."
+  buttonLabel="Tải File Mẫu 5MB PDF →"
+/>
+
+## Testing File Downloads in Cypress
+
+In Cypress, downloads triggered by the browser are automatically saved to the `cypress/downloads` folder.
+
+```javascript
+describe('Cypress PDF Download Verification', () => {
+  it('downloads and verifies 5MB PDF', () => {
+    cy.visit('https://filedummy.dev/pdf/5mb');
+    cy.contains('button', 'Download 5MB PDF').click();
+
+    // Verify file exists in default download path
+    const filename = 'cypress/downloads/sample-5mb.pdf';
+    cy.readFile(filename, 'binary', { timeout: 15000 }).should((buffer) => {
+      expect(buffer.length).to.be.at.least(5000000);
+    });
+  });
+});
+```
+
+## Key E2E Download Testing Considerations
+- **Avoid headless browser download blocks:** Ensure browser preferences permit automatic downloads without a system dialog.
+- **Timeout margins:** Large file downloads need generous timeouts in CI environments where network latency varies.
+- **Clean up artifacts:** Delete downloaded files in `afterEach` hooks to prevent test disk exhaustion.

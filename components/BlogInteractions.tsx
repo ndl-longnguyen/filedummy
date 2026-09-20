@@ -4,37 +4,32 @@ import { useState, useEffect } from "react";
 import {
   MessageSquare,
   ThumbsUp,
-  Heart,
-  Rocket,
-  Lightbulb,
-  Flame,
   Send,
   Trash2,
   LogIn,
   LogOut,
   User,
-  Sparkles,
   Info,
+  Check,
 } from "lucide-react";
 import type { Locale } from "@/lib/i18n/types";
 import { getDictionary } from "@/lib/i18n";
 import {
   PostComment,
-  PostReactionsSummary,
-  ReactionType,
   UserProfile,
   isSupabaseConfigured,
 } from "@/lib/supabase/client";
 import {
-  fetchPostReactions,
-  togglePostReaction,
+  fetchPostLikeStatus,
+  togglePostLike,
   fetchPostComments,
   addPostComment,
   deletePostComment,
   getCurrentUserProfile,
-  setStoredGuestUser,
   signOutUser,
   signInWithOAuthProvider,
+  setStoredDevUser,
+  PostLikeStatus,
 } from "@/lib/supabase/api";
 
 interface BlogInteractionsProps {
@@ -42,43 +37,21 @@ interface BlogInteractionsProps {
   locale?: Locale;
 }
 
-const REACTION_CONFIG: Array<{
-  type: ReactionType;
-  emoji: string;
-  icon: typeof ThumbsUp;
-  color: string;
-  bgActive: string;
-}> = [
-  { type: "like", emoji: "👍", icon: ThumbsUp, color: "text-blue-400", bgActive: "bg-blue-500/20 border-blue-500/40 text-blue-300" },
-  { type: "love", emoji: "❤️", icon: Heart, color: "text-rose-400", bgActive: "bg-rose-500/20 border-rose-500/40 text-rose-300" },
-  { type: "rocket", emoji: "🚀", icon: Rocket, color: "text-emerald-400", bgActive: "bg-emerald-500/20 border-emerald-500/40 text-emerald-300" },
-  { type: "insight", emoji: "💡", icon: Lightbulb, color: "text-amber-400", bgActive: "bg-amber-500/20 border-amber-500/40 text-amber-300" },
-  { type: "fire", emoji: "🔥", icon: Flame, color: "text-orange-400", bgActive: "bg-orange-500/20 border-orange-500/40 text-orange-300" },
-];
-
 export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsProps) {
   const dict = getDictionary(locale);
   const t = dict.interactions;
+  const isVi = locale === "vi";
 
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [reactions, setReactions] = useState<PostReactionsSummary>({
-    like: 0,
-    love: 0,
-    rocket: 0,
-    insight: 0,
-    fire: 0,
-    userReactions: { like: false, love: false, rocket: false, insight: false, fire: false },
-  });
+  const [likeStatus, setLikeStatus] = useState<PostLikeStatus>({ count: 24, userLiked: false });
   const [comments, setComments] = useState<PostComment[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [guestName, setGuestName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [hasLoaded, setHasLoaded] = useState(false);
 
   const supabaseReady = isSupabaseConfigured();
 
-  // Load initial data
+  // Load initial user, likes, comments
   useEffect(() => {
     let isMounted = true;
 
@@ -86,15 +59,14 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
       const currentUser = await getCurrentUserProfile();
       if (isMounted) setUser(currentUser);
 
-      const [loadedReactions, loadedComments] = await Promise.all([
-        fetchPostReactions(postSlug, currentUser?.id),
+      const [loadedLike, loadedComments] = await Promise.all([
+        fetchPostLikeStatus(postSlug, currentUser?.id),
         fetchPostComments(postSlug),
       ]);
 
       if (isMounted) {
-        setReactions(loadedReactions);
+        setLikeStatus(loadedLike);
         setComments(loadedComments);
-        setHasLoaded(true);
       }
     }
 
@@ -105,37 +77,19 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
     };
   }, [postSlug]);
 
-  // Handle Reaction Click
-  const handleReactionClick = async (type: ReactionType) => {
-    let currentUser = user;
-    if (!currentUser) {
-      // Auto-assign a random guest identifier so user doesn't face friction just to react
-      currentUser = setStoredGuestUser("Developer Guest");
-      setUser(currentUser);
-    }
-
-    const updated = await togglePostReaction(postSlug, type, currentUser, reactions);
-    setReactions(updated);
-  };
-
-  // Handle Guest Login
-  const handleGuestLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!guestName.trim()) return;
-    const profile = setStoredGuestUser(guestName);
-    setUser(profile);
-    setGuestName("");
-    setShowLoginModal(false);
+  // Handle Like Toggle
+  const handleLikeClick = async () => {
+    const updated = await togglePostLike(postSlug, likeStatus, user?.id);
+    setLikeStatus(updated);
   };
 
   // Handle OAuth Login
   const handleOAuthLogin = async (provider: "github" | "google") => {
     if (!supabaseReady) {
-      // If not configured, auto-login with mock profile
-      const profile = setStoredGuestUser(
+      const devProfile = setStoredDevUser(
         provider === "github" ? "GitHub Developer" : "Google Developer"
       );
-      setUser(profile);
+      setUser(devProfile);
       setShowLoginModal(false);
       return;
     }
@@ -144,6 +98,13 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
     } catch (err) {
       console.error("OAuth error:", err);
     }
+  };
+
+  // Handle Dev Quick Login (when Supabase keys not present)
+  const handleDevLogin = () => {
+    const devProfile = setStoredDevUser("Alex Rivera (Dev)");
+    setUser(devProfile);
+    setShowLoginModal(false);
   };
 
   // Handle Sign Out
@@ -184,7 +145,7 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
   const formatCommentDate = (isoDate: string) => {
     try {
       const date = new Date(isoDate);
-      return date.toLocaleDateString(locale === "vi" ? "vi-VN" : "en-US", {
+      return date.toLocaleDateString(isVi ? "vi-VN" : "en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -198,7 +159,7 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
 
   return (
     <section className="mt-14 pt-10 border-t border-slate-800/80 space-y-10">
-      {/* Fallback Preview Mode Notice (Only shown if Supabase keys not set) */}
+      {/* Fallback Preview Mode Notice */}
       {!supabaseReady && (
         <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-blue-950/40 border border-blue-500/20 text-blue-300 text-xs">
           <Info className="w-4 h-4 flex-shrink-0 text-blue-400" />
@@ -206,47 +167,46 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
         </div>
       )}
 
-      {/* 1. REACTIONS BAR */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-4">
-        <div className="space-y-1">
-          <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-amber-400" />
-            {t.reactionsTitle}
+      {/* 1. LIKE REACTION SECTION (Simplified to Like-Only) */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="space-y-1 text-center sm:text-left">
+          <h3 className="text-lg font-bold text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
+            <ThumbsUp className={`w-5 h-5 ${likeStatus.userLiked ? "text-blue-400 fill-blue-400" : "text-blue-400"}`} />
+            {isVi ? "Bài viết này có hữu ích không?" : "Was this article helpful?"}
           </h3>
-          <p className="text-xs text-slate-400">{t.reactionsSubtitle}</p>
+          <p className="text-xs text-slate-400">
+            {isVi
+              ? "Bấm Thích để ủng hộ tác giả và giúp bài viết lan tỏa tới cộng đồng lập trình viên."
+              : "Click Like to support the author and help other developers discover this guide."}
+          </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 pt-2">
-          {REACTION_CONFIG.map(({ type, emoji, icon: Icon, color, bgActive }) => {
-            const count = reactions[type] || 0;
-            const isActive = !!reactions.userReactions[type];
-            return (
-              <button
-                key={type}
-                type="button"
-                onClick={() => handleReactionClick(type)}
-                className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-semibold transition-all duration-200 active:scale-95 ${
-                  isActive
-                    ? bgActive
-                    : "bg-slate-900/70 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-800/60"
-                }`}
-              >
-                <span className="text-base group-hover:scale-110 transition-transform">{emoji}</span>
-                <span className="capitalize">{t[type]}</span>
-                <span
-                  className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-bold ${
-                    isActive ? "bg-white/20 text-white" : "bg-slate-800 text-slate-400"
-                  }`}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <button
+          type="button"
+          onClick={handleLikeClick}
+          className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl border text-sm font-bold transition-all duration-200 active:scale-95 shadow-lg ${
+            likeStatus.userLiked
+              ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-400/50 shadow-blue-500/25"
+              : "bg-slate-900 border-slate-700 text-slate-200 hover:border-blue-500/50 hover:bg-slate-800"
+          }`}
+        >
+          <ThumbsUp
+            className={`w-5 h-5 transition-transform group-hover:scale-110 ${
+              likeStatus.userLiked ? "fill-white" : ""
+            }`}
+          />
+          <span>{likeStatus.userLiked ? (isVi ? "Đã Thích" : "Liked") : (isVi ? "Thích Bài Viết" : "Like Article")}</span>
+          <span
+            className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${
+              likeStatus.userLiked ? "bg-white/25 text-white" : "bg-slate-800 text-blue-400 border border-slate-700"
+            }`}
+          >
+            {likeStatus.count}
+          </span>
+        </button>
       </div>
 
-      {/* 2. COMMENTS SECTION */}
+      {/* 2. COMMENTS SECTION (OAuth Required) */}
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
@@ -257,7 +217,7 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
             <p className="text-xs text-slate-400">{t.commentsSubtitle}</p>
           </div>
 
-          {/* User Status Badge or Quick Login Trigger */}
+          {/* User Badge / Sign In Trigger */}
           {user ? (
             <div className="flex items-center gap-3 p-2 px-3 rounded-xl bg-slate-900 border border-slate-800 text-xs">
               <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-[11px] font-bold text-white uppercase">
@@ -265,14 +225,9 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-slate-400">{t.loggedInAs}</span>
-                <strong className="text-white font-medium truncate max-w-[120px]">
+                <strong className="text-white font-medium truncate max-w-[140px]">
                   {user.name}
                 </strong>
-                {user.isGuest && (
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                    Guest
-                  </span>
-                )}
               </div>
               <button
                 onClick={handleSignOut}
@@ -285,10 +240,10 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
           ) : (
             <button
               onClick={() => setShowLoginModal(true)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 text-xs font-semibold transition-all self-start sm:self-auto"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all self-start sm:self-auto shadow-md shadow-blue-500/20"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span>{t.quickLoginTitle}</span>
+              <span>{isVi ? "Đăng nhập để bình luận" : "Sign in to comment"}</span>
             </button>
           )}
         </div>
@@ -298,7 +253,10 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder={user ? t.leaveCommentPlaceholder : t.loginToComment}
+            onFocus={() => {
+              if (!user) setShowLoginModal(true);
+            }}
+            placeholder={user ? t.leaveCommentPlaceholder : (isVi ? "Vui lòng đăng nhập qua GitHub / Google để bình luận..." : "Please sign in with GitHub or Google to leave a comment...")}
             rows={3}
             maxLength={3000}
             className="w-full bg-slate-950/70 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/40 transition-all resize-y"
@@ -310,23 +268,25 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
             </span>
 
             <div className="flex items-center gap-2">
-              {!user && (
+              {!user ? (
                 <button
                   type="button"
                   onClick={() => setShowLoginModal(true)}
-                  className="text-xs text-blue-400 hover:underline font-medium"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all shadow-md shadow-blue-500/20"
                 >
-                  {t.quickLoginTitle}
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>{isVi ? "Đăng nhập" : "Sign In"}</span>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !newComment.trim()}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 text-white text-xs font-semibold transition-all shadow-md shadow-blue-500/20 disabled:shadow-none"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{isSubmitting ? t.submitting : t.submitComment}</span>
                 </button>
               )}
-              <button
-                type="submit"
-                disabled={isSubmitting || !newComment.trim()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 text-white text-xs font-semibold transition-all shadow-md shadow-blue-500/20 disabled:shadow-none"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{isSubmitting ? t.submitting : t.submitComment}</span>
-              </button>
             </div>
           </div>
         </form>
@@ -357,7 +317,7 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
                         <strong className="text-xs sm:text-sm font-semibold text-white">
                           {comment.user_name}
                         </strong>
-                        {comment.user_name.includes("Nguyen Dai Long") && (
+                        {(comment.user_name.includes("Nguyen Dai Long") || comment.user_name.includes("Nguyễn Đại Long")) && (
                           <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">
                             Author
                           </span>
@@ -389,17 +349,21 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
         </div>
       </div>
 
-      {/* QUICK LOGIN MODAL */}
+      {/* QUICK LOGIN MODAL (1-Click GitHub & Google Only) */}
       {showLoginModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 p-6 sm:p-8 space-y-6 shadow-2xl animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <h4 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
                   <User className="w-5 h-5 text-blue-400" />
-                  {t.quickLoginTitle}
+                  {isVi ? "Đăng nhập nhanh để bình luận" : "Sign in to comment"}
                 </h4>
-                <p className="text-xs text-slate-400">{t.quickLoginDesc}</p>
+                <p className="text-xs text-slate-400">
+                  {isVi
+                    ? "Đăng nhập 1-click tức thì qua tài khoản lập trình viên GitHub hoặc Google."
+                    : "Fast 1-click login with your GitHub or Google developer account."}
+                </p>
               </div>
               <button
                 onClick={() => setShowLoginModal(false)}
@@ -410,11 +374,11 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
             </div>
 
             {/* 1-Click OAuth Buttons */}
-            <div className="space-y-2.5">
+            <div className="space-y-3 pt-2">
               <button
                 type="button"
                 onClick={() => handleOAuthLogin("github")}
-                className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700 transition-colors"
+                className="w-full flex items-center justify-center gap-3 px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700 transition-colors shadow-sm"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
@@ -425,7 +389,7 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
               <button
                 type="button"
                 onClick={() => handleOAuthLogin("google")}
-                className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700 transition-colors"
+                className="w-full flex items-center justify-center gap-3 px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700 transition-colors shadow-sm"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path
@@ -447,34 +411,18 @@ export function BlogInteractions({ postSlug, locale = "en" }: BlogInteractionsPr
                 </svg>
                 <span>{t.signInWithGoogle}</span>
               </button>
-            </div>
 
-            {/* Divider */}
-            <div className="relative flex items-center justify-center">
-              <div className="border-t border-slate-800 w-full" />
-              <span className="bg-slate-900 px-3 text-[11px] text-slate-500 uppercase tracking-wider">
-                {t.orJoinAsGuest}
-              </span>
+              {!supabaseReady && (
+                <button
+                  type="button"
+                  onClick={handleDevLogin}
+                  className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 text-xs font-semibold border border-blue-500/30 transition-colors"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>{isVi ? "Đăng nhập nhanh thử nghiệm (Dev Test)" : "Quick Test Login (Preview)"}</span>
+                </button>
+              )}
             </div>
-
-            {/* Guest Form */}
-            <form onSubmit={handleGuestLogin} className="space-y-3">
-              <input
-                type="text"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                placeholder={t.guestNamePlaceholder}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                maxLength={40}
-              />
-              <button
-                type="submit"
-                disabled={!guestName.trim()}
-                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 text-white text-xs font-semibold transition-colors"
-              >
-                {t.joinGuestBtn}
-              </button>
-            </form>
           </div>
         </div>
       )}

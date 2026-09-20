@@ -1,0 +1,65 @@
+Portable Document Format (PDF), created by Adobe in 1993 and later standardized as ISO 32000, was designed to represent documents independently of application software, hardware, and operating systems. Understanding its internal object structure is critical for developers building custom PDF parsers, generators, and forensics tools.
+
+## The 4 Physical Sections of a PDF File
+
+Every valid PDF file consists of four major physical regions:
+
+```
++-------------------------------+
+|  Header (%PDF-1.4)            |
++-------------------------------+
+|  Body (Indirect Objects)      |
+|    - Pages, Fonts, Streams    |
++-------------------------------+
+|  Cross-Reference Table (xref) |
+|    - Byte offsets of objects  |
++-------------------------------+
+|  Trailer                      |
+|    - Root pointer & %%EOF     |
++-------------------------------+
+```
+
+1. **Header:** The very first line identifies the PDF specification version (e.g. `%PDF-1.4`).
+2. **Body:** A collection of indirect objects (dictionaries, arrays, numbers, and compressed binary streams).
+3. **Cross-Reference Table (xref):** A table mapping each object number to its exact byte offset from the start of the file. This enables PDF readers to perform random-access seeking without parsing the entire file sequentially.
+4. **Trailer:** Points to the catalog dictionary (`Root`) and specifies the byte offset of the `xref` table, ending with the magic marker `%%EOF`.
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="1mb"
+  message="Download our structurally pure 1MB PDF file to inspect xref tables and object streams in a hex editor."
+  buttonLabel="Tải File Mẫu 1MB PDF →"
+/>
+
+## Inspecting a PDF via Hex / Plaintext
+
+You can view the uncompressed ASCII components of a PDF with any text or hex viewer:
+
+```text
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [3 0 R]
+  /Count 1
+>>
+endobj
+3 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 612 792]
+  /Contents 4 0 R
+>>
+endobj
+```
+
+## Linearized ("Fast Web View") PDFs
+Standard PDFs must be downloaded completely before a reader can locate the `trailer` at the end. Linearized PDFs restructure internal objects so the first page and an initial hint stream appear at the start of the file, allowing web browsers to render Page 1 before the remaining megabytes have finished downloading.

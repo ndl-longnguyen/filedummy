@@ -1,0 +1,56 @@
+Converting PDF documents into editable Microsoft Word (.docx) files is a common requirement for legal portals, contract review platforms, and document management systems. Because PDF is primarily a display format (specifying absolute glyph coordinates) rather than a semantic structure, conversion requires structural reconstruction.
+
+## Conversion Approaches in Node.js
+
+1. **LibreOffice Headless (Self-Hosted):** High fidelity, converts complex tables and layouts via command line.
+2. **Cloud Converter APIs (ConvertAPI, CloudConvert):** Zero maintenance, handles OCR and rasterized text.
+3. **pdf2docx (Python bridge via Node child_process):** High quality for vector documents and tables.
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="10mb"
+  message="Download our 10MB PDF sample file to test your PDF-to-DOCX conversion pipeline."
+  buttonLabel="Tải File Mẫu 10MB PDF →"
+/>
+
+## Using Headless LibreOffice with Node.js
+
+Running LibreOffice in headless mode inside a Docker container provides free, reliable document conversion:
+
+```typescript
+import { exec } from 'child_process';
+import util from 'util';
+import path from 'path';
+import fs from 'fs';
+
+const execPromise = util.promisify(exec);
+
+export async function convertPdfToDocx(inputPdfPath: string, outputDir: string): Promise<string> {
+  if (!fs.existsSync(inputPdfPath)) {
+    throw new Error('Input PDF does not exist.');
+  }
+
+  // soffice is the executable name for LibreOffice
+  const cmd = `soffice --headless --convert-to docx "${inputPdfPath}" --outdir "${outputDir}"`;
+
+  console.log('Executing conversion:', cmd);
+  const { stdout, stderr } = await execPromise(cmd);
+
+  if (stderr && !stderr.includes('Warning')) {
+    console.warn('LibreOffice warnings:', stderr);
+  }
+
+  const baseName = path.basename(inputPdfPath, path.extname(inputPdfPath));
+  const expectedOutputPath = path.join(outputDir, `${baseName}.docx`);
+
+  if (!fs.existsSync(expectedOutputPath)) {
+    throw new Error('Conversion completed but output DOCX file was not generated.');
+  }
+
+  return expectedOutputPath;
+}
+```
+
+## Key Conversion Challenges
+- **Embedded fonts:** Missing system fonts can cause text overlapping and reflow issues. Install standard Microsoft Core Fonts (`msttcorefonts`) in your Linux/Docker host.
+- **Scanned pages:** PDFs containing only raster images require an Optical Character Recognition (OCR) step using Tesseract before conversion.

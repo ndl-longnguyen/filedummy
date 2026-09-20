@@ -1,0 +1,41 @@
+One of the most frequent sources of bugs in file validation is the confusion between decimal (SI, base-10) and binary (IEC, base-2) size units. Knowing whether your server or cloud provider calculates 1MB as 1,000,000 bytes or 1,048,576 bytes prevents subtle boundary failures.
+
+## Decimal (SI) vs Binary (IEC) Prefixes
+
+| Unit | Prefix | Base-10 (Decimal / Hard Drives / S3) | Binary Prefix | Base-2 (RAM / OS / Windows) |
+|------|--------|--------------------------------------|---------------|-----------------------------|
+| Kilo | KB     | 1,000 bytes (`10^3`)                  | KiB           | 1,024 bytes (`2^10`)         |
+| Mega | MB     | 1,000,000 bytes (`10^6`)              | MiB           | 1,048,576 bytes (`2^20`)     |
+| Giga | GB     | 1,000,000,000 bytes (`10^9`)          | GiB           | 1,073,741,824 bytes (`2^30`) |
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="10mb"
+  message="Download our exact 10MB (10,485,760 bytes) PDF test file to test boundary limits in your validator."
+  buttonLabel="Tải File Mẫu 10MB PDF →"
+/>
+
+## Accurate File Size Formatter in TypeScript
+
+```typescript
+export function formatBytes(bytes: number, decimals = 2, useBinary = true): string {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = useBinary ? 1024 : 1000;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = useBinary
+    ? ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB']
+    : ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+// Example outputs:
+// formatBytes(1048576, 2, true)  => "1 MiB"
+// formatBytes(1000000, 2, false) => "1 MB"
+```
+
+## Practical Advice for File Upload Rules
+When configuring upload limits in web applications, explicitly use raw **bytes** in your configuration schemas (e.g. `maxSizeBytes: 10485760`) rather than converting strings dynamically.

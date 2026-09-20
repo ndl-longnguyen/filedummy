@@ -1,0 +1,58 @@
+Network interruptions on mobile networks and unreliable Wi-Fi frequently abort standard HTTP uploads. The **tus protocol** is an open, standardized specification (tus.io) designed specifically for resumable file uploads over HTTP/1.1 and HTTP/2.
+
+## How the tus Protocol Works
+
+Instead of one monolithic request, tus utilizes standard HTTP verbs to coordinate byte offsets:
+- **POST:** Creates an upload resource URL on the server with metadata and total size.
+- **PATCH:** Sends byte ranges starting at a specific `Upload-Offset`.
+- **HEAD:** Queries the current offset after an unexpected connection drop.
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="1gb"
+  message="Simulate heavy network dropouts with our 1GB PDF sample file to test tus-js-client resumption."
+  buttonLabel="Tải File Mẫu 1GB PDF →"
+/>
+
+## Using tus-js-client in Modern JavaScript
+
+```typescript
+import * as tus from 'tus-js-client';
+
+export function startResumableUpload(file: File, endpoint: string) {
+  const upload = new tus.Upload(file, {
+    endpoint: endpoint, // e.g. https://upload.example.com/files/
+    retryDelays: [0, 1000, 3000, 5000],
+    chunkSize: 5 * 1024 * 1024, // 5MB chunks
+    metadata: {
+      filename: file.name,
+      filetype: file.type,
+    },
+    onError: (error) => {
+      console.error('Upload failed:', error);
+    },
+    onProgress: (bytesUploaded, bytesTotal) => {
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+      console.log(`Uploaded ${bytesUploaded} of ${bytesTotal} bytes (${percentage}%)`);
+    },
+    onSuccess: () => {
+      console.log('Upload finished! URL:', upload.url);
+    },
+  });
+
+  // Check if a previous upload can be resumed
+  upload.findPreviousUploads().then((previousUploads) => {
+    if (previousUploads.length > 0) {
+      upload.resumeFromPreviousUpload(previousUploads[0]);
+    }
+    upload.start();
+  });
+
+  return upload;
+}
+```
+
+## Backend Support for tus
+- **tusd (Go):** The official reference implementation, highly optimized with S3, Google Cloud Storage, and Azure Blob backends.
+- **Uppy Companion:** Works seamlessly with Uppy.js frontend components.
+- **Cloudflare Stream:** Uses the tus protocol natively for direct creator video uploads.

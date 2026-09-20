@@ -1,0 +1,61 @@
+When testing complex file operations—such as recursive directory scans, nested zip extractions, or atomic file overwrites—mocking individual `fs` methods with `jest.fn()` quickly becomes fragile. `memfs` provides a complete, in-memory virtual filesystem for Jest tests.
+
+## Why Use memfs for Testing File Operations?
+
+`memfs` implements the full Node.js `fs` and `fs/promises` API entirely in RAM:
+- **Lightning fast:** No physical disk I/O, speeding up large test suites by 10x.
+- **Zero test pollution:** No temporary directories left behind after test failures.
+- **Deterministic:** Easily configure the exact file tree before each test.
+
+<BlogDownloadCTA
+  fileType="zip"
+  fileSlug="10mb"
+  message="Download a structured 10MB test ZIP archive to test your extraction and archive processing pipelines."
+  buttonLabel="Tải File Mẫu 10MB ZIP →"
+/>
+
+## Setting Up memfs with Jest
+
+First install `memfs`:
+```bash
+npm install --save-dev memfs
+```
+
+Create a mock file in `__mocks__/fs.js` or directly configure Jest to mock `fs` and `fs/promises`:
+
+```typescript
+import { fs, vol } from 'memfs';
+import { backupUserFiles } from '../src/backupService';
+
+// Redirect node fs calls to memfs virtual volume
+jest.mock('fs', () => fs);
+jest.mock('fs/promises', () => fs.promises);
+
+describe('Backup Service with In-Memory Filesystem', () => {
+  beforeEach(() => {
+    // Reset virtual filesystem before each test
+    vol.reset();
+  });
+
+  it('archives target files into destination directory', async () => {
+    // Populate virtual directory tree
+    vol.fromJSON({
+      '/app/data/file1.txt': 'Hello World',
+      '/app/data/file2.json': '{"active": true}',
+      '/app/backups': null, // empty directory
+    });
+
+    await backupUserFiles('/app/data', '/app/backups');
+
+    // Assert files were created in virtual disk
+    const backupFiles = fs.readdirSync('/app/backups');
+    expect(backupFiles).toContain('file1.txt');
+    expect(backupFiles).toContain('file2.json');
+  });
+});
+```
+
+## Summary Checklist
+- Use `vol.fromJSON()` to quickly mock entire directory trees in a single call.
+- Always call `vol.reset()` in `beforeEach` to ensure clean test isolation.
+- Combine `memfs` with custom file generators to simulate edge cases like deep directory nesting and permission errors.

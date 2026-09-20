@@ -1,0 +1,78 @@
+Chỉ dựa vào phần mở rộng (đuôi tệp như `.pdf` hay `.jpg`) hoặc header `Content-Type` do trình duyệt của người dùng gửi lên là một lỗ hổng bảo mật nghiêm trọng. Kẻ tấn công có thể dễ dàng đổi tên file thực thi độc hại `malware.exe` thành `invoice.pdf` để vượt qua các bộ lọc thông thường. Để xác thực tệp tin thực sự an toàn và chuẩn xác, chúng ta bắt buộc phải kiểm tra **Magic Bytes (chữ ký số tệp tin)**.
+
+## Magic Bytes Là Gì?
+
+Magic Bytes (file signatures) là một chuỗi các byte nhị phân đặc thù nằm chính xác ở những byte đầu tiên (header) của một tệp tin. Các hệ điều hành và phần mềm giải mã chuyên sâu luôn dựa vào chuỗi byte này thay vì phần mở rộng của file.
+
+Dưới đây là bảng tra cứu Magic Bytes của các định dạng phổ biến:
+
+| Định dạng tệp | Phần mở rộng | Magic Bytes (Hex) | Ký tự biểu diễn ASCII |
+|-------------|-----------|-------------------|----------------------|
+| PDF         | .pdf      | `25 50 44 46`     | `%PDF`               |
+| PNG         | .png      | `89 50 4E 47`     | `.PNG`               |
+| JPEG        | .jpg      | `FF D8 FF`        | `ÿØÿ`                |
+| ZIP / DOCX  | .zip/.docx| `50 4B 03 04`     | `PK..`               |
+| GIF         | .gif      | `47 49 46 38`     | `GIF8`               |
+
+<BlogDownloadCTA
+  fileType="docx"
+  fileSlug="1mb"
+  message="Tải file mẫu DOCX 1MB chuẩn để phân tích các magic bytes PK của container ZIP trong mã nguồn của bạn."
+  buttonLabel="Tải File Mẫu 1MB DOCX →"
+/>
+
+## Kiểm Tra Magic Bytes Trong Node.js Với Thư Viện file-type
+
+Cài đặt thư viện chuẩn công nghiệp:
+
+```bash
+npm install file-type
+```
+
+Triển khai hàm xác thực định dạng nhị phân phía máy chủ:
+
+```typescript
+import { fileTypeFromBuffer } from 'file-type';
+
+export async function validateActualFileType(
+  buffer: Buffer, 
+  expectedMime: string
+): Promise<boolean> {
+  // Đọc và phân tích các byte mở đầu của buffer
+  const detected = await fileTypeFromBuffer(buffer);
+
+  if (!detected) {
+    console.error('Không nhận diện được cấu trúc nhị phân của tệp.');
+    return false;
+  }
+
+  console.log(`Định dạng thực tế: ${detected.ext} (${detected.mime})`);
+  return detected.mime === expectedMime;
+}
+```
+
+## Đọc Magic Bytes Trực Tiếp Trên Trình Duyệt (Client-Side)
+
+Bạn có thể đọc 4 đến 16 byte đầu tiên của bất kỳ đối tượng `File` hoặc `Blob` nào mà không cần nạp toàn bộ file vào bộ nhớ RAM của trình duyệt:
+
+```typescript
+export async function checkPdfHeaderInBrowser(file: File): Promise<boolean> {
+  // Chỉ cắt lấy 4 byte đầu tiên
+  const headerBlob = file.slice(0, 4);
+  const arrayBuffer = await headerBlob.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+
+  // Chuỗi %PDF trong bảng mã ASCII tương ứng [0x25, 0x50, 0x44, 0x46]
+  return (
+    bytes[0] === 0x25 && 
+    bytes[1] === 0x50 && 
+    bytes[2] === 0x44 && 
+    bytes[3] === 0x46
+  );
+}
+```
+
+## Lưu Ý Quan Trọng Về Bảo Mật Hệ Thống
+
+- **Tệp Polyglot (Đa hình thức):** Những tệp được cố ý tạo ra để vừa là file ảnh hợp lệ vừa chứa mã script thực thi. Do đó, hãy luôn kết hợp kiểm tra magic bytes với việc chuyển mã (re-encoding) hoặc xử lý trong môi trường sandbox cô lập.
+- **Tệp DOCX / XLSX bản chất là ZIP:** Các tài liệu Office hiện đại là kho nén OpenXML. Magic bytes của chúng sẽ báo về là `application/zip`. Bạn nên kiểm tra thêm sự tồn tại của tệp `word/document.xml` bên trong container để xác định chắc chắn là tài liệu Word.

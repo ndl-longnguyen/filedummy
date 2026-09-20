@@ -1,0 +1,71 @@
+Whenever you download software binaries, disk images, or confidential documents, comparing the file checksum against the publisher's published digest confirms that the file was not altered in transit or corrupted by network dropouts.
+
+## Command-Line Checksum Tools Across Platforms
+
+Every major operating system provides built-in tools to calculate and verify hashes.
+
+### 1. macOS (Terminal)
+```bash
+# Compute SHA-256
+shasum -a 256 sample-10mb.pdf
+
+# Compute MD5
+md5 sample-10mb.pdf
+```
+
+### 2. Linux (Ubuntu, Debian, RedHat)
+```bash
+# Compute SHA-256
+sha256sum sample-10mb.pdf
+
+# Verify against a checksums.txt file
+sha256sum -c checksums.txt
+```
+
+### 3. Windows (PowerShell)
+```powershell
+# Compute SHA-256
+Get-FileHash .\sample-10mb.pdf -Algorithm SHA256
+
+# Compute MD5
+Get-FileHash .\sample-10mb.pdf -Algorithm MD5
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="1mb"
+  message="Download our 1MB PDF sample and verify its SHA-256 checksum in your terminal right now."
+  buttonLabel="Tải File Mẫu 1MB PDF →"
+/>
+
+## Automating Checksum Verification in Node.js
+
+```typescript
+import fs from 'fs';
+import crypto from 'crypto';
+
+export async function verifyDownloadedFile(
+  filePath: string,
+  expectedChecksum: string,
+  algorithm = 'sha256'
+): Promise<boolean> {
+  const hash = crypto.createHash(algorithm);
+  const stream = fs.createReadStream(filePath);
+
+  for await (const chunk of stream) {
+    hash.update(chunk);
+  }
+
+  const actualChecksum = hash.digest('hex').toLowerCase();
+  const matches = actualChecksum === expectedChecksum.toLowerCase();
+
+  if (!matches) {
+    console.error(`Integrity mismatch! Expected: ${expectedChecksum}, got: ${actualChecksum}`);
+  }
+
+  return matches;
+}
+```
+
+## Why Verify Over HTTPS?
+While TLS encrypts data in flight, a compromised content distribution network, faulty proxy cache, or interrupted connection can result in truncated or malicious payloads. Publishing SHA-256 digests out-of-band guarantees end-to-end authenticity.

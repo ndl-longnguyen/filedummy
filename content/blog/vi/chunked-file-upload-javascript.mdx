@@ -1,0 +1,86 @@
+Tải lên các tệp tin dung lượng lớn (từ 100MB đến 5GB+) qua web đặt ra những thách thức kỹ thuật lớn: kết nối dễ bị timeout, tràn bộ nhớ RAM trình duyệt và mất toàn bộ tiến trình khi gặp sự cố mạng ngắt quãng. Kỹ thuật chia nhỏ tệp tin thành các khối nhị phân tuần tự (chunked upload) bằng File API trên trình duyệt giải quyết triệt để những vấn đề này.
+
+## Kiến Trúc Upload Theo Chunks
+
+Giao diện `File` của chuẩn HTML5 kế thừa từ `Blob`, cung cấp phương thức `slice(start, end)`. Phương thức slice không tải toàn bộ file vào RAM mà chỉ tạo một con trỏ tham chiếu đến byte offset trên đĩa cứng:
+
+```
+[------------- Tệp Tin 100MB Trên Đĩa Cứng -------------]
+  |-- Chunk 0 (0 đến 5MB)      --> POST /upload?chunk=0
+  |-- Chunk 1 (5 đến 10MB)     --> POST /upload?chunk=1
+  |-- Chunk 2 (10 đến 15MB)    --> POST /upload?chunk=2
+  |-- ...
+  +-- Tín hiệu hoàn tất        --> POST /upload/complete
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="100mb"
+  message="Tải tệp PDF mẫu 100MB chuẩn để kiểm thử thuật toán chia chunk của bạn mà không cần tự tạo file giả."
+  buttonLabel="Tải File Mẫu 100MB PDF →"
+/>
+
+## Mã Nguồn Triển Khai Hoàn Chỉnh Phía Client
+
+Dưới đây là đoạn mã TypeScript chuẩn production với cơ chế tự động thử lại (exponential backoff retry) và tính toán tiến trình mượt mà:
+
+```typescript
+interface UploadOptions {
+  file: File;
+  endpoint: string;
+  chunkSize?: number; // mặc định 5MB
+  onProgress?: (percent: number) => void;
+}
+
+async function uploadFileInChunks({
+  file,
+  endpoint,
+  chunkSize = 5 * 1024 * 1024,
+  onProgress,
+}: UploadOptions): Promise<void> {
+  const totalChunks = Math.ceil(file.size / chunkSize);
+  const uploadId = crypto.randomUUID();
+
+  for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+    const start = chunkIndex * chunkSize;
+    const end = Math.min(start + chunkSize, file.size);
+    const chunkBlob = file.slice(start, end);
+
+    let success = false;
+    let retries = 3;
+
+    while (!success && retries > 0) {
+      try {
+        const formData = new FormData();
+        formData.append('file', chunkBlob, file.name);
+        formData.append('uploadId', uploadId);
+        formData.append('chunkIndex', String(chunkIndex));
+        formData.append('totalChunks', String(totalChunks));
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!res.ok) throw new Error(`Upload thất bại với mã lỗi ${res.status}`);
+        success = true;
+
+        if (onProgress) {
+          const percent = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+          onProgress(percent);
+        }
+      } catch (err) {
+        retries--;
+        if (retries === 0) throw err;
+        await new Promise((r) => setTimeout(r, 1000 * (4 - retries))); // Exponential backoff
+      }
+    }
+  }
+}
+```
+
+## Các Lưu Ý Quan Trọng Phía Backend
+
+- **Khu vực lưu trữ tạm (Staging):** Lưu các chunk vừa nhận vào thư mục tạm hoặc bucket prefix (`tmp/uploads/<uploadId>/`).
+- **Ghép nối tuần tự (Concatenation):** Trong Node.js, sử dụng `fs.createWriteStream({ flags: 'a' })` để ghi nối tiếp từng chunk vào file đích nhằm tránh tràn bộ nhớ máy chủ.
+- **Dọn dẹp chunk mồ côi:** Thiết lập cron job hoặc chính sách lifecycle trên bucket để tự động xóa các chunk của những phiên upload bị bỏ rơi sau 24 giờ.

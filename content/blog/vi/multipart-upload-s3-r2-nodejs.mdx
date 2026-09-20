@@ -1,0 +1,105 @@
+For files larger than 100MB, uploading via a single `PutObject` HTTP request is error-prone. A single dropped packet can fail the entire upload. AWS S3 and Cloudflare R2 provide the S3 Multipart Upload API, allowing developers to upload independent parts concurrently and assemble them on the server.
+
+## Quy Trình Multipart Upload Chuẩn S3
+
+1. **Initiate:** `CreateMultipartUpload` returns a unique `UploadId`.
+2. **Upload Parts:** Send 5MB to 500MB chunks using `UploadPartCommand`. Each part returns an `ETag`.
+3. **Complete:** Send `CompleteMultipartUploadCommand` with the ordered list of PartNumbers and ETags.
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="500mb"
+  message="Download our 500MB PDF sample file to test and benchmark your S3/R2 multipart upload pipeline."
+  buttonLabel="Tải File Mẫu 500MB PDF →"
+/>
+
+## Triển Khai Bằng AWS SDK v3 Trong Node.js
+
+```typescript
+import {
+  S3Client,
+  CreateMultipartUploadCommand,
+  UploadPartCommand,
+  CompleteMultipartUploadCommand,
+  AbortMultipartUploadCommand,
+} from '@aws-sdk/client-s3';
+import fs from 'fs';
+
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: process.env.R2_ENDPOINT, // e.g. https://<accountId>.r2.cloudflarestorage.com
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+export async function uploadLargeFileToR2(filePath: string, bucket: string, key: string) {
+  const PART_SIZE = 10 * 1024 * 1024; // 10MB per part (must be >= 5MB for S3/R2)
+  const fileStats = fs.statSync(filePath);
+  const fileStream = fs.createReadStream(filePath, { highWaterMark: PART_SIZE });
+
+  // 1. Initiate Multipart Upload
+  const init = await s3.send(
+    new CreateMultipartUploadCommand({
+      Bucket: bucket,
+      Key: key,
+    })
+  );
+  const uploadId = init.UploadId;
+
+  const uploadedParts: { PartNumber: number; ETag: string }[] = [];
+  let partNumber = 1;
+
+  try {
+    for await (const chunk of fileStream) {
+      console.log(`Uploading part ${partNumber}...`);
+
+      const partResult = await s3.send(
+        new UploadPartCommand({
+          Bucket: bucket,
+          Key: key,
+          UploadId: uploadId,
+          PartNumber: partNumber,
+          Body: chunk,
+        })
+      );
+
+      uploadedParts.push({
+        PartNumber: partNumber,
+        ETag: partResult.ETag!,
+      });
+
+      partNumber++;
+    }
+
+    // 2. Complete Upload
+    await s3.send(
+      new CompleteMultipartUploadCommand({
+        Bucket: bucket,
+        Key: key,
+        UploadId: uploadId,
+        MultipartUpload: {
+          Parts: uploadedParts.sort((a, b) => a.PartNumber - b.PartNumber),
+        },
+      })
+    );
+
+    console.log('Upload successfully completed!');
+  } catch (error) {
+    console.error('Upload failed. Aborting multipart upload...', error);
+    await s3.send(
+      new AbortMultipartUploadCommand({
+        Bucket: bucket,
+        Key: key,
+        UploadId: uploadId,
+      })
+    );
+    throw error;
+  }
+}
+```
+
+## Các Quy Tắc Vận Hành Thực Chiến
+- **Minimum part size:** All parts except the final part must be at least 5MB (5,242,880 bytes). Submitting a part smaller than 5MB will throw `EntityTooSmall`.
+- **Always handle aborts:** Unfinished multipart parts remain in object storage and incur monthly storage fees until aborted. Set S3 / R2 Lifecycle Rules to automatically purge incomplete multipart uploads after 7 days.

@@ -1,4 +1,4 @@
-import { BlogCluster, BlogPost, CLUSTER_META } from "../blog";
+import { BlogCluster, BlogPost, CLUSTER_META, FaqItem } from "../blog";
 
 export const VI_CLUSTER_META: Record<
   BlogCluster,
@@ -42,16 +42,35 @@ export const VI_CLUSTER_META: Record<
   },
 };
 
+export interface ViPostTranslation {
+  title: string;
+  description: string;
+  ctaText?: string;
+  buttonLabel?: string;
+  faqItems?: FaqItem[];
+}
+
 // Vietnamese translations for post titles and descriptions
-export const VI_POST_TRANSLATIONS: Record<
-  string,
-  { title: string; description: string; ctaText?: string; buttonLabel?: string }
-> = {
+export const VI_POST_TRANSLATIONS: Record<string, ViPostTranslation> = {
   "chunked-file-upload-javascript": {
     title: "Hướng Dẫn Tải File Dung Lượng Lớn Theo Chunks Bằng JavaScript",
     description: "Kỹ thuật chia nhỏ file thành từng phần để upload với JavaScript và Fetch API. Xử lý lỗi ngắt kết nối và tặng kèm file mẫu 100MB để kiểm thử.",
     ctaText: "Thử nghiệm tải file theo chunk với file PDF 100MB chuẩn — không cần đăng ký.",
     buttonLabel: "Tải File Mẫu 100MB PDF →",
+    faqItems: [
+      {
+        q: "Kích thước chunk (phần cắt) lý tưởng nhất cho upload file là bao nhiêu?",
+        a: "Đa số các hệ thống hiện nay sử dụng kích thước chunk từ 1MB đến 5MB. Kích thước 1MB giúp giảm áp lực bộ nhớ RAM trên thiết bị di động. Kích thước 5MB giúp giảm thiểu overhead của giao thức HTTP. Đối với AWS S3 và Cloudflare R2 Multipart Upload, kích thước part tối thiểu theo quy định là 5MB (ngoại trừ part cuối cùng)."
+      },
+      {
+        q: "Làm thế nào để tiếp tục tải lên (resume) khi upload theo chunk bị ngắt quãng?",
+        a: "Lưu trữ chỉ số chunk đã tải lên thành công gần nhất trong localStorage hoặc trên cơ sở dữ liệu máy chủ. Khi thử lại (retry), bắt đầu gửi từ chunk bị lỗi tiếp theo. Giao thức chuẩn 'tus' có thể quản lý việc này hoàn toàn tự động."
+      },
+      {
+        q: "Tôi có thể upload theo chunk trực tiếp lên S3 hoặc Cloudflare R2 không?",
+        a: "Hoàn toàn được. Cả AWS S3 và Cloudflare R2 đều hỗ trợ native API Multipart Upload — mỗi part được gửi qua một request PUT riêng biệt với presigned URL, sau đó gọi CompleteMultipartUpload để hoàn tất."
+      }
+    ]
   },
   "file-upload-progress-bar-html5": {
     title: "Tạo Thanh Tiến Trình Upload File: Hướng Dẫn Chi Tiết HTML5 + Fetch API",
@@ -106,6 +125,20 @@ export const VI_POST_TRANSLATIONS: Record<
     description: "Phát hiện định dạng tệp thực tế bằng magic bytes trong Node.js với thư viện file-type. Chặn đứng các tệp tin giả mạo đổi tên.",
     ctaText: "Kiểm thử validator của bạn với file PDF, DOCX chuẩn xác từng byte đầu tiên.",
     buttonLabel: "Tải File Mẫu 1MB PDF →",
+    faqItems: [
+      {
+        q: "Tại sao chỉ kiểm tra phần mở rộng (extension) là không đủ an toàn?",
+        a: "Kẻ tấn công có thể dễ dàng đổi tên file mã độc từ script_nguy_hiem.php thành tai_lieu.pdf. Máy chủ sẽ chấp nhận tải lên nếu chỉ kiểm tra đuôi file. Khi được phân phát hoặc thực thi với MIME type sai, nó sẽ dẫn đến lỗ hổng thực thi mã từ xa (RCE) đặc biệt nguy hiểm."
+      },
+      {
+        q: "Magic bytes (chữ ký số tệp tin) là gì?",
+        a: "Magic bytes là chuỗi byte đặc thù nằm tại vị trí đầu tiên của tệp tin dùng để định danh định dạng thực tế. Ví dụ: mọi file PDF luôn bắt đầu bằng %PDF (mã hex 25 50 44 46), và ảnh PNG luôn bắt đầu bằng chuỗi hex 89 50 4E 47 0D 0A 1A 0A dù bạn có đổi tên file thành bất kỳ đuôi nào."
+      },
+      {
+        q: "Thư viện nào tốt nhất để kiểm tra magic bytes trong Node.js?",
+        a: "Gói thư viện 'file-type' trên npm hiện là tiêu chuẩn công nghiệp. Thư viện này phân tích bộ đệm nhị phân Buffer và trả về MIME type cùng extension chuẩn xác. Phía trình duyệt, bạn có thể đọc 8–16 byte đầu tiên qua FileReader và kiểm tra mảng Uint8Array trực tiếp."
+      }
+    ]
   },
   "encrypt-file-before-upload-aes-javascript": {
     title: "Cách Mã Hóa Tệp Trước Khi Upload: AES-256 Ngay Trên Trình Duyệt",
@@ -265,6 +298,17 @@ export const VI_POST_TRANSLATIONS: Record<
   },
 };
 
+export function getLocalizedArticleTitle(slug: string, locale: "en" | "vi" = "en"): string {
+  if (locale === "vi") {
+    const trans = VI_POST_TRANSLATIONS[slug];
+    if (trans?.title) return trans.title;
+  }
+  return slug
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 export function getLocalizedPost(post: BlogPost, locale: "en" | "vi" = "en"): BlogPost {
   if (locale === "en") return post;
   const trans = VI_POST_TRANSLATIONS[post.slug];
@@ -282,5 +326,7 @@ export function getLocalizedPost(post: BlogPost, locale: "en" | "vi" = "en"): Bl
       text: trans.ctaText || post.downloadCTA.text,
       buttonLabel: trans.buttonLabel || post.downloadCTA.buttonLabel,
     },
+    faqItems: trans.faqItems && trans.faqItems.length > 0 ? trans.faqItems : post.faqItems,
   };
 }
+

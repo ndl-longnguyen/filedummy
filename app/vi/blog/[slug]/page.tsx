@@ -63,7 +63,7 @@ export default async function VietnameseBlogPostPage({ params }: PageProps) {
 
   let PostContent: React.ComponentType;
   try {
-    const mdxModule = await import(`@/content/blog/${slug}.mdx`);
+    const mdxModule = await import(`@/content/blog/vi/${slug}.mdx`);
     PostContent = mdxModule.default;
   } catch (error) {
     console.error(`Failed to load MDX for slug: ${slug}`, error);

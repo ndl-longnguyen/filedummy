@@ -1,0 +1,53 @@
+Testing file upload APIs with Postman is an essential step in verifying backend file ingestion, multipart encoding, validation boundaries, and cloud storage presigned URL endpoints. This guide covers end-to-end setup for automated Postman testing.
+
+## Setting Up Multipart/Form-Data Uploads in Postman
+
+When testing standard REST endpoints accepting `multipart/form-data`, Postman provides native file attachment capabilities.
+
+### Step 1: Configure the Request Body
+1. Set the HTTP method to **POST** and enter your endpoint URL (e.g., `https://api.example.com/v1/uploads`).
+2. Navigate to the **Body** tab and select **form-data**.
+3. In the key column, type the field name your server expects (such as `file` or `attachment`).
+4. Hover over the right edge of the key field, click the dropdown, and change the type from **Text** to **File**.
+5. Click **Select Files** and choose a sample test file.
+
+<BlogDownloadCTA
+  fileType="docx"
+  fileSlug="10mb"
+  message="Need a clean 10MB Word document to test your file upload API? Download our verified sample file."
+  buttonLabel="Tải File Mẫu 10MB DOCX →"
+/>
+
+## Automated Postman Tests for File Upload APIs
+
+To verify response status, payload schemas, and uploaded file attributes, use Postman's Tests script tab:
+
+```javascript
+pm.test("Status code is 201 Created", function () {
+  pm.response.to.have.status(201);
+});
+
+pm.test("Response contains valid file metadata", function () {
+  const json = pm.response.json();
+  pm.expect(json).to.have.property("fileId");
+  pm.expect(json).to.have.property("fileSize");
+  pm.expect(json.mimeType).to.eql("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+});
+
+pm.test("Upload processing time is under 2000ms", function () {
+  pm.expect(pm.response.responseTime).to.be.below(2000);
+});
+```
+
+## Testing Binary Raw Uploads (Octet-Stream)
+
+Some high-throughput APIs accept binary streams directly without multipart overhead:
+1. Under **Body**, select **binary**.
+2. Select your test binary file.
+3. In the **Headers** tab, explicitly set `Content-Type` to `application/octet-stream` or the appropriate MIME type.
+
+## Testing File Size Limits and Error Responses
+Be sure to create negative test cases in your Postman collection:
+- **Empty file (0 bytes):** Verify your server returns HTTP 400 Bad Request with a clear message.
+- **Oversized file (e.g. 50MB against a 20MB limit):** Verify HTTP 413 Payload Too Large.
+- **Wrong MIME type:** Ensure your backend rejects disallowed formats with HTTP 415 Unsupported Media Type.

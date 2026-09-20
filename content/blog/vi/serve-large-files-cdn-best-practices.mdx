@@ -1,0 +1,26 @@
+Distributing multi-gigabyte files to hundreds of thousands of concurrent users requires thoughtful CDN caching headers, origin protection, and protocol optimizations.
+
+## 1. Optimize HTTP Cache-Control Headers
+
+Never serve static immutable files without explicit browser and CDN cache directives:
+
+```http
+Cache-Control: public, max-age=31536000, immutable
+```
+
+- **`public`**: Permits CDN edge caches and proxies to store the file.
+- **`max-age=31536000`**: Informs the browser to retain the file in local disk cache for up to 1 year.
+- **`immutable`**: Informs browsers not to send conditional `If-None-Match` revalidation requests on page refreshes.
+
+<BlogDownloadCTA
+  fileType="zip"
+  fileSlug="100mb"
+  message="Download our 100MB ZIP archive to inspect response headers and CDN cache hit indicators."
+  buttonLabel="Tải File Mẫu 100MB ZIP →"
+/>
+
+## 2. Enable HTTP Byte-Range Caching
+Ensure your CDN edge supports **Slice / Range requests**. When a user requests bytes 0–1,000,000, the CDN should only fetch that specific byte slice from the origin, rather than forcing a full file download.
+
+## 3. Prevent Origin Shock with Request Collapsing
+When a popular new file is released, hundreds of users request it simultaneously before the CDN has cached it. Enable **Request Collapsing (Wait for Cache)** so that only one request hits your origin storage, while all other clients wait at the edge for the response.

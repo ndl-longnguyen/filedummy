@@ -1,0 +1,51 @@
+Many developers are surprised to learn that a Microsoft Word `.docx` file is not a proprietary monolithic binary. It is actually a standard ZIP archive containing human-readable XML documents, media assets, and relationship definitions conforming to the Office Open XML (ECMA-376 / ISO 29500) standard.
+
+## Unpacking a DOCX File
+
+Because DOCX is a ZIP container, you can rename `document.docx` to `document.zip` and extract it using standard archive utilities:
+
+```bash
+unzip sample.docx -d extracted_doc/
+tree extracted_doc/
+```
+
+```
+extracted_doc/
+├── [Content_Types].xml       <-- Maps parts to their MIME content types
+├── _rels/
+│   └── .rels                 <-- Root package relationships
+└── word/
+    ├── document.xml          <-- The actual text, paragraphs, and tables
+    ├── fontTable.xml         <-- Embedded font declarations
+    ├── settings.xml          <-- Document view options and zoom levels
+    ├── styles.xml            <-- Paragraph and character styling rules
+    ├── media/                <-- Embedded PNG, JPG, or SVG images
+    └── _rels/
+        └── document.xml.rels <-- Hyperlinks, images, and external references
+```
+
+<BlogDownloadCTA
+  fileType="docx"
+  fileSlug="10mb"
+  message="Download our 10MB sample DOCX file to extract and inspect its internal XML structure."
+  buttonLabel="Tải File Mẫu 10MB DOCX →"
+/>
+
+## Inspecting `word/document.xml`
+
+Inside `word/document.xml`, content is organized into paragraphs (`<w:p>`) and runs (`<w:r>`):
+
+```xml
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Heading1"/>
+  </w:pPr>
+  <w:r>
+    <w:t>Quarterly Financial Summary</w:t>
+  </w:r>
+</w:p>
+```
+
+## Why This Matters for Developers
+- **Fast programmatic edits:** You can modify document text or replace boilerplate variables by unzipping the archive, executing regex or DOM replacement on `word/document.xml`, and re-zipping without needing Microsoft Word installed.
+- **Data recovery:** If a DOCX file is corrupted, extracting its raw `document.xml` often recovers 100% of the underlying text.

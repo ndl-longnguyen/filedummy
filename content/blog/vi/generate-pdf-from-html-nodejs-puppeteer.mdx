@@ -1,0 +1,70 @@
+Generating pixel-perfect PDF documents such as invoices, certificates, and compliance reports from HTML and CSS is best achieved using headless Chrome via Puppeteer.
+
+## Setting Up Puppeteer
+
+```bash
+npm install puppeteer
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="1mb"
+  message="Download our standard 1MB sample PDF to compare against your Puppeteer rendering output."
+  buttonLabel="Tải File Mẫu 1MB PDF →"
+/>
+
+## Rendering HTML to PDF with Puppeteer
+
+```typescript
+import puppeteer from 'puppeteer';
+
+export interface PdfRenderOptions {
+  htmlContent: string;
+  outputPath?: string;
+  format?: 'A4' | 'Letter';
+}
+
+export async function generatePdfFromHtml({
+  htmlContent,
+  outputPath,
+  format = 'A4',
+}: PdfRenderOptions): Promise<Buffer> {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required in Linux Docker containers
+  });
+
+  try {
+    const page = await browser.newPage();
+
+    // Set HTML content and wait until network connections idle
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+
+    const pdfBuffer = await page.pdf({
+      format: format,
+      printBackground: true, // Crucial for CSS backgrounds and colors
+      margin: {
+        top: '20mm',
+        right: '15mm',
+        bottom: '20mm',
+        left: '15mm',
+      },
+      path: outputPath,
+    });
+
+    return Buffer.from(pdfBuffer);
+  } finally {
+    await browser.close();
+  }
+}
+```
+
+## Styling Rules for Print PDFs
+- **Use `@page` CSS:** Control paper size and margins with standard CSS:
+  ```css
+  @page {
+    size: A4 portrait;
+    margin: 1.5cm;
+  }
+  ```
+- **Avoid page break splits:** Prevent tables and headers from splitting across pages using `page-break-inside: avoid;`.

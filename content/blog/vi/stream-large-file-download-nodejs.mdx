@@ -1,0 +1,52 @@
+Serving large files directly from Node.js without a CDN or object storage proxy requires streaming. Loading a 1GB file into memory with `fs.readFileSync` consumes 1GB of server RAM per connected user—rapidly leading to process termination.
+
+## Streaming Files with Node.js HTTP Streams
+
+Node.js readable streams buffer only small chunks (typically 64KB) in memory at any given moment:
+
+```typescript
+import http from 'http';
+import fs from 'fs';
+import path from 'path';
+
+const server = http.createServer((req, res) => {
+  const filePath = path.join(process.cwd(), 'files', 'large-dataset.pdf');
+
+  fs.stat(filePath, (err, stats) => {
+    if (err) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      return res.end('File not found');
+    }
+
+    // Set binary response headers
+    res.writeHead(200, {
+      'Content-Type': 'application/pdf',
+      'Content-Length': stats.size,
+      'Content-Disposition': 'attachment; filename="large-dataset.pdf"',
+      'Accept-Ranges': 'bytes',
+    });
+
+    const readStream = fs.createReadStream(filePath);
+
+    // Automatically handles TCP backpressure
+    readStream.pipe(res);
+
+    // Handle client disconnects
+    req.on('close', () => {
+      readStream.destroy();
+    });
+  });
+});
+
+server.listen(3000, () => console.log('Download server running on port 3000'));
+```
+
+<BlogDownloadCTA
+  fileType="pdf"
+  fileSlug="500mb"
+  message="Download our 500MB PDF sample file to test stream backpressure handling in your server code."
+  buttonLabel="Tải File Mẫu 500MB PDF →"
+/>
+
+## Understanding Stream Backpressure
+When a server can read from disk faster than a client can receive data over the network, `stream.pipe(res)` automatically pauses the read stream until the client's socket drain buffer clears, preserving server memory.

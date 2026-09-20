@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ShieldCheck, Award, ExternalLink, Code2, CheckCircle2 } from "lucide-react";
+import { ExternalLink, Code2, CheckCircle2 } from "lucide-react";
 import type { Locale } from "@/lib/i18n/types";
-import { NDL_PORTAL_URL } from "@/lib/ecosystem";
 
 interface AuthorBoxProps {
   locale?: Locale;
@@ -34,7 +33,7 @@ export function AuthorBox({ locale = "en" }: AuthorBoxProps) {
               {isVi ? "Nguyễn Đại Long" : "Nguyen Dai Long"}
             </h3>
             <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              {isVi ? "Tác Giả & Kỹ Sư Trưởng" : "Author & Lead Engineer"}
+              {isVi ? "Tác Giả" : "Author"}
             </span>
           </div>
           <p className="text-xs text-slate-400">
@@ -48,23 +47,6 @@ export function AuthorBox({ locale = "en" }: AuthorBoxProps) {
               : "4+ years designing high-throughput file ingestion pipelines, database architectures, and distributed edge storage on Cloudflare R2 & AWS S3. Founder of FileDummy and the NDL Ecosystem."}
           </p>
         </div>
-      </div>
-
-      {/* Content Originality & E-E-A-T Guarantee */}
-      <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-4 space-y-2">
-        <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs uppercase tracking-wider">
-          <Award className="w-4 h-4" />
-          <span>
-            {isVi
-              ? "Cam Kết Nghiên Cứu Kỹ Thuật Nguyên Bản (E-E-A-T Guarantee)"
-              : "Original Engineering Research & E-E-A-T Guarantee"}
-          </span>
-        </div>
-        <p className="text-xs text-slate-300 leading-relaxed">
-          {isVi
-            ? "Mọi bài viết trên FileDummy được biên soạn dựa trên thực nghiệm kỹ thuật thực tế với các bài đo kiểm benchmark đo lường trực tiếp, đoạn mã code có thể chạy ngay và trích dẫn chuẩn hóa theo các tiêu chuẩn IETF RFC (RFC 7578 multipart, RFC 9110 HTTP Semantics, RFC 4180 CSV, RFC 8259 JSON). Toàn bộ file mẫu được sinh tự động sạch 100%, không chứa mã độc hay tracker."
-            : "Every technical guide on FileDummy is synthesized from real-world systems engineering benchmarks, reproducible code snippets, and formal IETF RFC citations (RFC 7578 multipart, RFC 9110 HTTP Semantics, RFC 4180 CSV, RFC 8259 JSON). All dummy assets are 100% virus-free, byte-exact, and zero-tracking."}
-        </p>
       </div>
 
       {/* Social and Ecosystem Links */}

@@ -2,38 +2,49 @@ import {
   getSupabaseClient,
   isSupabaseConfigured,
   PostComment,
-  PostReactionsSummary,
-  ReactionType,
   UserProfile,
 } from "./client";
 
-const GUEST_USER_KEY = "filedummy_guest_user";
+const CLIENT_ID_KEY = "filedummy_client_id";
+const DEV_USER_KEY = "filedummy_dev_user";
 
-export const getStoredGuestUser = (): UserProfile | null => {
+export const getOrCreateClientId = (): string => {
+  if (typeof window === "undefined") return "server_client";
+  let id = localStorage.getItem(CLIENT_ID_KEY);
+  if (!id) {
+    id = `cid_${Math.random().toString(36).substring(2, 12)}_${Date.now().toString(36)}`;
+    localStorage.setItem(CLIENT_ID_KEY, id);
+  }
+  return id;
+};
+
+export const getStoredDevUser = (): UserProfile | null => {
   if (typeof window === "undefined") return null;
   try {
-    const raw = localStorage.getItem(GUEST_USER_KEY);
+    const raw = localStorage.getItem(DEV_USER_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 };
 
-export const setStoredGuestUser = (name: string): UserProfile => {
+export const setStoredDevUser = (name: string, email?: string): UserProfile => {
   const profile: UserProfile = {
-    id: `guest_${Math.random().toString(36).substring(2, 10)}`,
+    id: `dev_${Math.random().toString(36).substring(2, 10)}`,
     name: name.trim(),
-    isGuest: true,
+    email: email || `${name.toLowerCase().replace(/\s+/g, ".")}@example.com`,
+    avatar_url: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`,
+    isGuest: false,
   };
   if (typeof window !== "undefined") {
-    localStorage.setItem(GUEST_USER_KEY, JSON.stringify(profile));
+    localStorage.setItem(DEV_USER_KEY, JSON.stringify(profile));
   }
   return profile;
 };
 
-export const clearStoredGuestUser = (): void => {
+export const clearStoredDevUser = (): void => {
   if (typeof window !== "undefined") {
-    localStorage.removeItem(GUEST_USER_KEY);
+    localStorage.removeItem(DEV_USER_KEY);
   }
 };
 
@@ -56,13 +67,15 @@ export const getCurrentUserProfile = async (): Promise<UserProfile | null> => {
     }
   }
 
-  return getStoredGuestUser();
+  return getStoredDevUser();
 };
 
 export const signInWithOAuthProvider = async (provider: "github" | "google"): Promise<void> => {
   const client = getSupabaseClient();
   if (!client) {
-    throw new Error("Supabase is not configured yet. Set NEXT_PUBLIC_SUPABASE_URL and ANON_KEY in .env.local.");
+    // If not configured, auto-login with realistic developer profile for testing
+    setStoredDevUser(provider === "github" ? "GitHub Developer" : "Google Developer");
+    return;
   }
 
   const { error } = await client.auth.signInWithOAuth({
@@ -76,7 +89,7 @@ export const signInWithOAuthProvider = async (provider: "github" | "google"): Pr
 };
 
 export const signOutUser = async (): Promise<void> => {
-  clearStoredGuestUser();
+  clearStoredDevUser();
   const client = getSupabaseClient();
   if (client) {
     await client.auth.signOut();
@@ -84,136 +97,148 @@ export const signOutUser = async (): Promise<void> => {
 };
 
 // -------------------------------------------------------------
-// REACTIONS API
+// PAGE VIEWS API
 // -------------------------------------------------------------
 
-const DEFAULT_REACTIONS: PostReactionsSummary = {
-  like: 12,
-  love: 8,
-  rocket: 15,
-  insight: 9,
-  fire: 14,
-  userReactions: {
-    like: false,
-    love: false,
-    rocket: false,
-    insight: false,
-    fire: false,
-  },
-};
-
-export const fetchPostReactions = async (
-  postSlug: string,
-  currentUserId?: string
-): Promise<PostReactionsSummary> => {
+export const recordAndFetchPageView = async (postSlug: string): Promise<number> => {
   const client = getSupabaseClient();
   if (client) {
     try {
-      const { data, error } = await client
-        .from("post_reactions")
-        .select("reaction_type, user_id")
-        .eq("post_slug", postSlug);
-
-      if (!error && data) {
-        const summary: PostReactionsSummary = {
-          like: 0,
-          love: 0,
-          rocket: 0,
-          insight: 0,
-          fire: 0,
-          userReactions: {
-            like: false,
-            love: false,
-            rocket: false,
-            insight: false,
-            fire: false,
-          },
-        };
-
-        data.forEach((row) => {
-          const type = row.reaction_type as ReactionType;
-          if (summary[type] !== undefined) {
-            summary[type]++;
-          }
-          if (currentUserId && row.user_id === currentUserId) {
-            summary.userReactions[type] = true;
-          }
-        });
-
-        return summary;
+      const { data, error } = await client.rpc("increment_page_view", { slug: postSlug });
+      if (!error && typeof data === "number") {
+        return data;
       }
+      // Direct query fallback
+      const { data: qData } = await client
+        .from("page_views")
+        .select("views_count")
+        .eq("page_slug", postSlug)
+        .single();
+      if (qData?.views_count) return qData.views_count;
     } catch (e) {
-      console.warn("Failed to fetch reactions from Supabase, using local fallback", e);
+      console.warn("Supabase page views fallback:", e);
     }
   }
 
-  // Fallback / Preview Mode
+  // Local storage fallback for dev / preview mode
   if (typeof window !== "undefined") {
     try {
-      const stored = localStorage.getItem(`mock_reactions_${postSlug}`);
-      if (stored) {
-        return JSON.parse(stored);
+      const key = `pv_${postSlug}`;
+      const base = 1240 + Math.abs(postSlug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 850);
+      const stored = localStorage.getItem(key);
+      const count = stored ? parseInt(stored, 10) + 1 : base;
+      localStorage.setItem(key, count.toString());
+      return count;
+    } catch {
+      return 1450;
+    }
+  }
+  return 1450;
+};
+
+// -------------------------------------------------------------
+// LIKE REACTION API (Simplified to Like-Only)
+// -------------------------------------------------------------
+
+export interface PostLikeStatus {
+  count: number;
+  userLiked: boolean;
+}
+
+export const fetchPostLikeStatus = async (
+  postSlug: string,
+  userId?: string
+): Promise<PostLikeStatus> => {
+  const client = getSupabaseClient();
+  const effectiveUserId = userId || getOrCreateClientId();
+
+  if (client) {
+    try {
+      const { count, error } = await client
+        .from("post_reactions")
+        .select("id", { count: "exact", head: true })
+        .eq("post_slug", postSlug)
+        .eq("reaction_type", "like");
+
+      let userLiked = false;
+      if (effectiveUserId) {
+        const { data: userLike } = await client
+          .from("post_reactions")
+          .select("id")
+          .eq("post_slug", postSlug)
+          .eq("reaction_type", "like")
+          .eq("user_id", effectiveUserId)
+          .maybeSingle();
+        userLiked = !!userLike;
       }
+
+      if (!error && typeof count === "number") {
+        return { count, userLiked };
+      }
+    } catch (e) {
+      console.warn("Failed to fetch like status from Supabase:", e);
+    }
+  }
+
+  // Local fallback
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(`mock_like_${postSlug}`);
+      if (stored) return JSON.parse(stored);
     } catch {
       // ignore
     }
   }
 
-  return DEFAULT_REACTIONS;
+  const defaultCount = 18 + Math.abs(postSlug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % 45);
+  return { count: defaultCount, userLiked: false };
 };
 
-export const togglePostReaction = async (
+export const togglePostLike = async (
   postSlug: string,
-  type: ReactionType,
-  user: UserProfile,
-  currentSummary: PostReactionsSummary
-): Promise<PostReactionsSummary> => {
-  const isCurrentlyActive = !!currentSummary.userReactions[type];
-  const newSummary: PostReactionsSummary = {
-    ...currentSummary,
-    [type]: Math.max(0, currentSummary[type] + (isCurrentlyActive ? -1 : 1)),
-    userReactions: {
-      ...currentSummary.userReactions,
-      [type]: !isCurrentlyActive,
-    },
-  };
+  currentStatus: PostLikeStatus,
+  userId?: string
+): Promise<PostLikeStatus> => {
+  const effectiveUserId = userId || getOrCreateClientId();
+  const nextUserLiked = !currentStatus.userLiked;
+  const nextCount = Math.max(0, currentStatus.count + (nextUserLiked ? 1 : -1));
+  const newStatus: PostLikeStatus = { count: nextCount, userLiked: nextUserLiked };
 
   const client = getSupabaseClient();
   if (client) {
     try {
-      if (isCurrentlyActive) {
+      if (nextUserLiked) {
+        await client.from("post_reactions").insert({
+          post_slug: postSlug,
+          reaction_type: "like",
+          user_id: effectiveUserId,
+        });
+      } else {
         await client
           .from("post_reactions")
           .delete()
-          .match({ post_slug: postSlug, reaction_type: type, user_id: user.id });
-      } else {
-        await client.from("post_reactions").insert({
-          post_slug: postSlug,
-          reaction_type: type,
-          user_id: user.id,
-          user_name: user.name,
-        });
+          .match({ post_slug: postSlug, reaction_type: "like", user_id: effectiveUserId });
       }
-      return newSummary;
+      return newStatus;
     } catch (err) {
-      console.warn("Error persisting reaction to Supabase:", err);
+      console.warn("Error toggling like on Supabase:", err);
     }
   }
 
-  // Local fallback storage
+  // Local fallback
   if (typeof window !== "undefined") {
     try {
-      localStorage.setItem(`mock_reactions_${postSlug}`, JSON.stringify(newSummary));
+      localStorage.setItem(`mock_like_${postSlug}`, JSON.stringify(newStatus));
     } catch {
       // ignore
     }
   }
 
-  return newSummary;
+  return newStatus;
 };
 
 // -------------------------------------------------------------
-// COMMENTS API
+// COMMENTS API (Strictly Authenticated, No Guest Form)
 // -------------------------------------------------------------
 
 const INITIAL_MOCK_COMMENTS: Record<string, PostComment[]> = {
@@ -280,7 +305,7 @@ export const addPostComment = async (
   content: string
 ): Promise<PostComment> => {
   const newComment: PostComment = {
-    id: `c_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+    id: `c_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
     post_slug: postSlug,
     user_id: user.id,
     user_name: user.name,
