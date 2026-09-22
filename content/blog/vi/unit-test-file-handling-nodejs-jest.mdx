@@ -1,14 +1,14 @@
-Unit testing code that reads, writes, transforms, or validates files in Node.js requires careful isolation to prevent test pollution, slow I/O, and platform-specific path bugs. Here are practical strategies for testing file logic with Jest.
+Kiểm thử đơn vị code đọc, ghi, chuyển đổi hoặc xác thực tệp trong Node.js đòi hỏi sự cô lập cẩn thận để ngăn chặn ô nhiễm dữ liệu kiểm thử, I/O chậm và lỗi đường dẫn phụ thuộc nền tảng. Dưới đây là các chiến lược thực tiễn để kiểm thử logic tệp với Jest.
 
-## Testing Buffer and Stream Processing
+## Kiểm Thử Xử Lý Buffer Và Stream
 
-When unit testing file parsers or converters, avoid reading from the physical filesystem. Pass in-memory Buffers or Readable streams directly.
+Khi kiểm thử đơn vị các bộ phân tích hoặc chuyển đổi tệp, hãy tránh đọc từ filesystem vật lý. Truyền trực tiếp Buffer trong bộ nhớ hoặc Readable stream.
 
 ```typescript
 import { parseCsvBuffer } from '../src/csvParser';
 
-describe('CSV Ingestion Unit Tests', () => {
-  it('parses valid CSV data into structured records', async () => {
+describe('Unit Test Xử Lý CSV', () => {
+  it('phân tích dữ liệu CSV hợp lệ thành các bản ghi có cấu trúc', async () => {
     const mockCsvContent = 'id,name,role\n1,Alice,Admin\n2,Bob,Developer';
     const buffer = Buffer.from(mockCsvContent, 'utf-8');
 
@@ -18,7 +18,7 @@ describe('CSV Ingestion Unit Tests', () => {
     expect(result[0]).toEqual({ id: '1', name: 'Alice', role: 'Admin' });
   });
 
-  it('throws a ValidationError when buffer is empty', async () => {
+  it('ném ValidationError khi buffer rỗng', async () => {
     const emptyBuffer = Buffer.alloc(0);
 
     await expect(parseCsvBuffer(emptyBuffer)).rejects.toThrow('File cannot be empty');
@@ -29,13 +29,13 @@ describe('CSV Ingestion Unit Tests', () => {
 <BlogDownloadCTA
   fileType="csv"
   fileSlug="1mb"
-  message="Download a structured 1MB CSV sample dataset with 10,000+ rows to benchmark your parsers."
+  message="Tải bộ dữ liệu CSV mẫu 1MB có cấu trúc với hơn 10.000 dòng để benchmark bộ phân tích của bạn."
   buttonLabel="Tải File Mẫu 1MB CSV →"
 />
 
-## Mocking the Node.js `fs/promises` Module
+## Mock Module `fs/promises` Của Node.js
 
-For functions that interact directly with the disk, use Jest's module mocking capabilities:
+Đối với các hàm tương tác trực tiếp với đĩa, sử dụng khả năng mock module của Jest:
 
 ```typescript
 import * as fs from 'fs/promises';
@@ -48,7 +48,7 @@ describe('readConfigSafely', () => {
     jest.clearAllMocks();
   });
 
-  it('returns parsed configuration when file exists', async () => {
+  it('trả về cấu hình đã phân tích khi tệp tồn tại', async () => {
     (fs.readFile as jest.Mock).mockResolvedValue(JSON.stringify({ maxUploadSize: 10485760 }));
 
     const config = await readConfigSafely('/etc/app/config.json');
@@ -58,7 +58,7 @@ describe('readConfigSafely', () => {
 });
 ```
 
-## Best Practices for File Unit Tests
-1. **Never commit large binaries to git:** Keep test fixture files tiny (&lt;50KB) or generate them deterministically.
-2. **Use temporary directories:** When disk writes are unavoidable, write to `os.tmpdir()` and clean up in `afterAll`.
-3. **Assert binary integrity:** Use checksum comparisons to confirm file transformers output valid contents.
+## Các Quy Tắc Tốt Nhất Cho Unit Test Tệp
+1. **Không commit binary lớn vào git:** Giữ các tệp fixture kiểm thử nhỏ (&lt;50KB) hoặc tạo chúng theo cách xác định.
+2. **Sử dụng thư mục tạm:** Khi không thể tránh ghi đĩa, ghi vào `os.tmpdir()` và dọn sạch trong `afterAll`.
+3. **Kiểm tra tính toàn vẹn nhị phân:** Sử dụng so sánh checksum để xác nhận các bộ chuyển đổi tệp xuất ra nội dung hợp lệ.

@@ -1,53 +1,53 @@
-Testing file upload APIs with Postman is an essential step in verifying backend file ingestion, multipart encoding, validation boundaries, and cloud storage presigned URL endpoints. This guide covers end-to-end setup for automated Postman testing.
+Kiểm thử API tải lên tệp bằng Postman là bước thiết yếu để xác minh quá trình xử lý tệp phía backend, encoding multipart, ranh giới xác thực và các endpoint presigned URL của cloud storage. Hướng dẫn này trình bày thiết lập toàn diện cho kiểm thử Postman tự động.
 
-## Setting Up Multipart/Form-Data Uploads in Postman
+## Thiết Lập Tải Lên Multipart/Form-Data Trong Postman
 
-When testing standard REST endpoints accepting `multipart/form-data`, Postman provides native file attachment capabilities.
+Khi kiểm thử các REST endpoint tiêu chuẩn nhận `multipart/form-data`, Postman cung cấp tính năng đính kèm tệp trực tiếp.
 
-### Step 1: Configure the Request Body
-1. Set the HTTP method to **POST** and enter your endpoint URL (e.g., `https://api.example.com/v1/uploads`).
-2. Navigate to the **Body** tab and select **form-data**.
-3. In the key column, type the field name your server expects (such as `file` or `attachment`).
-4. Hover over the right edge of the key field, click the dropdown, and change the type from **Text** to **File**.
-5. Click **Select Files** and choose a sample test file.
+### Bước 1: Cấu Hình Body Request
+1. Đặt phương thức HTTP là **POST** và nhập URL endpoint (ví dụ: `https://api.example.com/v1/uploads`).
+2. Chuyển đến tab **Body** và chọn **form-data**.
+3. Trong cột key, gõ tên trường mà máy chủ của bạn mong đợi (chẳng hạn `file` hoặc `attachment`).
+4. Di chuột qua rìa phải của trường key, nhấp vào dropdown và đổi kiểu từ **Text** sang **File**.
+5. Nhấp **Select Files** và chọn tệp kiểm thử mẫu.
 
 <BlogDownloadCTA
   fileType="docx"
   fileSlug="10mb"
-  message="Need a clean 10MB Word document to test your file upload API? Download our verified sample file."
+  message="Cần tài liệu Word 10MB sạch để kiểm thử API tải lên tệp? Tải file mẫu đã được xác minh của chúng tôi."
   buttonLabel="Tải File Mẫu 10MB DOCX →"
 />
 
-## Automated Postman Tests for File Upload APIs
+## Kiểm Thử Postman Tự Động Cho API Tải Lên Tệp
 
-To verify response status, payload schemas, and uploaded file attributes, use Postman's Tests script tab:
+Để xác minh trạng thái response, schema payload và thuộc tính tệp đã tải lên, sử dụng tab Tests script của Postman:
 
 ```javascript
-pm.test("Status code is 201 Created", function () {
+pm.test("Mã trạng thái là 201 Created", function () {
   pm.response.to.have.status(201);
 });
 
-pm.test("Response contains valid file metadata", function () {
+pm.test("Response chứa metadata tệp hợp lệ", function () {
   const json = pm.response.json();
   pm.expect(json).to.have.property("fileId");
   pm.expect(json).to.have.property("fileSize");
   pm.expect(json.mimeType).to.eql("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 });
 
-pm.test("Upload processing time is under 2000ms", function () {
+pm.test("Thời gian xử lý tải lên dưới 2000ms", function () {
   pm.expect(pm.response.responseTime).to.be.below(2000);
 });
 ```
 
-## Testing Binary Raw Uploads (Octet-Stream)
+## Kiểm Thử Tải Lên Binary Raw (Octet-Stream)
 
-Some high-throughput APIs accept binary streams directly without multipart overhead:
-1. Under **Body**, select **binary**.
-2. Select your test binary file.
-3. In the **Headers** tab, explicitly set `Content-Type` to `application/octet-stream` or the appropriate MIME type.
+Một số API thông lượng cao chấp nhận luồng nhị phân trực tiếp mà không có overhead multipart:
+1. Trong **Body**, chọn **binary**.
+2. Chọn tệp nhị phân kiểm thử của bạn.
+3. Trong tab **Headers**, đặt rõ ràng `Content-Type` thành `application/octet-stream` hoặc MIME type phù hợp.
 
-## Testing File Size Limits and Error Responses
-Be sure to create negative test cases in your Postman collection:
-- **Empty file (0 bytes):** Verify your server returns HTTP 400 Bad Request with a clear message.
-- **Oversized file (e.g. 50MB against a 20MB limit):** Verify HTTP 413 Payload Too Large.
-- **Wrong MIME type:** Ensure your backend rejects disallowed formats with HTTP 415 Unsupported Media Type.
+## Kiểm Thử Giới Hạn Kích Thước Tệp Và Phản Hồi Lỗi
+Hãy tạo các test case âm trong Postman collection của bạn:
+- **Tệp rỗng (0 byte):** Xác minh máy chủ trả về HTTP 400 Bad Request với thông báo rõ ràng.
+- **Tệp quá lớn (ví dụ 50MB vượt giới hạn 20MB):** Xác minh HTTP 413 Payload Too Large.
+- **Sai MIME type:** Đảm bảo backend từ chối các định dạng không được phép với HTTP 415 Unsupported Media Type.

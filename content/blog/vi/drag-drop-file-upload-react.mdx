@@ -1,6 +1,6 @@
-Building a smooth drag-and-drop file upload interface in React enhances usability and engagement. In this guide, we build an accessible, responsive dropzone component using `react-dropzone` with full file preview support and upload progress.
+Xây dựng giao diện tải lên tệp kéo thả mượt mà trong React nâng cao tính khả dụng và sự tương tác. Trong hướng dẫn này, chúng ta xây dựng một component dropzone có thể truy cập, responsive sử dụng `react-dropzone` với hỗ trợ xem trước tệp đầy đủ và tiến trình tải lên.
 
-## Installing react-dropzone
+## Cài Đặt react-dropzone
 
 ```bash
 npm install react-dropzone lucide-react
@@ -9,11 +9,11 @@ npm install react-dropzone lucide-react
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="10mb"
-  message="Download a standard 10MB test PDF to test your React drag-and-drop dropzone component."
+  message="Tải file PDF test 10MB chuẩn để kiểm thử component dropzone kéo thả trong React."
   buttonLabel="Tải File Mẫu 10MB PDF →"
 />
 
-## Complete React Component
+## Component React Hoàn Chỉnh
 
 ```tsx
 import React, { useCallback, useState } from 'react';
@@ -67,14 +67,14 @@ export function FileDropzone() {
             <UploadCloud className="w-8 h-8" />
           </div>
           {isDragActive ? (
-            <p className="text-sm font-medium text-blue-400">Drop the file here...</p>
+            <p className="text-sm font-medium text-blue-400">Thả tệp vào đây...</p>
           ) : (
             <div>
               <p className="text-sm font-semibold text-white">
-                Click to upload or drag and drop
+                Nhấp để tải lên hoặc kéo và thả
               </p>
               <p className="text-xs text-slate-400 mt-1">
-                PDF, DOCX, PNG, or JPG (max 20MB)
+                PDF, DOCX, PNG, hoặc JPG (tối đa 20MB)
               </p>
             </div>
           )}
@@ -107,7 +107,7 @@ export function FileDropzone() {
 }
 ```
 
-## Dropzone UX Best Practices
-- **Visual feedback on drag over:** Dim background or illuminate borders when a valid file is hovering.
-- **Clear rejection states:** Show distinct red styling if an unsupported file format is dragged over.
-- **Keyboard navigation:** Ensure users who rely on keyboards can press `Tab` to focus the dropzone and `Enter` to open the native OS file picker.
+## Các Quy Tắc UX Tốt Nhất Cho Dropzone
+- **Phản hồi trực quan khi kéo qua:** Làm tối nền hoặc làm sáng viền khi tệp hợp lệ đang được hover.
+- **Trạng thái từ chối rõ ràng:** Hiển thị kiểu màu đỏ riêng biệt nếu định dạng tệp không hỗ trợ được kéo qua.
+- **Điều hướng bàn phím:** Đảm bảo người dùng dùng bàn phím có thể nhấn `Tab` để focus vào dropzone và `Enter` để mở bộ chọn tệp OS gốc.

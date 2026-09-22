@@ -1,53 +1,53 @@
-Verifying file downloads in end-to-end (E2E) automation suites ensures that reporting tools, invoices, and export features work reliably across browser engines. Here is how to test file downloads using Playwright and Cypress.
+Xác minh tải xuống tệp trong bộ kiểm thử end-to-end (E2E) đảm bảo rằng các công cụ báo cáo, hóa đơn và tính năng xuất dữ liệu hoạt động đáng tin cậy trên các engine trình duyệt. Dưới đây là cách kiểm thử tải xuống tệp bằng Playwright và Cypress.
 
-## Testing File Downloads in Playwright
+## Kiểm Thử Tải Xuống Tệp Trong Playwright
 
-Playwright provides first-class support for browser download events via the `waitForEvent('download')` API.
+Playwright cung cấp hỗ trợ đầu cấp cho sự kiện download trình duyệt qua API `waitForEvent('download')`.
 
 ```typescript
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
-test('Verify PDF download event and file size', async ({ page }) => {
+test('Xác minh sự kiện tải xuống PDF và kích thước tệp', async ({ page }) => {
   await page.goto('https://filedummy.dev/pdf/5mb');
 
-  // Start waiting for download before clicking the trigger
+  // Bắt đầu chờ sự kiện download trước khi nhấn nút kích hoạt
   const downloadPromise = page.waitForEvent('download');
   await page.click('button:has-text("Download 5MB PDF")');
   const download = await downloadPromise;
 
-  // Validate suggested filename
+  // Xác thực tên file được đề xuất
   expect(download.suggestedFilename()).toBe('sample-5mb.pdf');
 
-  // Save to temporary test directory
+  // Lưu vào thư mục kiểm thử tạm
   const downloadPath = path.join('/tmp', download.suggestedFilename());
   await download.saveAs(downloadPath);
 
-  // Assert file exists on disk and verify byte size
+  // Kiểm tra tệp tồn tại trên đĩa và xác minh kích thước byte
   const stats = fs.statSync(downloadPath);
-  expect(stats.size).toBe(5 * 1024 * 1024); // 5,242,880 bytes
+  expect(stats.size).toBe(5 * 1024 * 1024); // 5.242.880 byte
 });
 ```
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="5mb"
-  message="Download a standardized 5MB PDF to test Playwright download events and assertions."
+  message="Tải file PDF chuẩn 5MB để kiểm thử sự kiện download và assertion của Playwright."
   buttonLabel="Tải File Mẫu 5MB PDF →"
 />
 
-## Testing File Downloads in Cypress
+## Kiểm Thử Tải Xuống Tệp Trong Cypress
 
-In Cypress, downloads triggered by the browser are automatically saved to the `cypress/downloads` folder.
+Trong Cypress, các tệp được tải xuống qua trình duyệt tự động được lưu vào thư mục `cypress/downloads`.
 
 ```javascript
-describe('Cypress PDF Download Verification', () => {
-  it('downloads and verifies 5MB PDF', () => {
+describe('Kiểm Thử Tải Xuống PDF Với Cypress', () => {
+  it('tải xuống và xác minh PDF 5MB', () => {
     cy.visit('https://filedummy.dev/pdf/5mb');
     cy.contains('button', 'Download 5MB PDF').click();
 
-    // Verify file exists in default download path
+    // Xác minh tệp tồn tại trong đường dẫn download mặc định
     const filename = 'cypress/downloads/sample-5mb.pdf';
     cy.readFile(filename, 'binary', { timeout: 15000 }).should((buffer) => {
       expect(buffer.length).to.be.at.least(5000000);
@@ -56,7 +56,7 @@ describe('Cypress PDF Download Verification', () => {
 });
 ```
 
-## Key E2E Download Testing Considerations
-- **Avoid headless browser download blocks:** Ensure browser preferences permit automatic downloads without a system dialog.
-- **Timeout margins:** Large file downloads need generous timeouts in CI environments where network latency varies.
-- **Clean up artifacts:** Delete downloaded files in `afterEach` hooks to prevent test disk exhaustion.
+## Các Lưu Ý Quan Trọng Khi Kiểm Thử Download E2E
+- **Tránh chặn tải xuống trên headless browser:** Đảm bảo tùy chọn trình duyệt cho phép tải xuống tự động mà không hiển thị hộp thoại hệ thống.
+- **Thời gian timeout đủ lớn:** Tải xuống tệp lớn cần timeout rộng rãi trong môi trường CI nơi độ trễ mạng có thể biến động.
+- **Dọn dẹp artifact:** Xóa các tệp đã tải xuống trong hook `afterEach` để tránh test runner hết dung lượng đĩa.

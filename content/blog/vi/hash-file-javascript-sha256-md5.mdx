@@ -1,15 +1,15 @@
-Calculating cryptographic hashes of files is fundamental for data deduplication, tamper verification, and integrity checks. Modern browsers provide the high-performance Web Crypto API for SHA-256 and SHA-512, while Node.js offers the native `crypto` module with streaming support.
+Tính toán hash mật mã của tệp là nền tảng cho loại bỏ trùng lặp dữ liệu, xác minh giả mạo và kiểm tra tính toàn vẹn. Trình duyệt hiện đại cung cấp Web Crypto API hiệu năng cao cho SHA-256 và SHA-512, trong khi Node.js cung cấp module `crypto` gốc với hỗ trợ streaming.
 
 ## Tính Mã Băm Với Web Crypto API Trên Trình Duyệt
 
-The Web Crypto API runs inside the browser engine using hardware-accelerated cryptographic primitives:
+Web Crypto API chạy bên trong engine trình duyệt sử dụng các thao tác mật mã được tăng tốc phần cứng:
 
 ```typescript
 export async function calculateFileSha256(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
   const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
 
-  // Convert ArrayBuffer to Hex string
+  // Chuyển đổi ArrayBuffer sang chuỗi Hex
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hexHash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 
@@ -20,13 +20,13 @@ export async function calculateFileSha256(file: File): Promise<string> {
 <BlogDownloadCTA
   fileType="txt"
   fileSlug="large"
-  message="Download our 1MB text file with deterministic content to test your SHA-256 hash algorithm."
+  message="Tải file text 1MB với nội dung xác định để kiểm thử thuật toán hash SHA-256 của bạn."
   buttonLabel="Tải File Mẫu 1MB TXT →"
 />
 
 ## Truyền Luồng Tính Hash Trong Node.js (Tệp Lớn)
 
-When hashing multi-gigabyte files in Node.js, loading the entire file into memory with `fs.readFileSync` causes out-of-memory crashes. Use streaming transforms instead:
+Khi hash các tệp nhiều gigabyte trong Node.js, việc tải toàn bộ tệp vào bộ nhớ bằng `fs.readFileSync` gây crash do hết bộ nhớ. Sử dụng streaming transform thay thế:
 
 ```typescript
 import fs from 'fs';
@@ -45,5 +45,5 @@ export function getFileChecksum(filePath: string, algorithm = 'sha256'): Promise
 ```
 
 ## Khi Nào Nên Dùng MD5 vs SHA-256
-- **MD5:** Cryptographically broken. Do **not** use for password hashing, digital signatures, or security checks. Still widely used for non-security checksums, such as AWS S3 ETag verification and local file caching keys.
-- **SHA-256:** Strong cryptographic collision resistance. The industry benchmark for software releases, package integrity, and blockchain transactions.
+- **MD5:** Đã bị phá vỡ về mặt mật mã. **Không** dùng cho hash mật khẩu, chữ ký số hoặc kiểm tra bảo mật. Vẫn được sử dụng rộng rãi cho checksum không liên quan bảo mật, như xác minh ETag S3 của AWS và khóa cache tệp cục bộ.
+- **SHA-256:** Khả năng chống va chạm mật mã mạnh. Tiêu chuẩn ngành cho phát hành phần mềm, tính toàn vẹn gói và giao dịch blockchain.

@@ -1,8 +1,8 @@
-Many developers are surprised to learn that a Microsoft Word `.docx` file is not a proprietary monolithic binary. It is actually a standard ZIP archive containing human-readable XML documents, media assets, and relationship definitions conforming to the Office Open XML (ECMA-376 / ISO 29500) standard.
+Nhiều lập trình viên ngạc nhiên khi biết rằng một tệp Microsoft Word `.docx` không phải là tệp nhị phân độc quyền nguyên khối. Thực ra nó là một archive ZIP tiêu chuẩn chứa các tài liệu XML có thể đọc được, tài nguyên media và định nghĩa mối quan hệ tuân theo chuẩn Office Open XML (ECMA-376 / ISO 29500).
 
-## Unpacking a DOCX File
+## Giải Nén Tệp DOCX
 
-Because DOCX is a ZIP container, you can rename `document.docx` to `document.zip` and extract it using standard archive utilities:
+Vì DOCX là một container ZIP, bạn có thể đổi tên `document.docx` thành `document.zip` và giải nén bằng các tiện ích archive tiêu chuẩn:
 
 ```bash
 unzip sample.docx -d extracted_doc/
@@ -11,29 +11,29 @@ tree extracted_doc/
 
 ```
 extracted_doc/
-├── [Content_Types].xml       <-- Maps parts to their MIME content types
+├── [Content_Types].xml       <-- Ánh xạ các phần với MIME content type của chúng
 ├── _rels/
-│   └── .rels                 <-- Root package relationships
+│   └── .rels                 <-- Mối quan hệ gói gốc
 └── word/
-    ├── document.xml          <-- The actual text, paragraphs, and tables
-    ├── fontTable.xml         <-- Embedded font declarations
-    ├── settings.xml          <-- Document view options and zoom levels
-    ├── styles.xml            <-- Paragraph and character styling rules
-    ├── media/                <-- Embedded PNG, JPG, or SVG images
+    ├── document.xml          <-- Văn bản thực tế, đoạn văn và bảng biểu
+    ├── fontTable.xml         <-- Khai báo font nhúng
+    ├── settings.xml          <-- Tùy chọn view tài liệu và mức zoom
+    ├── styles.xml            <-- Quy tắc định dạng đoạn văn và ký tự
+    ├── media/                <-- Hình ảnh PNG, JPG, hoặc SVG nhúng
     └── _rels/
-        └── document.xml.rels <-- Hyperlinks, images, and external references
+        └── document.xml.rels <-- Liên kết, hình ảnh và tham chiếu ngoài
 ```
 
 <BlogDownloadCTA
   fileType="docx"
   fileSlug="10mb"
-  message="Download our 10MB sample DOCX file to extract and inspect its internal XML structure."
+  message="Tải file DOCX mẫu 10MB để giải nén và kiểm tra cấu trúc XML nội tại của nó."
   buttonLabel="Tải File Mẫu 10MB DOCX →"
 />
 
-## Inspecting `word/document.xml`
+## Kiểm Tra `word/document.xml`
 
-Inside `word/document.xml`, content is organized into paragraphs (`<w:p>`) and runs (`<w:r>`):
+Bên trong `word/document.xml`, nội dung được tổ chức thành đoạn văn (`<w:p>`) và run (`<w:r>`):
 
 ```xml
 <w:p>
@@ -41,11 +41,11 @@ Inside `word/document.xml`, content is organized into paragraphs (`<w:p>`) and r
     <w:pStyle w:val="Heading1"/>
   </w:pPr>
   <w:r>
-    <w:t>Quarterly Financial Summary</w:t>
+    <w:t>Tóm Tắt Tài Chính Hàng Quý</w:t>
   </w:r>
 </w:p>
 ```
 
-## Why This Matters for Developers
-- **Fast programmatic edits:** You can modify document text or replace boilerplate variables by unzipping the archive, executing regex or DOM replacement on `word/document.xml`, and re-zipping without needing Microsoft Word installed.
-- **Data recovery:** If a DOCX file is corrupted, extracting its raw `document.xml` often recovers 100% of the underlying text.
+## Tại Sao Điều Này Quan Trọng Với Lập Trình Viên
+- **Chỉnh sửa lập trình nhanh:** Bạn có thể chỉnh sửa văn bản tài liệu hoặc thay thế biến mẫu bằng cách giải nén archive, thực thi regex hoặc thay thế DOM trên `word/document.xml`, rồi nén lại mà không cần cài Microsoft Word.
+- **Phục hồi dữ liệu:** Nếu tệp DOCX bị hỏng, việc trích xuất `document.xml` thô thường phục hồi được 100% văn bản gốc.

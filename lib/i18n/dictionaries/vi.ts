@@ -74,7 +74,7 @@ export const viDictionary: Dictionary = {
     blogBadge: "Hướng Dẫn & Bài Viết Chuyên Sâu",
     blogSubtitle:
       "Phân tích chuyên sâu về xử lý file upload, băm bảo mật, kiểm thử QA và kiến trúc lưu trữ đám mây.",
-    viewAllBlog: "Xem Toàn Bộ 36 Bài Viết",
+    viewAllBlog: "Xem Tất Cả Bài Viết",
     faqBadge: "Thắc Mắc Thường Gặp",
     faqTitle: "Câu Hỏi Thường Gặp (FAQ)",
     faqs: [

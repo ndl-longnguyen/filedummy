@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Download, ArrowRight, Sparkles } from "lucide-react";
 
 interface BlogDownloadCTAProps {
@@ -14,9 +17,10 @@ export function BlogDownloadCTA({
   fileSlug,
   message,
   buttonLabel,
-  locale = "en",
+  locale,
 }: BlogDownloadCTAProps) {
-  const isVi = locale === "vi";
+  const pathname = usePathname();
+  const isVi = locale === "vi" || pathname?.startsWith("/vi");
   const prefix = isVi ? "/vi" : "";
 
   return (

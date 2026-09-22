@@ -1,28 +1,28 @@
-HTTP Range Requests (RFC 7233) allow clients to download specific byte ranges of a resource. This is the underlying technology powering video seek bars, multi-threaded download managers (IDM, aria2), and resumable downloads.
+HTTP Range Requests (RFC 7233) cho phép client tải xuống các phạm vi byte cụ thể của tài nguyên. Đây là công nghệ nền tảng hỗ trợ thanh seek video, trình quản lý tải xuống đa luồng (IDM, aria2) và tải xuống có thể tiếp tục.
 
-## The HTTP 206 Partial Content Lifecycle
+## Vòng Đời HTTP 206 Partial Content
 
-1. **Client probe:** Client makes a `HEAD` request. The server replies with `Accept-Ranges: bytes`.
-2. **Range request:** Client sends `Range: bytes=0-1048575` (requesting the first 1MB).
-3. **Partial response:** Server returns **HTTP 206 Partial Content** with:
+1. **Client thăm dò:** Client thực hiện request `HEAD`. Máy chủ trả về `Accept-Ranges: bytes`.
+2. **Range request:** Client gửi `Range: bytes=0-1048575` (yêu cầu 1MB đầu tiên).
+3. **Partial response:** Máy chủ trả về **HTTP 206 Partial Content** với:
    - `Content-Range: bytes 0-1048575/10485760`
    - `Content-Length: 1048576`
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="10mb"
-  message="Test HTTP byte range requests with curl against our 10MB PDF sample."
+  message="Kiểm thử HTTP byte range request bằng curl với file PDF mẫu 10MB của chúng tôi."
   buttonLabel="Tải File Mẫu 10MB PDF →"
 />
 
-## Testing Byte Ranges with cURL
+## Kiểm Thử Byte Range Với cURL
 
 ```bash
-# Request only the first 500 bytes (to inspect file magic headers)
-curl -r 0-499 -i https://filedummy.dev/api/download?type=pdf&size=10mb
+# Yêu cầu chỉ 500 byte đầu tiên (để kiểm tra magic header)
+curl -r 0-499 -i "https://filedummy.dev/api/download?type=pdf&size=10mb"
 ```
 
-## Implementing Range Requests in Node.js
+## Triển Khai Range Request Trong Node.js
 
 ```typescript
 import fs from 'fs';

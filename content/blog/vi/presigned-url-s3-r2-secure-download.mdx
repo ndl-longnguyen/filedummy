@@ -1,24 +1,24 @@
-Allowing users to download private assets directly from Amazon S3 or Cloudflare R2 without routing massive data streams through your application servers drastically reduces server load and bandwidth costs. Presigned URLs provide secure, time-limited download links signed by your cloud credentials.
+Cho phép người dùng tải xuống tài sản riêng tư trực tiếp từ Amazon S3 hoặc Cloudflare R2 mà không cần định tuyến luồng dữ liệu khổng lồ qua máy chủ ứng dụng của bạn sẽ giảm đáng kể tải cho máy chủ và chi phí băng thông. Presigned URL cung cấp các liên kết tải xuống an toàn, có thời hạn, được ký bởi thông tin xác thực đám mây của bạn.
 
-## Architecture: Why Direct Presigned Downloads?
+## Kiến Trúc: Tại Sao Dùng Presigned URL Cho Download Trực Tiếp?
 
 ```
-[Browser] -- 1. GET /api/download-link?file=report.pdf --> [Node.js API Server]
-                                                            | Generates Presigned URL
-[Browser] <-- 2. Returns signed URL (expires in 15m) <-----+ (Zero bandwidth used!)
+[Trình duyệt] -- 1. GET /api/download-link?file=report.pdf --> [Node.js API Server]
+                                                                 | Tạo Presigned URL
+[Trình duyệt] <-- 2. Trả về URL có chữ ký (hết hạn sau 15 phút) (Không tốn băng thông!)
 
-[Browser] -- 3. GET https://bucket.r2.cloudflarestorage.com/report.pdf?X-Amz-Signature=... --> [Cloudflare R2]
-[Browser] <-- 4. Direct high-speed download at line rate ---------------------------------------+
+[Trình duyệt] -- 3. GET https://bucket.r2.cloudflarestorage.com/report.pdf?X-Amz-Signature=... --> [Cloudflare R2]
+[Trình duyệt] <-- 4. Tải xuống trực tiếp tốc độ cao -----------------------------------------------+
 ```
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="100mb"
-  message="Download our 100MB PDF sample to benchmark time-to-first-byte (TTFB) with presigned download URLs."
+  message="Tải file PDF mẫu 100MB để đo thời gian đến byte đầu tiên (TTFB) với presigned download URL."
   buttonLabel="Tải File Mẫu 100MB PDF →"
 />
 
-## Generating Presigned GET URLs in Node.js (AWS SDK v3)
+## Tạo Presigned GET URL Trong Node.js (AWS SDK v3)
 
 ```typescript
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
@@ -37,12 +37,12 @@ export async function createDownloadUrl(
   bucketName: string,
   objectKey: string,
   fileName: string,
-  expiresInSeconds = 900 // 15 minutes
+  expiresInSeconds = 900 // 15 phút
 ): Promise<string> {
   const command = new GetObjectCommand({
     Bucket: bucketName,
     Key: objectKey,
-    // Force browser to download with proper filename instead of opening in tab
+    // Buộc trình duyệt tải về với tên file đúng thay vì mở trong tab mới
     ResponseContentDisposition: `attachment; filename="${encodeURIComponent(fileName)}"`,
   });
 
@@ -51,6 +51,6 @@ export async function createDownloadUrl(
 }
 ```
 
-## Security Best Practices
-- **Short expiration windows:** Limit expiration to 5–15 minutes. Once the browser initiates the download stream, connection continuity is preserved even if the URL expires mid-transfer.
-- **Authorization checks first:** Always verify user session permissions and rate limits in your API endpoint before generating and returning the signed URL.
+## Các Biện Pháp Bảo Mật Tốt Nhất
+- **Thời gian hết hạn ngắn:** Giới hạn thời gian hết hạn từ 5–15 phút. Sau khi trình duyệt bắt đầu luồng tải xuống, tính liên tục của kết nối vẫn được duy trì ngay cả khi URL hết hạn giữa chừng.
+- **Kiểm tra phân quyền trước:** Luôn xác minh quyền phiên người dùng và giới hạn tốc độ trong API endpoint trước khi tạo và trả về URL đã ký.

@@ -1,15 +1,15 @@
-For files larger than 100MB, uploading via a single `PutObject` HTTP request is error-prone. A single dropped packet can fail the entire upload. AWS S3 and Cloudflare R2 provide the S3 Multipart Upload API, allowing developers to upload independent parts concurrently and assemble them on the server.
+Với các tệp lớn hơn 100MB, việc tải lên qua một request HTTP `PutObject` đơn lẻ rất dễ xảy ra lỗi. Chỉ một gói tin bị mất có thể khiến toàn bộ quá trình tải lên thất bại. AWS S3 và Cloudflare R2 cung cấp S3 Multipart Upload API, cho phép lập trình viên tải lên các phần độc lập song song và ghép chúng lại trên máy chủ.
 
 ## Quy Trình Multipart Upload Chuẩn S3
 
-1. **Initiate:** `CreateMultipartUpload` returns a unique `UploadId`.
-2. **Upload Parts:** Send 5MB to 500MB chunks using `UploadPartCommand`. Each part returns an `ETag`.
-3. **Complete:** Send `CompleteMultipartUploadCommand` with the ordered list of PartNumbers and ETags.
+1. **Khởi tạo (Initiate):** `CreateMultipartUpload` trả về một `UploadId` duy nhất.
+2. **Tải các phần (Upload Parts):** Gửi các chunk từ 5MB đến 500MB bằng `UploadPartCommand`. Mỗi phần trả về một `ETag`.
+3. **Hoàn tất (Complete):** Gửi `CompleteMultipartUploadCommand` kèm danh sách PartNumber và ETag đã sắp xếp theo thứ tự.
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="500mb"
-  message="Download our 500MB PDF sample file to test and benchmark your S3/R2 multipart upload pipeline."
+  message="Tải file PDF mẫu 500MB để kiểm thử và đo hiệu năng pipeline multipart upload S3/R2 của bạn."
   buttonLabel="Tải File Mẫu 500MB PDF →"
 />
 
@@ -35,11 +35,11 @@ const s3 = new S3Client({
 });
 
 export async function uploadLargeFileToR2(filePath: string, bucket: string, key: string) {
-  const PART_SIZE = 10 * 1024 * 1024; // 10MB per part (must be >= 5MB for S3/R2)
+  const PART_SIZE = 10 * 1024 * 1024; // 10MB mỗi phần (phải >= 5MB với S3/R2)
   const fileStats = fs.statSync(filePath);
   const fileStream = fs.createReadStream(filePath, { highWaterMark: PART_SIZE });
 
-  // 1. Initiate Multipart Upload
+  // 1. Khởi tạo Multipart Upload
   const init = await s3.send(
     new CreateMultipartUploadCommand({
       Bucket: bucket,
@@ -53,7 +53,7 @@ export async function uploadLargeFileToR2(filePath: string, bucket: string, key:
 
   try {
     for await (const chunk of fileStream) {
-      console.log(`Uploading part ${partNumber}...`);
+      console.log(`Đang tải phần ${partNumber}...`);
 
       const partResult = await s3.send(
         new UploadPartCommand({
@@ -73,7 +73,7 @@ export async function uploadLargeFileToR2(filePath: string, bucket: string, key:
       partNumber++;
     }
 
-    // 2. Complete Upload
+    // 2. Hoàn tất Upload
     await s3.send(
       new CompleteMultipartUploadCommand({
         Bucket: bucket,
@@ -85,9 +85,9 @@ export async function uploadLargeFileToR2(filePath: string, bucket: string, key:
       })
     );
 
-    console.log('Upload successfully completed!');
+    console.log('Tải lên hoàn tất thành công!');
   } catch (error) {
-    console.error('Upload failed. Aborting multipart upload...', error);
+    console.error('Tải lên thất bại. Đang hủy multipart upload...', error);
     await s3.send(
       new AbortMultipartUploadCommand({
         Bucket: bucket,
@@ -101,5 +101,5 @@ export async function uploadLargeFileToR2(filePath: string, bucket: string, key:
 ```
 
 ## Các Quy Tắc Vận Hành Thực Chiến
-- **Minimum part size:** All parts except the final part must be at least 5MB (5,242,880 bytes). Submitting a part smaller than 5MB will throw `EntityTooSmall`.
-- **Always handle aborts:** Unfinished multipart parts remain in object storage and incur monthly storage fees until aborted. Set S3 / R2 Lifecycle Rules to automatically purge incomplete multipart uploads after 7 days.
+- **Kích thước phần tối thiểu:** Tất cả các phần trừ phần cuối cùng phải có dung lượng ít nhất 5MB (5.242.880 byte). Gửi một phần nhỏ hơn 5MB sẽ gây lỗi `EntityTooSmall`.
+- **Luôn xử lý hủy (abort):** Các phần multipart chưa hoàn chỉnh vẫn tồn tại trong object storage và bị tính phí lưu trữ hàng tháng cho đến khi bị hủy. Thiết lập Lifecycle Rules trên S3/R2 để tự động xóa các multipart upload chưa hoàn tất sau 7 ngày.

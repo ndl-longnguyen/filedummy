@@ -1,24 +1,24 @@
-Permitting users to upload arbitrary documents and archives creates an acute security liability. ClamAV is an open-source antivirus engine capable of detecting viruses, trojans, malicious macros, and zip bombs in real-time.
+Cho phép người dùng tải lên các tài liệu và archive tùy ý tạo ra trách nhiệm bảo mật nghiêm trọng. ClamAV là một engine diệt virus mã nguồn mở có khả năng phát hiện virus, trojan, macro độc hại và zip bomb theo thời gian thực.
 
-## ClamAV Deployment Architecture
+## Kiến Trúc Triển Khai ClamAV
 
-The recommended production architecture runs `clamd` (the ClamAV daemon) as a standalone container or local Unix socket service, communicating with your Node.js application via TCP port 3310 or Unix IPC.
+Kiến trúc production được khuyến nghị chạy `clamd` (ClamAV daemon) như một container độc lập hoặc dịch vụ Unix socket cục bộ, giao tiếp với ứng dụng Node.js qua cổng TCP 3310 hoặc Unix IPC.
 
 ```
-[User Upload] --> [Node.js API Server] --(INSTREAM via TCP 3310)--> [ClamAV Daemon (clamd)]
-                        |
-                        +--> If Clean: Persist to S3/R2
-                        +--> If Infected: Quarantine & Log Security Alert
+[Upload Người Dùng] --> [Node.js API Server] --(INSTREAM qua TCP 3310)--> [ClamAV Daemon (clamd)]
+                              |
+                              +--> Nếu Sạch: Lưu vào S3/R2
+                              +--> Nếu Bị Nhiễm: Cách ly & Ghi Log Cảnh Báo Bảo Mật
 ```
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="10mb"
-  message="Download a verified clean 10MB PDF sample to test your ClamAV scanning daemon without false positives."
-  buttonLabel="Download Clean 10MB PDF →"
+  message="Tải file PDF sạch đã được xác minh 10MB để kiểm thử ClamAV daemon mà không có false positive."
+  buttonLabel="Tải File Sạch 10MB PDF →"
 />
 
-## Integrating with Node.js via clamscan
+## Tích Hợp Với Node.js Qua clamscan
 
 ```bash
 npm install clamscan
@@ -49,15 +49,15 @@ export async function scanUploadedBuffer(fileBuffer: Buffer): Promise<{ isInfect
   const { isInfected, viruses } = await scanner.scanBuffer(fileBuffer);
 
   if (isInfected) {
-    console.warn('MALWARE DETECTED IN UPLOAD:', viruses);
+    console.warn('PHÁT HIỆN PHẦN MỀM ĐỘC HẠI TRONG UPLOAD:', viruses);
   }
 
   return { isInfected, viruses };
 }
 ```
 
-## Handling Scans Asynchronously
-Scanning large files takes 1–5 seconds. For files over 50MB:
-1. Save the file with status `PENDING_SCAN` in object storage.
-2. Publish a scan event to a background job queue (e.g. BullMQ / AWS SQS).
-3. Update file status to `ACTIVE` or `REJECTED` once ClamAV completes its evaluation.
+## Xử Lý Quét Theo Kiểu Bất Đồng Bộ
+Quét tệp lớn mất 1–5 giây. Với các tệp trên 50MB:
+1. Lưu tệp với trạng thái `PENDING_SCAN` trong object storage.
+2. Phát một sự kiện quét vào hàng đợi công việc nền (ví dụ: BullMQ / AWS SQS).
+3. Cập nhật trạng thái tệp thành `ACTIVE` hoặc `REJECTED` sau khi ClamAV hoàn thành đánh giá.

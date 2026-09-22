@@ -1,6 +1,6 @@
-Manipulating PDF pages—combining multiple reports into a single file or extracting specific pages—can be performed entirely in pure JavaScript without external system dependencies like Poppler or Ghostscript using the `pdf-lib` library.
+Thao tác trang PDF — kết hợp nhiều báo cáo thành một tệp hoặc trích xuất các trang cụ thể — có thể được thực hiện hoàn toàn bằng JavaScript thuần túy mà không cần các phụ thuộc hệ thống bên ngoài như Poppler hay Ghostscript, nhờ thư viện `pdf-lib`.
 
-## Installing pdf-lib
+## Cài Đặt pdf-lib
 
 ```bash
 npm install pdf-lib
@@ -9,11 +9,11 @@ npm install pdf-lib
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="10mb"
-  message="Download a multi-page 10MB PDF sample to test splitting and merging functions with pdf-lib."
+  message="Tải file PDF mẫu 10MB nhiều trang để kiểm thử các hàm tách và ghép với pdf-lib."
   buttonLabel="Tải File Mẫu 10MB PDF →"
 />
 
-## Merging Multiple PDFs
+## Ghép Nhiều PDF
 
 ```typescript
 import { PDFDocument } from 'pdf-lib';
@@ -33,14 +33,14 @@ export async function mergePdfFiles(pdfBuffers: Buffer[]): Promise<Uint8Array> {
 }
 ```
 
-## Splitting a PDF (Extracting Page Ranges)
+## Tách PDF (Trích Xuất Phạm Vi Trang)
 
 ```typescript
 import { PDFDocument } from 'pdf-lib';
 
 export async function extractPdfPages(
   sourceBuffer: Buffer,
-  pageIndices: number[] // 0-indexed page numbers
+  pageIndices: number[] // số trang theo chỉ mục 0
 ): Promise<Uint8Array> {
   const sourcePdf = await PDFDocument.load(sourceBuffer);
   const newPdf = await PDFDocument.create();
@@ -52,6 +52,6 @@ export async function extractPdfPages(
 }
 ```
 
-## In-Memory Performance Tips
-- **Keep byte streams in memory:** Avoid writing intermediary files to disk during multi-step merge operations.
-- **Preserve metadata:** Use `mergedPdf.setTitle('Merged Report')` and `mergedPdf.setAuthor('My App')` to maintain clean document properties.
+## Mẹo Hiệu Năng Trong Bộ Nhớ
+- **Giữ luồng byte trong bộ nhớ:** Tránh ghi các tệp trung gian ra đĩa trong quá trình ghép nhiều bước.
+- **Bảo toàn metadata:** Sử dụng `mergedPdf.setTitle('Báo Cáo Tổng Hợp')` và `mergedPdf.setAuthor('My App')` để duy trì thuộc tính tài liệu gọn gàng.

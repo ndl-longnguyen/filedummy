@@ -1,8 +1,8 @@
-Extracting structured text from PDFs is a core component of search indexing, invoice parsing, LLM retrieval-augmented generation (RAG), and data analysis. This guide shows how to extract raw text and layout data in JavaScript and Node.js.
+Trích xuất văn bản có cấu trúc từ PDF là thành phần cốt lõi của lập chỉ mục tìm kiếm, phân tích hóa đơn, LLM retrieval-augmented generation (RAG) và phân tích dữ liệu. Hướng dẫn này trình bày cách trích xuất văn bản thô và dữ liệu bố cục trong JavaScript và Node.js.
 
-## Using pdf-parse in Node.js
+## Sử Dụng pdf-parse Trong Node.js
 
-`pdf-parse` is a lightweight Node.js library built on top of Mozilla's PDF.js:
+`pdf-parse` là thư viện Node.js nhẹ được xây dựng trên PDF.js của Mozilla:
 
 ```bash
 npm install pdf-parse
@@ -29,18 +29,18 @@ export async function extractPdfText(filePath: string) {
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="5mb"
-  message="Download our structured 5MB PDF test file to test text extraction, page counts, and metadata inspection."
+  message="Tải file PDF test 5MB có cấu trúc để kiểm thử trích xuất văn bản, đếm trang và kiểm tra metadata."
   buttonLabel="Tải File Mẫu 5MB PDF →"
 />
 
-## Extracting Text in the Browser with PDF.js
+## Trích Xuất Văn Bản Trên Trình Duyệt Với PDF.js
 
-Mozilla's `pdfjs-dist` allows client-side parsing without server roundtrips:
+`pdfjs-dist` của Mozilla cho phép phân tích phía client mà không cần roundtrip đến máy chủ:
 
 ```typescript
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Set worker source
+// Thiết lập nguồn worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
 export async function extractTextInBrowser(file: File): Promise<string> {
@@ -52,13 +52,13 @@ export async function extractTextInBrowser(file: File): Promise<string> {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
     const pageText = content.items.map((item: any) => item.str).join(' ');
-    fullText += `--- Page ${i} ---\n${pageText}\n\n`;
+    fullText += `--- Trang ${i} ---\n${pageText}\n\n`;
   }
 
   return fullText;
 }
 ```
 
-## Handling Text Extraction Gotchas
-- **Two-column layouts:** Text extractors reading stream order may read across columns instead of down.
-- **Font encoding:** Non-standard embedded font encodings can output garbled Unicode characters without appropriate character map tables.
+## Xử Lý Các Vấn Đề Thường Gặp Khi Trích Xuất Văn Bản
+- **Bố cục hai cột:** Các bộ trích xuất đọc theo thứ tự stream có thể đọc ngang qua các cột thay vì đọc xuống.
+- **Mã hóa font:** Các bảng mã hóa font nhúng không chuẩn có thể xuất ra các ký tự Unicode bị lỗi mà không có bảng ánh xạ ký tự phù hợp.

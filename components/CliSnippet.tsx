@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Terminal, Copy, Check } from "lucide-react";
 
 interface CliSnippetProps {
@@ -11,6 +12,8 @@ interface CliSnippetProps {
 export function CliSnippet({ r2Key, filename }: CliSnippetProps) {
   const [activeTab, setActiveTab] = useState<"curl" | "wget" | "python" | "node">("curl");
   const [copied, setCopied] = useState(false);
+  const pathname = usePathname();
+  const isVi = pathname?.startsWith("/vi");
 
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://filedummy.ndlong.site";
   const downloadUrl = `${siteUrl}/api/download?file=${encodeURIComponent(r2Key)}`;
@@ -58,12 +61,12 @@ export function CliSnippet({ r2Key, filename }: CliSnippetProps) {
           {copied ? (
             <>
               <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-emerald-400">Copied</span>
+              <span className="text-emerald-400">{isVi ? "Đã chép" : "Copied"}</span>
             </>
           ) : (
             <>
               <Copy className="w-3.5 h-3.5" />
-              <span>Copy</span>
+              <span>{isVi ? "Sao chép" : "Copy"}</span>
             </>
           )}
         </button>

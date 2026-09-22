@@ -1,54 +1,54 @@
-When testing file upload forms, parsing pipelines, cloud storage sync, and edge proxies, having reliable test files across exact byte sizes and formats is critical. This guide covers best practices for generating and using dummy files in QA testing workflows.
+Khi kiểm thử form tải lên tệp, pipeline phân tích, đồng bộ cloud storage và edge proxy, việc có các tệp test đáng tin cậy với kích thước byte chính xác và các định dạng khác nhau là yếu tố quan trọng. Hướng dẫn này trình bày các quy tắc tốt nhất để tạo và sử dụng dummy file trong quy trình kiểm thử QA.
 
-## Why Real Dummy Files Matter in QA Testing
+## Tại Sao Dummy File Thực Sự Quan Trọng Trong Kiểm Thử QA
 
-Using mock objects in memory or zero-byte placeholder files often hides edge cases that only surface in production:
+Sử dụng mock object trong bộ nhớ hoặc tệp placeholder zero-byte thường che giấu các edge case chỉ xuất hiện trên môi trường production:
 
-- **Multipart boundary parsing:** Web servers and S3 proxies must parse boundary markers across chunk buffers.
-- **MIME type and magic byte sniffing:** Modern firewalls and upload validators inspect the first 512 bytes of a file. Zero-filled files fail magic-number detection.
-- **Memory footprint and garbage collection:** Large file downloads stream data through Node.js Buffers or browser Blobs. If streams are mishandled, memory spikes cause crashes.
+- **Phân tích ranh giới multipart:** Web server và S3 proxy phải phân tích các marker ranh giới qua các buffer chunk.
+- **Phát hiện MIME type và magic byte:** Tường lửa hiện đại và bộ xác thực tải lên kiểm tra 512 byte đầu tiên của tệp. Tệp zero-filled không vượt qua được phát hiện magic-number.
+- **Dung lượng bộ nhớ và garbage collection:** Tải xuống tệp lớn truyền dữ liệu qua Node.js Buffer hoặc trình duyệt Blob. Nếu stream được xử lý sai, bộ nhớ tăng đột biến gây crash.
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="10mb"
-  message="Download a real 10MB test PDF with valid headers and structure to test your upload pipeline."
-  buttonLabel="Download 10MB PDF Test File →"
+  message="Tải file PDF test 10MB thực với header và cấu trúc hợp lệ để kiểm thử pipeline tải lên."
+  buttonLabel="Tải File Test 10MB PDF →"
 />
 
-## Common File Test Scenarios in QA
+## Các Kịch Bản Kiểm Thử Tệp Phổ Biến Trong QA
 
-### 1. File Size Boundary Testing
-Always test the exact upper and lower bounds of your upload rules:
-- **0-byte files:** Verify the backend rejects empty files gracefully with an HTTP 400 or 422.
-- **Exact limit (e.g. 10MB):** Ensure a file of exactly 10,485,760 bytes passes validation.
-- **Limit + 1 byte:** Ensure a file of 10,485,761 bytes is rejected with HTTP 413 Payload Too Large before the full upload streams.
+### 1. Kiểm Thử Ranh Giới Kích Thước Tệp
+Luôn kiểm thử cả giới hạn trên và dưới của quy tắc tải lên:
+- **Tệp 0 byte:** Xác minh backend từ chối tệp rỗng nhẹ nhàng với HTTP 400 hoặc 422.
+- **Đúng giới hạn (ví dụ 10MB):** Đảm bảo tệp có đúng 10.485.760 byte vượt qua xác thực.
+- **Vượt giới hạn 1 byte:** Đảm bảo tệp 10.485.761 byte bị từ chối với HTTP 413 Payload Too Large trước khi toàn bộ upload được stream.
 
-### 2. File Format and Content-Type Verification
-Never trust the file extension alone. Test how your application handles:
-- Valid PDF files with proper `%PDF-1.4` headers.
-- Renamed extensions (e.g., an `.exe` file renamed to `.pdf`).
-- Corrupted file headers and incomplete file streams.
+### 2. Xác Minh Định Dạng Tệp và Content-Type
+Không bao giờ chỉ tin tưởng phần mở rộng tệp. Kiểm thử cách ứng dụng xử lý:
+- Tệp PDF hợp lệ với header `%PDF-1.4` đúng.
+- Đổi tên phần mở rộng (ví dụ: tệp `.exe` đổi tên thành `.pdf`).
+- Header tệp bị hỏng và luồng tệp không đầy đủ.
 
 ```javascript
-// Example: Validating file size before initiating upload
+// Ví dụ: Xác thực kích thước tệp trước khi bắt đầu tải lên
 function validateFileSize(file, maxSizeBytes = 10 * 1024 * 1024) {
   if (file.size === 0) {
-    throw new Error("File cannot be empty");
+    throw new Error("Tệp không thể rỗng");
   }
   if (file.size > maxSizeBytes) {
-    throw new Error(`File exceeds maximum allowed size of ${maxSizeBytes / (1024 * 1024)}MB`);
+    throw new Error(`Tệp vượt quá kích thước tối đa cho phép ${maxSizeBytes / (1024 * 1024)}MB`);
   }
   return true;
 }
 ```
 
-## Automating Dummy File Downloads in CI/CD
+## Tự Động Tải Dummy File Trong CI/CD
 
-Instead of generating synthetic files with shell commands like `dd` or `truncate` that lack valid format metadata, you can fetch deterministic sample files directly in your automated test runners.
+Thay vì tạo tệp tổng hợp bằng lệnh shell như `dd` hoặc `truncate` thiếu metadata định dạng hợp lệ, bạn có thể lấy các tệp mẫu xác định trực tiếp trong test runner tự động.
 
 ```bash
-# Download sample PDF in GitHub Actions or test scripts
-curl -o test-sample.pdf https://filedummy.dev/api/download?type=pdf&size=10mb
+# Tải file PDF mẫu trong GitHub Actions hoặc script test
+curl -o test-sample.pdf "https://filedummy.dev/api/download?type=pdf&size=10mb"
 ```
 
-By standardizing on well-formed test files, QA teams eliminate false positives caused by malformed file structures and focus on genuine application logic.
+Bằng cách chuẩn hóa trên các tệp test được hình thành tốt, đội QA loại bỏ false positive gây ra bởi cấu trúc tệp bị lỗi và tập trung vào logic ứng dụng thực sự.

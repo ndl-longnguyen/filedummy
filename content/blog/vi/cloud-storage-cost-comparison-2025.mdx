@@ -1,21 +1,21 @@
-Cloud storage pricing consists of three components: **Storage** (per GB/month), **Operations** (PUT, GET requests), and **Data Egress** (bandwidth transferred out to the internet). For download-heavy platforms, egress frequently accounts for over 80% of the total infrastructure cost.
+Giá lưu trữ đám mây bao gồm ba thành phần: **Storage** (mỗi GB/tháng), **Operations** (các request PUT, GET) và **Data Egress** (băng thông truyền ra Internet). Đối với các nền tảng có lưu lượng tải xuống cao, egress thường chiếm hơn 80% tổng chi phí hạ tầng.
 
-## Cost Comparison: 100TB Monthly Egress Scenario
+## So Sánh Chi Phí: Kịch Bản Egress 100TB/Tháng
 
-| Provider | Storage (10TB) | Operations (1M GETs) | Egress (100TB) | Estimated Total |
-|----------|----------------|----------------------|----------------|-----------------|
-| **AWS S3 Standard** | $230.00 | $0.40 | $9,000.00 | **~$9,230 / mo** |
-| **Google Cloud Storage** | $200.00 | $0.40 | $8,500.00 | **~$8,700 / mo** |
-| **Wasabi** | $69.90 | $0.00 | $0.00 (Fair use) | **~$70 / mo** |
-| **Cloudflare R2** | $150.00 | $0.36 | **$0.00** | **~$150 / mo** |
+| Nhà cung cấp | Lưu trữ (10TB) | Thao tác (1M GET) | Egress (100TB) | Tổng ước tính |
+|--------------|----------------|-------------------|----------------|---------------|
+| **AWS S3 Standard** | $230.00 | $0.40 | $9,000.00 | **~$9,230 / tháng** |
+| **Google Cloud Storage** | $200.00 | $0.40 | $8,500.00 | **~$8,700 / tháng** |
+| **Wasabi** | $69.90 | $0.00 | $0.00 (Fair use) | **~$70 / tháng** |
+| **Cloudflare R2** | $150.00 | $0.36 | **$0.00** | **~$150 / tháng** |
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="1gb"
-  message="Download our 1GB test file to measure real-world transfer throughput from Cloudflare R2."
+  message="Tải file test 1GB để đo thông lượng truyền dữ liệu thực tế từ Cloudflare R2."
   buttonLabel="Tải File Mẫu 1GB PDF →"
 />
 
 ## Những Điểm Cốt Lõi Cần Ghi Nhớ
-- **The Egress Trap:** Amazon S3 charges $0.09/GB for data transfer out. Serving just 100TB of files to your users costs $9,000 every month on AWS.
-- **Why R2 Wins:** Cloudflare does not charge for egress bandwidth. You only pay $0.015/GB/month for data stored and standard per-operation fees ($0.36 per million Class B read operations).
+- **Bẫy Egress:** Amazon S3 tính $0.09/GB cho lưu lượng truyền ra ngoài. Phục vụ 100TB tệp tin cho người dùng tốn $9.000 mỗi tháng trên AWS.
+- **Tại Sao R2 Thắng:** Cloudflare không tính phí băng thông egress. Bạn chỉ trả $0.015/GB/tháng cho dữ liệu lưu trữ và phí thao tác tiêu chuẩn ($0.36 mỗi triệu thao tác đọc Class B).

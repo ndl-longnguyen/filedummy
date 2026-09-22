@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Check, Copy } from "lucide-react";
 
 interface CodeBlockProps extends React.HTMLAttributes<HTMLPreElement> {
@@ -40,6 +41,8 @@ function getLanguageLabel(lang: string): string {
 
 export function CodeBlock({ children, ...props }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
+  const pathname = usePathname();
+  const isVi = pathname?.startsWith("/vi");
 
   // Extract language from code element className (e.g. language-typescript)
   const codeElement = React.isValidElement(children) ? children : null;
@@ -88,12 +91,14 @@ export function CodeBlock({ children, ...props }: CodeBlockProps) {
           {copied ? (
             <>
               <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-emerald-400 text-[11px] font-medium">Đã chép!</span>
+              <span className="text-emerald-400 text-[11px] font-medium">
+                {isVi ? "Đã chép!" : "Copied!"}
+              </span>
             </>
           ) : (
             <>
               <Copy className="w-3.5 h-3.5" />
-              <span className="text-[11px]">Sao chép</span>
+              <span className="text-[11px]">{isVi ? "Sao chép" : "Copy"}</span>
             </>
           )}
         </button>

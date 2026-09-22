@@ -1,26 +1,26 @@
-Distributing multi-gigabyte files to hundreds of thousands of concurrent users requires thoughtful CDN caching headers, origin protection, and protocol optimizations.
+Phân phối tệp tin có dung lượng nhiều gigabyte đến hàng trăm nghìn người dùng đồng thời đòi hỏi cấu hình cẩn thận về header cache CDN, bảo vệ origin và tối ưu hóa giao thức.
 
-## 1. Optimize HTTP Cache-Control Headers
+## 1. Tối Ưu HTTP Cache-Control Headers
 
-Never serve static immutable files without explicit browser and CDN cache directives:
+Không bao giờ phục vụ các tệp tĩnh bất biến mà không có chỉ thị cache rõ ràng cho trình duyệt và CDN:
 
 ```http
 Cache-Control: public, max-age=31536000, immutable
 ```
 
-- **`public`**: Permits CDN edge caches and proxies to store the file.
-- **`max-age=31536000`**: Informs the browser to retain the file in local disk cache for up to 1 year.
-- **`immutable`**: Informs browsers not to send conditional `If-None-Match` revalidation requests on page refreshes.
+- **`public`**: Cho phép các CDN edge cache và proxy lưu trữ tệp.
+- **`max-age=31536000`**: Thông báo cho trình duyệt lưu tệp trong cache đĩa cục bộ tối đa 1 năm.
+- **`immutable`**: Thông báo cho trình duyệt không gửi yêu cầu xác thực lại `If-None-Match` có điều kiện khi làm mới trang.
 
 <BlogDownloadCTA
   fileType="zip"
   fileSlug="100mb"
-  message="Download our 100MB ZIP archive to inspect response headers and CDN cache hit indicators."
+  message="Tải file ZIP mẫu 100MB để kiểm tra response header và chỉ số cache hit của CDN."
   buttonLabel="Tải File Mẫu 100MB ZIP →"
 />
 
-## 2. Enable HTTP Byte-Range Caching
-Ensure your CDN edge supports **Slice / Range requests**. When a user requests bytes 0–1,000,000, the CDN should only fetch that specific byte slice from the origin, rather than forcing a full file download.
+## 2. Bật HTTP Byte-Range Caching
+Đảm bảo CDN edge của bạn hỗ trợ **Slice / Range requests**. Khi người dùng yêu cầu byte 0–1.000.000, CDN chỉ nên lấy phần byte đó từ origin thay vì buộc tải xuống toàn bộ tệp.
 
-## 3. Prevent Origin Shock with Request Collapsing
-When a popular new file is released, hundreds of users request it simultaneously before the CDN has cached it. Enable **Request Collapsing (Wait for Cache)** so that only one request hits your origin storage, while all other clients wait at the edge for the response.
+## 3. Ngăn Chặn Origin Shock Bằng Request Collapsing
+Khi một tệp phổ biến mới được phát hành, hàng trăm người dùng yêu cầu nó đồng thời trước khi CDN kịp cache. Bật **Request Collapsing (Wait for Cache)** để chỉ một request được gửi đến origin storage, trong khi tất cả các client khác chờ tại edge cho đến khi có response.

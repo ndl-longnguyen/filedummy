@@ -1,26 +1,26 @@
-MIME types (Multipurpose Internet Mail Extensions), standardized by IANA, instruct web browsers and HTTP clients on how to interpret and render received byte streams. Setting incorrect MIME types results in files downloading as plain text, broken video streams, or security vulnerabilities like MIME-sniffing attacks.
+MIME type (Multipurpose Internet Mail Extensions), được IANA chuẩn hóa, hướng dẫn trình duyệt web và HTTP client cách diễn giải và hiển thị các luồng byte nhận được. Đặt MIME type không đúng dẫn đến tệp tải xuống dưới dạng văn bản thuần túy, luồng video bị hỏng hoặc các lỗ hổng bảo mật như tấn công MIME-sniffing.
 
-## Common Web MIME Types Reference
+## Bảng MIME Type Web Phổ Biến
 
-| Extension | MIME Type | Description |
-|-----------|-----------|-------------|
-| `.pdf`     | `application/pdf` | Adobe PDF Document |
-| `.docx`    | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` | Microsoft Word |
-| `.json`    | `application/json` | JavaScript Object Notation |
-| `.csv`     | `text/csv` | Comma-Separated Values |
-| `.zip`     | `application/zip` | ZIP Archive |
-| `.png`     | `image/png` | Portable Network Graphics |
-| `.jpg`     | `image/jpeg` | JPEG Image |
-| `.txt`     | `text/plain` | Raw Plaintext |
+| Phần mở rộng | MIME Type | Mô tả |
+|--------------|-----------|-------|
+| `.pdf` | `application/pdf` | Tài liệu PDF Adobe |
+| `.docx` | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` | Microsoft Word |
+| `.json` | `application/json` | JavaScript Object Notation |
+| `.csv` | `text/csv` | Giá Trị Phân Cách Bằng Dấu Phẩy |
+| `.zip` | `application/zip` | Archive ZIP |
+| `.png` | `image/png` | Đồ Họa Mạng Di Động |
+| `.jpg` | `image/jpeg` | Hình Ảnh JPEG |
+| `.txt` | `text/plain` | Văn Bản Thuần Túy |
 
 <BlogDownloadCTA
   fileType="csv"
   fileSlug="1mb"
-  message="Download our 1MB CSV file served with standard text/csv headers to test your browser parser."
+  message="Tải file CSV 1MB được phục vụ với header text/csv chuẩn để kiểm thử bộ phân tích trình duyệt."
   buttonLabel="Tải File Mẫu 1MB CSV →"
 />
 
-## Enforcing Content-Type in HTTP Headers
+## Áp Dụng Content-Type Trong HTTP Headers
 
 ```http
 HTTP/1.1 200 OK
@@ -29,7 +29,7 @@ Content-Disposition: inline; filename="statement.pdf"
 X-Content-Type-Options: nosniff
 ```
 
-## The Critical `X-Content-Type-Options: nosniff` Header
-Older browsers attempted to "sniff" the content of a file regardless of what the `Content-Type` header declared. An attacker could upload an HTML file containing JavaScript disguised with a `text/plain` header; the browser would sniff the HTML tags and execute the malicious script (Cross-Site Scripting).
+## Header `X-Content-Type-Options: nosniff` Quan Trọng
+Các trình duyệt cũ cố gắng "ngửi" nội dung tệp bất kể `Content-Type` header khai báo gì. Kẻ tấn công có thể tải lên tệp HTML chứa JavaScript được giả mạo với header `text/plain`; trình duyệt sẽ phát hiện thẻ HTML và thực thi script độc hại (Cross-Site Scripting).
 
-Setting `X-Content-Type-Options: nosniff` strictly commands the browser to trust the declared MIME type and refuse to execute non-executable files.
+Đặt `X-Content-Type-Options: nosniff` ra lệnh cho trình duyệt tin tưởng MIME type đã khai báo và từ chối thực thi các tệp không phải thực thi.

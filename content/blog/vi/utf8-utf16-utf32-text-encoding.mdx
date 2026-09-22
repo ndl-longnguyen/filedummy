@@ -1,39 +1,39 @@
-Text encoding bugs—mojibake characters like `Ã©` instead of `é`—happen when software misinterprets the byte sequences representing Unicode code points. Understanding how UTF-8, UTF-16, and UTF-32 encode characters is essential for building resilient file processing pipelines.
+Lỗi mã hóa văn bản — các ký tự mojibake như `Ã©` thay vì `é` — xảy ra khi phần mềm hiểu sai các chuỗi byte đại diện cho các code point Unicode. Hiểu cách UTF-8, UTF-16 và UTF-32 mã hóa ký tự là điều thiết yếu để xây dựng pipeline xử lý tệp có khả năng chịu lỗi tốt.
 
-## The Unicode Model: Code Points vs Bytes
+## Mô Hình Unicode: Code Point vs Byte
 
-Unicode maps abstract characters to numeric **code points** (e.g. `U+0041` for 'A', `U+1F600` for '😀'). The transformation format (UTF) dictates how those numbers are serialized into binary bytes.
+Unicode ánh xạ các ký tự trừu tượng thành **code point** số (ví dụ: `U+0041` cho 'A', `U+1F600` cho '😀'). Định dạng chuyển đổi (UTF) quy định cách các số đó được tuần tự hóa thành byte nhị phân.
 
-| Encoding | Bytes per Character | Self-Synchronizing? | Web Adoption |
-|----------|---------------------|---------------------|--------------|
-| **UTF-8** | 1 to 4 bytes (Variable) | Yes | **98.2% of all websites** |
-| **UTF-16**| 2 or 4 bytes (Variable) | No (Requires BOM/Endianness) | Windows internal / JVM / JS engine |
-| **UTF-32**| Exactly 4 bytes (Fixed) | Yes | Rare (high memory overhead) |
+| Mã hóa | Byte mỗi ký tự | Tự đồng bộ? | Mức độ sử dụng Web |
+|--------|----------------|-------------|---------------------|
+| **UTF-8** | 1 đến 4 byte (Biến đổi) | Có | **98,2% tổng số website** |
+| **UTF-16**| 2 hoặc 4 byte (Biến đổi) | Không (Cần BOM/Endianness) | Windows nội bộ / JVM / JS engine |
+| **UTF-32**| Chính xác 4 byte (Cố định) | Có | Hiếm (tốn nhiều bộ nhớ) |
 
 <BlogDownloadCTA
   fileType="txt"
   fileSlug="large"
-  message="Download our 1MB UTF-8 text file to test character decoding and multibyte parsing."
+  message="Tải file văn bản UTF-8 mẫu 1MB để kiểm thử giải mã ký tự và phân tích multibyte."
   buttonLabel="Tải File Mẫu 1MB TXT →"
 />
 
-## How UTF-8 Variable Length Works
+## Cách Hoạt Động Của UTF-8 Với Độ Dài Biến Đổi
 
-- **ASCII characters (0-127):** Encoded in 1 byte (`0xxxxxxx`), maintaining 100% backwards compatibility with legacy ASCII.
-- **Latin, Greek, Cyrillic (128-2047):** Encoded in 2 bytes.
-- **Asian scripts, CJK (2048-65535):** Encoded in 3 bytes.
-- **Emojis & rare symbols (65536+):** Encoded in 4 bytes.
+- **Ký tự ASCII (0-127):** Mã hóa trong 1 byte (`0xxxxxxx`), duy trì 100% khả năng tương thích ngược với ASCII cũ.
+- **Latin, Hy Lạp, Cyrillic (128-2047):** Mã hóa trong 2 byte.
+- **Chữ Á Đông, CJK (2048-65535):** Mã hóa trong 3 byte.
+- **Emoji & ký hiệu hiếm (65536+):** Mã hóa trong 4 byte.
 
 ```typescript
-// Decoding bytes safely in Node.js
+// Giải mã byte an toàn trong Node.js
 import { TextDecoder } from 'util';
 
 export function decodeTextSafely(buffer: Buffer): string {
-  // fatal: true throws an exception instead of inserting  replacement characters
+  // fatal: true ném ngoại lệ thay vì chèn ký tự thay thế 
   const decoder = new TextDecoder('utf-8', { fatal: true });
   return decoder.decode(buffer);
 }
 ```
 
-## The Byte Order Mark (BOM)
-UTF-8 does not require a Byte Order Mark because bytes are ordered identically on big-endian and little-endian machines. However, some Windows software (Notepad, Excel) prepends `0xEF 0xBB 0xBF`. Always strip leading BOM bytes when parsing text files in Node.js.
+## Byte Order Mark (BOM)
+UTF-8 không yêu cầu Byte Order Mark vì các byte được sắp xếp giống nhau trên máy big-endian và little-endian. Tuy nhiên, một số phần mềm Windows (Notepad, Excel) thêm `0xEF 0xBB 0xBF` ở đầu. Luôn loại bỏ các byte BOM đầu khi phân tích tệp văn bản trong Node.js.

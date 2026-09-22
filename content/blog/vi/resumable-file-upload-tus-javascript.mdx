@@ -1,46 +1,46 @@
-Network interruptions on mobile networks and unreliable Wi-Fi frequently abort standard HTTP uploads. The **tus protocol** is an open, standardized specification (tus.io) designed specifically for resumable file uploads over HTTP/1.1 and HTTP/2.
+Gián đoạn mạng trên các mạng di động và Wi-Fi không ổn định thường xuyên làm gián đoạn các request HTTP tải lên thông thường. **Giao thức tus** là một đặc tả mở, tiêu chuẩn hóa (tus.io) được thiết kế đặc biệt cho việc tải lên tệp tin có thể tiếp tục qua HTTP/1.1 và HTTP/2.
 
-## How the tus Protocol Works
+## Cách Hoạt Động Của Giao Thức tus
 
-Instead of one monolithic request, tus utilizes standard HTTP verbs to coordinate byte offsets:
-- **POST:** Creates an upload resource URL on the server with metadata and total size.
-- **PATCH:** Sends byte ranges starting at a specific `Upload-Offset`.
-- **HEAD:** Queries the current offset after an unexpected connection drop.
+Thay vì một request đơn khổng lồ, tus sử dụng các HTTP verb tiêu chuẩn để phối hợp byte offset:
+- **POST:** Tạo một URL tài nguyên upload trên máy chủ kèm metadata và tổng kích thước.
+- **PATCH:** Gửi phạm vi byte bắt đầu từ một `Upload-Offset` cụ thể.
+- **HEAD:** Truy vấn offset hiện tại sau khi kết nối bị ngắt đột ngột.
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="1gb"
-  message="Simulate heavy network dropouts with our 1GB PDF sample file to test tus-js-client resumption."
+  message="Mô phỏng sự cố mạng nặng với file PDF mẫu 1GB để kiểm thử tính năng tiếp tục upload của tus-js-client."
   buttonLabel="Tải File Mẫu 1GB PDF →"
 />
 
-## Using tus-js-client in Modern JavaScript
+## Sử Dụng tus-js-client Trong JavaScript Hiện Đại
 
 ```typescript
 import * as tus from 'tus-js-client';
 
 export function startResumableUpload(file: File, endpoint: string) {
   const upload = new tus.Upload(file, {
-    endpoint: endpoint, // e.g. https://upload.example.com/files/
+    endpoint: endpoint, // ví dụ: https://upload.example.com/files/
     retryDelays: [0, 1000, 3000, 5000],
-    chunkSize: 5 * 1024 * 1024, // 5MB chunks
+    chunkSize: 5 * 1024 * 1024, // chunk 5MB
     metadata: {
       filename: file.name,
       filetype: file.type,
     },
     onError: (error) => {
-      console.error('Upload failed:', error);
+      console.error('Tải lên thất bại:', error);
     },
     onProgress: (bytesUploaded, bytesTotal) => {
       const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-      console.log(`Uploaded ${bytesUploaded} of ${bytesTotal} bytes (${percentage}%)`);
+      console.log(`Đã tải ${bytesUploaded} / ${bytesTotal} byte (${percentage}%)`);
     },
     onSuccess: () => {
-      console.log('Upload finished! URL:', upload.url);
+      console.log('Tải lên hoàn tất! URL:', upload.url);
     },
   });
 
-  // Check if a previous upload can be resumed
+  // Kiểm tra xem có thể tiếp tục phiên upload trước không
   upload.findPreviousUploads().then((previousUploads) => {
     if (previousUploads.length > 0) {
       upload.resumeFromPreviousUpload(previousUploads[0]);
@@ -52,7 +52,7 @@ export function startResumableUpload(file: File, endpoint: string) {
 }
 ```
 
-## Backend Support for tus
-- **tusd (Go):** The official reference implementation, highly optimized with S3, Google Cloud Storage, and Azure Blob backends.
-- **Uppy Companion:** Works seamlessly with Uppy.js frontend components.
-- **Cloudflare Stream:** Uses the tus protocol natively for direct creator video uploads.
+## Hỗ Trợ Backend Cho tus
+- **tusd (Go):** Triển khai tham chiếu chính thức, được tối ưu hóa cao với các backend S3, Google Cloud Storage, và Azure Blob.
+- **Uppy Companion:** Tích hợp liền mạch với các thành phần frontend Uppy.js.
+- **Cloudflare Stream:** Sử dụng giao thức tus trực tiếp để upload video từ người dùng.

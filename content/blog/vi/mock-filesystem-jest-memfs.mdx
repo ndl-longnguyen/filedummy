@@ -1,53 +1,53 @@
-When testing complex file operations—such as recursive directory scans, nested zip extractions, or atomic file overwrites—mocking individual `fs` methods with `jest.fn()` quickly becomes fragile. `memfs` provides a complete, in-memory virtual filesystem for Jest tests.
+Khi kiểm thử các thao tác tệp phức tạp — như quét thư mục đệ quy, giải nén zip lồng nhau hoặc ghi đè tệp nguyên tử — việc mock từng phương thức `fs` riêng lẻ bằng `jest.fn()` nhanh chóng trở nên mong manh. `memfs` cung cấp một filesystem ảo hoàn chỉnh, trong bộ nhớ cho các bài test Jest.
 
-## Why Use memfs for Testing File Operations?
+## Tại Sao Sử Dụng memfs Để Kiểm Thử Thao Tác Tệp?
 
-`memfs` implements the full Node.js `fs` and `fs/promises` API entirely in RAM:
-- **Lightning fast:** No physical disk I/O, speeding up large test suites by 10x.
-- **Zero test pollution:** No temporary directories left behind after test failures.
-- **Deterministic:** Easily configure the exact file tree before each test.
+`memfs` triển khai hoàn toàn API `fs` và `fs/promises` của Node.js trong RAM:
+- **Cực nhanh:** Không có I/O đĩa vật lý, tăng tốc test suite lớn lên đến 10 lần.
+- **Không ô nhiễm test:** Không còn thư mục tạm bị bỏ lại sau khi test thất bại.
+- **Xác định:** Dễ dàng cấu hình cây tệp chính xác trước mỗi test.
 
 <BlogDownloadCTA
   fileType="zip"
   fileSlug="10mb"
-  message="Download a structured 10MB test ZIP archive to test your extraction and archive processing pipelines."
+  message="Tải archive ZIP test 10MB có cấu trúc để kiểm thử pipeline giải nén và xử lý archive của bạn."
   buttonLabel="Tải File Mẫu 10MB ZIP →"
 />
 
-## Setting Up memfs with Jest
+## Thiết Lập memfs Với Jest
 
-First install `memfs`:
+Trước tiên cài đặt `memfs`:
 ```bash
 npm install --save-dev memfs
 ```
 
-Create a mock file in `__mocks__/fs.js` or directly configure Jest to mock `fs` and `fs/promises`:
+Tạo file mock trong `__mocks__/fs.js` hoặc cấu hình trực tiếp Jest để mock `fs` và `fs/promises`:
 
 ```typescript
 import { fs, vol } from 'memfs';
 import { backupUserFiles } from '../src/backupService';
 
-// Redirect node fs calls to memfs virtual volume
+// Chuyển hướng các lời gọi node fs sang memfs virtual volume
 jest.mock('fs', () => fs);
 jest.mock('fs/promises', () => fs.promises);
 
-describe('Backup Service with In-Memory Filesystem', () => {
+describe('Backup Service Với Filesystem Trong Bộ Nhớ', () => {
   beforeEach(() => {
-    // Reset virtual filesystem before each test
+    // Reset virtual filesystem trước mỗi test
     vol.reset();
   });
 
-  it('archives target files into destination directory', async () => {
-    // Populate virtual directory tree
+  it('nén các tệp mục tiêu vào thư mục đích', async () => {
+    // Tạo cây thư mục ảo
     vol.fromJSON({
       '/app/data/file1.txt': 'Hello World',
       '/app/data/file2.json': '{"active": true}',
-      '/app/backups': null, // empty directory
+      '/app/backups': null, // thư mục rỗng
     });
 
     await backupUserFiles('/app/data', '/app/backups');
 
-    // Assert files were created in virtual disk
+    // Kiểm tra các tệp đã được tạo trên đĩa ảo
     const backupFiles = fs.readdirSync('/app/backups');
     expect(backupFiles).toContain('file1.txt');
     expect(backupFiles).toContain('file2.json');
@@ -55,7 +55,7 @@ describe('Backup Service with In-Memory Filesystem', () => {
 });
 ```
 
-## Summary Checklist
-- Use `vol.fromJSON()` to quickly mock entire directory trees in a single call.
-- Always call `vol.reset()` in `beforeEach` to ensure clean test isolation.
-- Combine `memfs` with custom file generators to simulate edge cases like deep directory nesting and permission errors.
+## Checklist Tóm Tắt
+- Sử dụng `vol.fromJSON()` để mock nhanh toàn bộ cây thư mục trong một lời gọi.
+- Luôn gọi `vol.reset()` trong `beforeEach` để đảm bảo sự cô lập test sạch.
+- Kết hợp `memfs` với các bộ tạo tệp tùy chỉnh để mô phỏng các trường hợp edge như cấu trúc thư mục lồng sâu và lỗi quyền truy cập.

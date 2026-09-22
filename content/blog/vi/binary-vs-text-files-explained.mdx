@@ -1,20 +1,20 @@
-At the physical storage level, all computer files are sequences of binary bits (0s and 1s). However, operating systems and programming languages distinguish fundamentally between text files and binary files.
+Ở cấp độ lưu trữ vật lý, tất cả tệp máy tính đều là chuỗi bit nhị phân (0 và 1). Tuy nhiên, hệ điều hành và ngôn ngữ lập trình phân biệt về cơ bản giữa tệp văn bản và tệp nhị phân.
 
-## What Distinguishes Text from Binary?
+## Điều Gì Phân Biệt Văn Bản Với Nhị Phân?
 
-- **Text Files (.txt, .json, .csv, .html, .xml):** Byte sequences intended to be interpreted directly through a character encoding map (such as UTF-8 or ASCII). Bytes map directly to printable glyphs, line breaks (`\n`, `\r\n`), and whitespace.
-- **Binary Files (.pdf, .png, .docx, .zip, .exe):** Byte sequences representing structured machine data, compiled instructions, compressed streams, or image raster matrices. Arbitrary byte values (from `0x00` to `0xFF`) occur throughout the file.
+- **Tệp Văn Bản (.txt, .json, .csv, .html, .xml):** Chuỗi byte được diễn giải trực tiếp qua bảng mã ký tự (như UTF-8 hoặc ASCII). Các byte ánh xạ trực tiếp đến các glyph có thể in, ký tự xuống dòng (`\n`, `\r\n`) và khoảng trắng.
+- **Tệp Nhị Phân (.pdf, .png, .docx, .zip, .exe):** Chuỗi byte đại diện cho dữ liệu máy có cấu trúc, lệnh đã biên dịch, luồng nén hoặc ma trận raster hình ảnh. Các giá trị byte tùy ý (từ `0x00` đến `0xFF`) xuất hiện xuyên suốt tệp.
 
 <BlogDownloadCTA
   fileType="png"
   fileSlug="1mb"
-  message="Download our 1MB PNG sample to analyze raw raster chunks and compare with text file representations."
+  message="Tải file PNG mẫu 1MB để phân tích các chunk raster thô và so sánh với biểu diễn tệp văn bản."
   buttonLabel="Tải File Mẫu 1MB PNG →"
 />
 
-## Inspecting the Null Byte (`0x00`) Test
+## Kiểm Tra Null Byte (`0x00`)
 
-A classic heuristic used by Git and Unix tools like `file` to determine whether a file is binary is checking for null bytes (`0x00`) in the first 8,000 bytes:
+Heuristic cổ điển được sử dụng bởi Git và các công cụ Unix như `file` để xác định liệu tệp có phải nhị phân là kiểm tra null byte (`0x00`) trong 8.000 byte đầu tiên:
 
 ```typescript
 import fs from 'fs';
@@ -26,7 +26,7 @@ export function isBinaryFile(filePath: string): boolean {
   fs.closeSync(fd);
 
   for (let i = 0; i < bytesRead; i++) {
-    // If a null byte is found, it's almost certainly binary data
+    // Nếu tìm thấy null byte, gần chắc chắn là dữ liệu nhị phân
     if (buffer[i] === 0) {
       return true;
     }
@@ -36,5 +36,5 @@ export function isBinaryFile(filePath: string): boolean {
 }
 ```
 
-## Handling Line Ending Conversions
-Text files undergo carriage return / line feed translations across operating systems (`CRLF` on Windows vs `LF` on Linux/macOS). Attempting to read a binary file in "text mode" in legacy runtimes can corrupt binary streams by altering `0x0D 0x0A` sequences. Always open binary files with binary flags (`'rb'` or `'binary'`).
+## Xử Lý Chuyển Đổi Ký Tự Xuống Dòng
+Tệp văn bản trải qua chuyển đổi carriage return / line feed giữa các hệ điều hành (`CRLF` trên Windows so với `LF` trên Linux/macOS). Cố đọc tệp nhị phân ở "chế độ văn bản" trong các runtime cũ có thể làm hỏng luồng nhị phân bằng cách thay đổi chuỗi `0x0D 0x0A`. Luôn mở tệp nhị phân với cờ nhị phân (`'rb'` hoặc `'binary'`).

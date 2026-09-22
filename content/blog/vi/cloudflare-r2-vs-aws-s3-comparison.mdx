@@ -1,25 +1,25 @@
-Amazon S3 has long been the dominant cloud object storage solution, but its data egress (bandwidth) fees remain a significant cost pain point for high-traffic download platforms. Cloudflare R2 entered the market with full S3 API compatibility and zero egress fees. Here is an architectural and financial breakdown.
+Amazon S3 từ lâu đã là giải pháp lưu trữ object storage đám mây thống lĩnh thị trường, nhưng phí truyền dữ liệu egress (băng thông) vẫn là điểm đau chi phí đáng kể cho các nền tảng tải xuống có lưu lượng cao. Cloudflare R2 gia nhập thị trường với khả năng tương thích S3 API hoàn toàn và phí egress bằng không. Dưới đây là bảng phân tích kiến trúc và tài chính.
 
-## Core Architectural Differences
+## Sự Khác Biệt Kiến Trúc Cốt Lõi
 
-| Feature | AWS S3 Standard | Cloudflare R2 |
-|---------|-----------------|---------------|
-| S3 API Compatibility | Native | 99% Compatible (SigV4) |
-| Egress Fees | $0.09 / GB (US/EU) | **$0.00 / GB (Free)** |
-| Storage Cost | $0.023 / GB / month | $0.015 / GB / month |
-| Global Edge Integration | Requires CloudFront ($) | Direct Cloudflare CDN integration |
-| Minimum Storage Duration | None on Standard (90d on Glacier) | None |
+| Tính năng | AWS S3 Standard | Cloudflare R2 |
+|-----------|-----------------|---------------|
+| Tương thích S3 API | Gốc | Tương thích 99% (SigV4) |
+| Phí Egress | $0.09 / GB (Mỹ/EU) | **$0.00 / GB (Miễn phí)** |
+| Chi phí lưu trữ | $0.023 / GB / tháng | $0.015 / GB / tháng |
+| Tích hợp CDN toàn cầu | Cần CloudFront (tính phí) | Tích hợp Cloudflare CDN trực tiếp |
+| Thời gian lưu trữ tối thiểu | Không có với Standard (90 ngày với Glacier) | Không có |
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="100mb"
-  message="Test low-latency downloads served directly from Cloudflare R2 edge object storage."
+  message="Kiểm thử tải xuống độ trễ thấp được phục vụ trực tiếp từ Cloudflare R2 edge object storage."
   buttonLabel="Tải File Mẫu 100MB PDF →"
 />
 
-## Code Migration: Connecting to R2 with AWS SDK v3
+## Migration Code: Kết Nối Đến R2 Với AWS SDK v3
 
-Migrating from S3 to R2 requires changing only the client endpoint:
+Chuyển đổi từ S3 sang R2 chỉ cần thay đổi endpoint của client:
 
 ```typescript
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
@@ -44,6 +44,6 @@ export async function uploadToR2(bucket: string, key: string, data: Buffer) {
 }
 ```
 
-## When to Choose Which?
-- **Choose Cloudflare R2:** For public file distributions, software releases, game patchers, and video assets where download egress dominates your AWS bill.
-- **Choose AWS S3:** If your application relies deeply on AWS services like Athena, SageMaker, or fine-grained IAM resource tagging.
+## Khi Nào Nên Chọn Cái Nào?
+- **Chọn Cloudflare R2:** Cho phân phối tệp công khai, phát hành phần mềm, game patcher, và tài sản video nơi chi phí egress tải xuống chiếm phần lớn hóa đơn AWS của bạn.
+- **Chọn AWS S3:** Nếu ứng dụng của bạn phụ thuộc sâu vào các dịch vụ AWS như Athena, SageMaker, hoặc gắn tag tài nguyên IAM chi tiết.

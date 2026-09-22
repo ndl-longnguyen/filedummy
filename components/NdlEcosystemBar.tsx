@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import {
   LayoutGrid,
   ExternalLink,
@@ -26,9 +27,19 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Code,
 };
 
+const VI_APP_DESC: Record<string, string> = {
+  filedummy: "Bộ tạo file dummy & tải tệp mẫu kiểm thử từ 50KB đến 1GB",
+  "image-compress": "Nén ảnh phía trình duyệt & chuyển đổi WebP, PNG, JPG siêu nhanh",
+  "short-link": "Rút gọn link tốc độ cao với phân tích truy cập và API lập trình viên",
+  toolskit: "Hộp công cụ lập trình viên: format code, mã hóa, regex & tiện ích",
+  "ndlong-hub": "Hồ sơ kỹ sư, tiện ích mã nguồn mở & dự án phần mềm của Nguyễn Đại Long",
+};
+
 export function NdlAppLauncher() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname() || "/";
+  const isVi = pathname.startsWith("/vi/") || pathname === "/vi";
 
   // Close on outside click
   useEffect(() => {
@@ -63,15 +74,15 @@ export function NdlAppLauncher() {
             ? "bg-blue-600/20 text-blue-400 border border-blue-500/40 shadow-sm"
             : "text-slate-400 hover:text-white hover:bg-slate-900 border border-transparent hover:border-slate-800"
         }`}
-        title="NDL Developer Tools & Ecosystem"
-        aria-label="Open NDL Developer Tools menu"
+        title={isVi ? "Công cụ & Hệ sinh thái NDL" : "NDL Developer Tools & Ecosystem"}
+        aria-label={isVi ? "Mở menu công cụ NDL" : "Open NDL Developer Tools menu"}
       >
         <div className="relative">
           <LayoutGrid className="w-4 h-4 text-slate-400 group-hover:text-blue-400 transition-colors" />
           <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-blue-500" />
         </div>
         <span className="hidden xl:inline text-slate-300 group-hover:text-white">
-          NDL Tools
+          {isVi ? "Tiện ích NDL" : "NDL Tools"}
         </span>
       </button>
 
@@ -85,10 +96,12 @@ export function NdlAppLauncher() {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-white tracking-tight">
-                  NDL Developer Ecosystem
+                  {isVi ? "Hệ Sinh Thái Tiện Ích NDL" : "NDL Developer Ecosystem"}
                 </h3>
                 <p className="text-[10px] text-slate-400">
-                  Developer tools by Nguyen Dai Long (<code>*.ndlong.site</code>)
+                  {isVi
+                    ? "Bộ công cụ lập trình viên bởi Nguyễn Đại Long (*.ndlong.site)"
+                    : "Developer tools by Nguyen Dai Long (*.ndlong.site)"}
                 </p>
               </div>
             </div>
@@ -104,6 +117,7 @@ export function NdlAppLauncher() {
           <div className="space-y-2">
             {NDL_ECOSYSTEM_APPS.map((app) => {
               const IconComponent = ICON_MAP[app.iconName] || Globe;
+              const shortDesc = (isVi && VI_APP_DESC[app.id]) || app.shortDesc;
               return (
                 <a
                   key={app.id}
@@ -136,7 +150,7 @@ export function NdlAppLauncher() {
                       )}
                     </div>
                     <p className="text-[11px] text-slate-400 line-clamp-1 mt-0.5 leading-tight">
-                      {app.shortDesc}
+                      {shortDesc}
                     </p>
                   </div>
                 </a>
@@ -147,7 +161,7 @@ export function NdlAppLauncher() {
           {/* Footer Hub Link */}
           <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
             <span className="text-slate-500 text-[10px]">
-              Developer suite &amp; open APIs
+              {isVi ? "Bộ công cụ & API mở" : "Developer suite & open APIs"}
             </span>
             <a
               href={NDL_PORTAL_URL}
@@ -155,7 +169,7 @@ export function NdlAppLauncher() {
               rel="noreferrer"
               className="flex items-center gap-1 text-blue-400 hover:text-blue-300 font-semibold"
             >
-              <span>Visit ndlong.site Hub</span>
+              <span>{isVi ? "Khám phá Hub ndlong.site" : "Visit ndlong.site Hub"}</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>

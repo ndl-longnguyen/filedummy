@@ -34,7 +34,11 @@ export function CustomFileGenerator({ locale = "en" }: CustomFileGeneratorProps)
   const handleGenerate = async () => {
     const totalBytes = calculateBytes(sizeValue, sizeUnit);
     if (totalBytes > 100 * 1024 * 1024) {
-      alert("For browser safety, browser-generated files are capped at 100MB. For larger files up to 1GB, please use our pre-built downloads.");
+      alert(
+        isVi
+          ? "Vì lý do an toàn bộ nhớ trình duyệt, file tạo trực tuyến giới hạn tối đa 100MB. Với dung lượng lớn hơn tới 1GB, vui lòng tải các file dựng sẵn của chúng tôi."
+          : "For browser safety, browser-generated files are capped at 100MB. For larger files up to 1GB, please use our pre-built downloads."
+      );
       return;
     }
 
@@ -225,7 +229,11 @@ export function CustomFileGenerator({ locale = "en" }: CustomFileGeneratorProps)
       setIsDone(true);
     } catch (e) {
       console.error(e);
-      alert("Error generating file in browser.");
+      alert(
+        isVi
+          ? "Có lỗi xảy ra khi tạo file trên trình duyệt."
+          : "Error generating file in browser."
+      );
     } finally {
       setIsGenerating(false);
     }

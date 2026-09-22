@@ -1,8 +1,8 @@
-Serving large files directly from Node.js without a CDN or object storage proxy requires streaming. Loading a 1GB file into memory with `fs.readFileSync` consumes 1GB of server RAM per connected user—rapidly leading to process termination.
+Phục vụ tệp lớn trực tiếp từ Node.js mà không có CDN hoặc proxy object storage đòi hỏi phải sử dụng streaming. Tải một tệp 1GB vào bộ nhớ bằng `fs.readFileSync` sẽ tiêu tốn 1GB RAM máy chủ cho mỗi người dùng kết nối — nhanh chóng dẫn đến crash tiến trình.
 
-## Streaming Files with Node.js HTTP Streams
+## Streaming Tệp Với HTTP Streams Của Node.js
 
-Node.js readable streams buffer only small chunks (typically 64KB) in memory at any given moment:
+Readable stream của Node.js chỉ buffer một lượng nhỏ chunk (thường là 64KB) trong bộ nhớ tại bất kỳ thời điểm nào:
 
 ```typescript
 import http from 'http';
@@ -15,10 +15,10 @@ const server = http.createServer((req, res) => {
   fs.stat(filePath, (err, stats) => {
     if (err) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
-      return res.end('File not found');
+      return res.end('Không tìm thấy tệp');
     }
 
-    // Set binary response headers
+    // Thiết lập header response nhị phân
     res.writeHead(200, {
       'Content-Type': 'application/pdf',
       'Content-Length': stats.size,
@@ -28,25 +28,25 @@ const server = http.createServer((req, res) => {
 
     const readStream = fs.createReadStream(filePath);
 
-    // Automatically handles TCP backpressure
+    // Tự động xử lý TCP backpressure
     readStream.pipe(res);
 
-    // Handle client disconnects
+    // Xử lý khi client ngắt kết nối
     req.on('close', () => {
       readStream.destroy();
     });
   });
 });
 
-server.listen(3000, () => console.log('Download server running on port 3000'));
+server.listen(3000, () => console.log('Máy chủ tải xuống đang chạy trên cổng 3000'));
 ```
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="500mb"
-  message="Download our 500MB PDF sample file to test stream backpressure handling in your server code."
+  message="Tải file PDF mẫu 500MB để kiểm thử xử lý stream backpressure trong code máy chủ của bạn."
   buttonLabel="Tải File Mẫu 500MB PDF →"
 />
 
-## Understanding Stream Backpressure
-When a server can read from disk faster than a client can receive data over the network, `stream.pipe(res)` automatically pauses the read stream until the client's socket drain buffer clears, preserving server memory.
+## Hiểu Stream Backpressure
+Khi máy chủ có thể đọc từ đĩa nhanh hơn tốc độ client nhận dữ liệu qua mạng, `stream.pipe(res)` tự động tạm dừng read stream cho đến khi buffer socket drain của client được giải phóng, giúp bảo toàn bộ nhớ máy chủ.

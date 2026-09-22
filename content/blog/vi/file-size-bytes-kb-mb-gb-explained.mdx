@@ -1,21 +1,21 @@
-One of the most frequent sources of bugs in file validation is the confusion between decimal (SI, base-10) and binary (IEC, base-2) size units. Knowing whether your server or cloud provider calculates 1MB as 1,000,000 bytes or 1,048,576 bytes prevents subtle boundary failures.
+Một trong những nguồn gây lỗi phổ biến nhất trong xác thực tệp là sự nhầm lẫn giữa đơn vị kích thước thập phân (SI, cơ số 10) và nhị phân (IEC, cơ số 2). Biết liệu máy chủ hoặc nhà cung cấp đám mây của bạn tính 1MB là 1.000.000 byte hay 1.048.576 byte sẽ ngăn chặn các lỗi ranh giới khó phát hiện.
 
-## Decimal (SI) vs Binary (IEC) Prefixes
+## Tiền Tố Thập Phân (SI) vs Nhị Phân (IEC)
 
-| Unit | Prefix | Base-10 (Decimal / Hard Drives / S3) | Binary Prefix | Base-2 (RAM / OS / Windows) |
-|------|--------|--------------------------------------|---------------|-----------------------------|
-| Kilo | KB     | 1,000 bytes (`10^3`)                  | KiB           | 1,024 bytes (`2^10`)         |
-| Mega | MB     | 1,000,000 bytes (`10^6`)              | MiB           | 1,048,576 bytes (`2^20`)     |
-| Giga | GB     | 1,000,000,000 bytes (`10^9`)          | GiB           | 1,073,741,824 bytes (`2^30`) |
+| Đơn vị | Tiền tố | Cơ số 10 (Thập phân / Ổ cứng / S3) | Tiền tố nhị phân | Cơ số 2 (RAM / OS / Windows) |
+|--------|---------|--------------------------------------|------------------|-------------------------------|
+| Kilo | KB | 1.000 byte (`10^3`) | KiB | 1.024 byte (`2^10`) |
+| Mega | MB | 1.000.000 byte (`10^6`) | MiB | 1.048.576 byte (`2^20`) |
+| Giga | GB | 1.000.000.000 byte (`10^9`) | GiB | 1.073.741.824 byte (`2^30`) |
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="10mb"
-  message="Download our exact 10MB (10,485,760 bytes) PDF test file to test boundary limits in your validator."
+  message="Tải file PDF test chính xác 10MB (10.485.760 byte) để kiểm thử giới hạn ranh giới trong validator."
   buttonLabel="Tải File Mẫu 10MB PDF →"
 />
 
-## Accurate File Size Formatter in TypeScript
+## Hàm Định Dạng Kích Thước Tệp Chính Xác Bằng TypeScript
 
 ```typescript
 export function formatBytes(bytes: number, decimals = 2, useBinary = true): string {
@@ -32,10 +32,10 @@ export function formatBytes(bytes: number, decimals = 2, useBinary = true): stri
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-// Example outputs:
+// Ví dụ kết quả:
 // formatBytes(1048576, 2, true)  => "1 MiB"
 // formatBytes(1000000, 2, false) => "1 MB"
 ```
 
-## Practical Advice for File Upload Rules
-When configuring upload limits in web applications, explicitly use raw **bytes** in your configuration schemas (e.g. `maxSizeBytes: 10485760`) rather than converting strings dynamically.
+## Lời Khuyên Thực Tiễn Cho Quy Tắc Tải Lên Tệp
+Khi cấu hình giới hạn tải lên trong ứng dụng web, hãy sử dụng rõ ràng **byte** thô trong schema cấu hình (ví dụ: `maxSizeBytes: 10485760`) thay vì chuyển đổi chuỗi động.

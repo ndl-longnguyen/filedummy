@@ -74,7 +74,7 @@ export const enDictionary: Dictionary = {
     blogBadge: "Technical Guides & Tutorials",
     blogSubtitle:
       "Deep dives into file uploads, security hashes, QA testing, and cloud storage architectures.",
-    viewAllBlog: "View All 36 Articles",
+    viewAllBlog: "View All Articles",
     faqBadge: "Got Questions?",
     faqTitle: "Frequently Asked Questions",
     faqs: [

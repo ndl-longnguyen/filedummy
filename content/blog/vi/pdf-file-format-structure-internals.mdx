@@ -1,8 +1,8 @@
-Portable Document Format (PDF), created by Adobe in 1993 and later standardized as ISO 32000, was designed to represent documents independently of application software, hardware, and operating systems. Understanding its internal object structure is critical for developers building custom PDF parsers, generators, and forensics tools.
+Định dạng Tài liệu Di động (PDF), được Adobe tạo ra năm 1993 và sau đó được chuẩn hóa thành ISO 32000, được thiết kế để biểu diễn tài liệu độc lập với phần mềm ứng dụng, phần cứng và hệ điều hành. Hiểu cấu trúc object nội tại của nó rất quan trọng đối với các lập trình viên xây dựng trình phân tích PDF, công cụ tạo PDF tùy chỉnh và công cụ pháp chứng.
 
-## The 4 Physical Sections of a PDF File
+## 4 Vùng Vật Lý Của Tệp PDF
 
-Every valid PDF file consists of four major physical regions:
+Mọi tệp PDF hợp lệ đều bao gồm bốn vùng vật lý chính:
 
 ```
 +-------------------------------+
@@ -19,21 +19,21 @@ Every valid PDF file consists of four major physical regions:
 +-------------------------------+
 ```
 
-1. **Header:** The very first line identifies the PDF specification version (e.g. `%PDF-1.4`).
-2. **Body:** A collection of indirect objects (dictionaries, arrays, numbers, and compressed binary streams).
-3. **Cross-Reference Table (xref):** A table mapping each object number to its exact byte offset from the start of the file. This enables PDF readers to perform random-access seeking without parsing the entire file sequentially.
-4. **Trailer:** Points to the catalog dictionary (`Root`) and specifies the byte offset of the `xref` table, ending with the magic marker `%%EOF`.
+1. **Header (Tiêu đề):** Dòng đầu tiên xác định phiên bản đặc tả PDF (ví dụ: `%PDF-1.4`).
+2. **Body (Thân):** Tập hợp các indirect object (từ điển, mảng, số và luồng nhị phân nén).
+3. **Cross-Reference Table (Bảng tham chiếu chéo xref):** Bảng ánh xạ số object với byte offset chính xác từ đầu tệp. Điều này cho phép trình đọc PDF thực hiện random-access seeking mà không cần phân tích toàn bộ tệp tuần tự.
+4. **Trailer:** Trỏ đến catalog dictionary (`Root`) và xác định byte offset của bảng `xref`, kết thúc bằng marker đặc biệt `%%EOF`.
 
 <BlogDownloadCTA
   fileType="pdf"
   fileSlug="1mb"
-  message="Download our structurally pure 1MB PDF file to inspect xref tables and object streams in a hex editor."
+  message="Tải file PDF mẫu 1MB có cấu trúc thuần túy để kiểm tra bảng xref và object stream trong hex editor."
   buttonLabel="Tải File Mẫu 1MB PDF →"
 />
 
-## Inspecting a PDF via Hex / Plaintext
+## Kiểm Tra PDF Qua Hex / Văn Bản Thuần
 
-You can view the uncompressed ASCII components of a PDF with any text or hex viewer:
+Bạn có thể xem các thành phần ASCII không nén của PDF bằng bất kỳ trình xem văn bản hoặc hex nào:
 
 ```text
 %PDF-1.4
@@ -61,5 +61,5 @@ endobj
 endobj
 ```
 
-## Linearized ("Fast Web View") PDFs
-Standard PDFs must be downloaded completely before a reader can locate the `trailer` at the end. Linearized PDFs restructure internal objects so the first page and an initial hint stream appear at the start of the file, allowing web browsers to render Page 1 before the remaining megabytes have finished downloading.
+## PDF Tuyến Tính ("Fast Web View")
+PDF tiêu chuẩn phải được tải xuống hoàn toàn trước khi trình đọc có thể định vị `trailer` ở cuối tệp. PDF tuyến tính cấu trúc lại các object nội tại để trang đầu tiên và hint stream ban đầu xuất hiện ở đầu tệp, cho phép trình duyệt render Trang 1 trước khi các megabyte còn lại tải xong.
