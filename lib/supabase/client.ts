@@ -1,3 +1,4 @@
+import { cookieStorageAdapter } from "./cookie-storage";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 export type ReactionType = "like" | "love" | "rocket" | "insight" | "fire";
@@ -78,6 +79,9 @@ export const getSupabaseClient = (): SupabaseClient | null => {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: "ndl_ecosystem_auth",
+        storage: cookieStorageAdapter,
       },
     });
   }
