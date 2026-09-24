@@ -69,6 +69,7 @@ export function CategoryPageContent({ type, locale = "en" }: CategoryPageContent
       `test ${type} file`,
       `${meta.extension} testing`,
     ],
+    license: "https://creativecommons.org/publicdomain/zero/1.0/",
     isAccessibleForFree: true,
     creator: {
       "@type": "Organization",
